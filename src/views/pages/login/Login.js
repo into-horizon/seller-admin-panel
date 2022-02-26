@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -12,11 +12,61 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { If, Then, Else } from 'react-if'
+import { loginHandler,deleteMessage } from '../../../store/auth'
+import { connect , useDispatch } from 'react-redux'
+import { usePopup, DialogType } from "react-custom-popup";
+import cookie from 'react-cookies'
 
-const Login = () => {
+const Login = (props) => {
+  const dispatch = useDispatch()
+  const [load, setLoad] = useState(true)
+  const { login, loginHandler } = props
+  const { showAlert } = usePopup();
+  const history = useHistory()
+  const submitHandler = (e) => {
+    setLoad(true)
+    e.preventDefault()
+    loginHandler({ email: e.target.email.value, password: e.target.password.value })
+  }
+  let currentPath = cookie.load('current_path')
+  useEffect(() => {
+    if (login.loggedIn) {
+      history.push(currentPath || '/')
+    }
+    setLoad(false)
+  }, [])
+  useEffect(() => {
+    if (login.loggedIn) {
+      history.push(currentPath || '/')
+    }
+  }, [login.loggedIn])
+  useEffect(() => {
+    if(login.message){
+      if (login.message.includes('password')) {
+        showAlert({
+          title: "incorrect credentials",
+          type: DialogType.WARNING,
+          text: login.message
+        });
+        setLoad(false)
+      } else {
+        if (login.message) {
+          showAlert({
+            title: "unauthorized",
+            type: DialogType.WARNING,
+            text: login.message
+          });
+          setLoad(false)
+        }
+      }
+      dispatch(deleteMessage())
+    }
+  }, [login.message])
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -25,14 +75,14 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={submitHandler}>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput placeholder="Username" autoComplete="email" name="email" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,13 +92,22 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        name="password"
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
-                          Login
-                        </CButton>
+                        <If condition={load}>
+                          <Then>
+                            <CSpinner color="primary" />
+                          </Then>
+                          <Else>
+                            <CButton color="primary" className="px-4" type="submit">
+                              Login
+                            </CButton>
+
+                          </Else>
+                        </If>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
@@ -78,9 +137,15 @@ const Login = () => {
             </CCardGroup>
           </CCol>
         </CRow>
+
       </CContainer>
     </div>
   )
 }
 
-export default Login
+const mapStateToProps = (state) => ({
+  login: state.login
+
+});
+const mapDispatchToProps = { loginHandler };
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

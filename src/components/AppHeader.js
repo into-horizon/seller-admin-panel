@@ -10,6 +10,7 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
+  CButton
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
@@ -17,11 +18,25 @@ import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
+import { useTranslation } from 'react-i18next';
 
 const AppHeader = () => {
   const dispatch = useDispatch()
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+  const sidebarShow = useSelector((state) => state.changeState.sidebarShow)
+  const { t, i18n } = useTranslation()
 
+  const langChange = () => {
+    let lang = localStorage.getItem('i18nextLng')
+    if (lang === 'en') {
+      i18n.changeLanguage('ar');
+      document.documentElement.setAttribute("lang", 'ar');
+      document.documentElement.setAttribute("dir", 'rtl');
+    } else {
+      i18n.changeLanguage('en');
+      document.documentElement.setAttribute("lang", 'en');
+      document.documentElement.setAttribute("dir", 'ltl');
+    }
+  }
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -47,6 +62,7 @@ const AppHeader = () => {
             <CNavLink href="#">Settings</CNavLink>
           </CNavItem>
         </CHeaderNav>
+      <CButton color="primary" onClick={langChange}>{t('lang')}</CButton>
         <CHeaderNav>
           <CNavItem>
             <CNavLink href="#">

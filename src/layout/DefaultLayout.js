@@ -1,7 +1,23 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import {connect} from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
-const DefaultLayout = () => {
+const DefaultLayout = (props) => {
+  const {login} = props
+  const history = useHistory()
+  useEffect(() => {
+    if(!login.loggedIn){
+      history.push('/login')
+    }
+  },[])
+  useEffect(() => {
+    if(!login.loggedIn){
+      history.push('/login')
+    }
+  },[login.loggedIn])
+
+
   return (
     <div>
       <AppSidebar />
@@ -16,4 +32,9 @@ const DefaultLayout = () => {
   )
 }
 
-export default DefaultLayout
+const mapStateToProps = (state) => ({
+  login: state.login
+
+});
+
+export default connect(mapStateToProps)(DefaultLayout)

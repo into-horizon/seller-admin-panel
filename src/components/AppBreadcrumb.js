@@ -4,11 +4,13 @@ import { useLocation } from 'react-router-dom'
 import routes from '../routes'
 
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
+import cookie from 'react-cookies'
 
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
 
   const getRouteName = (pathname, routes) => {
+    cookie.save('current_path', pathname)
     const currentRoute = routes.find((route) => route.path === pathname)
     return currentRoute.name
   }

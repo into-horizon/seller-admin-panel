@@ -1,0 +1,6 @@
+{
+    "lang": "عربي",
+    "profile":{"store_name": "store name", "city": "city", "about": "about", "caption": "caption", "update": "Update", "cancel": "Cancel", "confirmMessage": "Are you sure you want to update your information?", "doneUpdating": "Updated Successfully", "updateTitle": "Update Information"},
+    "addProduct":{"add_product": "Add Product", "englishTitle": "English Title", "arabicTitle": "Arabic Title", "metaTitle": "Meta Title", "SKU": "SKU", "cancel": "Cancel", "price": "Price", "brandName": "Brand Name", "quantity": "Quantity", "englishDescrition": "English Description", "arabicDescription": "Arabic Description", "parentCategory": "First Category", "childCategory": "Second Category", "grandChildCategory": "Third Category" }
+
+}

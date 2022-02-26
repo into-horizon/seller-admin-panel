@@ -1,0 +1,6 @@
+{
+    "lang": "English",
+    "profile":{"store_name": "إسم المتجر", "city": "المدينة", "about": "عن المتجر", "caption": "شرح","update": "تحديث", "cancel": "إلغاء", "confirmMessage": "هل أنت متأكد أنك تريد تحديث المعلومات؟", "doneUpdating": "تم التحديث بنجاح", "updateTitle": "تحديث المعلومات" },
+    "addProduct":{"add_product": "إضافة منتج",  "englishTitle": "العنوان الإنجليزي", "arabicTitle": "العنوان العربي", "metaTitle": "العنوان الفوقي", "SKU": "SKU", "cancel": "Cancel", "price": "السعر", "brandName": "العلامة التجارية", "quantity": "العدد", "englishDescrition": "الوصف الإنجليزي", "arabicDescription": "الوصف العربي", "parentCategory": "الفئة الاولى", "childCategory": "الفئة الثانية", "grandChildCategory": "الفئة الثالثة" }
+
+}
