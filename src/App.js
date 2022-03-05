@@ -54,7 +54,7 @@ const App = props => {
     }
    
     if (!props.login.user.id && token) {
-      props.getUser(token)
+      props.getUser()
       // history.push(currentPath || '/')
       //  setLoad(false)
     }
@@ -75,10 +75,10 @@ const App = props => {
       history.push('/login')
       setLoad(false)
     } 
-    else{
-      setLoad(false)
-    }
-  },[props.login.loggedIn])
+    // else{
+    //   setLoad(false)
+    // }
+  },[props.login.loggedIn, props.login.user])
 
   return (
     <PopupProvider>

@@ -14,20 +14,20 @@ export default class Auth extends ApiService{
             return error;
         }
     }
-    async getStore(payload) {
+    async getStore() {
         try {  
-            let response = await this.get(this.path, null, this.bearer(payload? payload:this.token()))
+            // console.log("🚀 ~ file: Auth.js ~ line 18 ~ Auth ~ getStore ~ payload", payload)
+            let response = await this.get(this.path, null, this.bearer(await this.token()))
             return response.data
             
         } catch (error) {
-            console.log("🚀 ~ file: Auth.js ~ line 24 ~ Auth ~ getStore ~ error", error)
             return error
         }
     }
 
     async logout() {
         try {
-            let response = await this.post('auth/signout', null, this.bearer(this.token()))
+            let response = await this.post('auth/signout', null, this.bearer( await this.token()))
             return response
         } catch (error) {
             return error
