@@ -1,6 +1,6 @@
 // import { createStore } from 'redux'
 import thunk from 'redux-thunk';
-import {combineReducers ,configureStore } from '@reduxjs/toolkit';
+import {combineReducers ,configureStore,getDefaultMiddleware } from '@reduxjs/toolkit';
 import { createStore, applyMiddleware } from 'redux';
 import login from './auth'
 import category from './category'
@@ -8,6 +8,9 @@ import products from './product'
 const initialState = {
   sidebarShow: true,
 }
+const customizedMiddleware = getDefaultMiddleware({
+  serializableCheck: false
+})
 
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
@@ -20,5 +23,5 @@ const changeState = (state = initialState, { type, ...rest }) => {
 
 const reducers = combineReducers({changeState, login:login, category: category, products:products})
 
-const store = configureStore({reducer: reducers}, applyMiddleware(thunk))
+const store = configureStore({reducer: reducers, middleware: (getDefaultMiddleware) => getDefaultMiddleware(),}, applyMiddleware(thunk))
 export default store

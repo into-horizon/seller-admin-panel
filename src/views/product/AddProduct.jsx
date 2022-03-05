@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 import { CFormSelect, CFormLabel, CFormText, CFormCheck, CFormInput, CButton, CFormFloating, CFormTextarea, CFormFeedback, CCol, CForm, CRow, CInputGroup, CInputGroupText } from '@coreui/react'
 import { If, Then, Else } from 'react-if'
-import { useSelector, connect } from 'react-redux';
-import { addProductHandler } from 'src/store/product';
-import { usePopup, DialogType, AnimationType } from "react-custom-popup";
+import { useSelector, connect, useDispatch } from 'react-redux';
+import { addProductHandler , errorMessage } from 'src/store/product';
+import { usePopup, DialogType, AnimationType, ToastPosition } from "react-custom-popup";
 import { useTranslation } from 'react-i18next';
 // import { CRow } from '@coreui/react-pro';
 const AddProduct = props => {
+    const dispatch = useDispatch()
     const { showOptionDialog, showToast, showAlert } = usePopup();
     const { t, i18n } = useTranslation('translation', { keyPrefix: 'addProduct' });
     const category = useSelector(state => state.category)
@@ -20,6 +21,16 @@ const AddProduct = props => {
             sizeNumbers.push(i)
         }
 
+    }
+
+    const initialState = {
+        values: [],
+        secondCategory : { visible: false},
+        thirdCategory: {visible: false, selected: false, add: false, select: true},
+        sizes: {visible: false, add: false},
+        selectedSizes: [],
+        sizesDetails: [],
+        discount: { hasDiscount: false, discountRate: 0 }
     }
     const [values, setValues] = useState([])
     const [secondCategory, setSecondCategory] = useState({ visible: false, data: [] })
@@ -57,7 +68,7 @@ const AddProduct = props => {
             ardescription: e.target.ardescription.value,
             parent_category_id: e.target.parentCategory.value,
             child_category_id: e.target.childCategory.value,
-            grandchild_category_id: e.target.grandChildCategory.value || null,
+            grandchild_category_id: e.target.grandChildCategory.value === 'default' ? null :e.target.grandChildCategory.value ,
             size: sizesDetails.length > 0 ? JSON.stringify(sizesDetails) : null,
             discount: discount.hasDiscount,
             discount_rate: discount.discountRate,
@@ -68,12 +79,20 @@ const AddProduct = props => {
         if (e.target.image.files.length > 5) {
             return showAlert({
                 type: DialogType.WARNING,
-                text: 'please reduce the number of images',
-                title: 'image limit exceeded',
+                text: t('imageLimitText'),
+                title: t('imageLimit'),
                 animationType: AnimationType.ZOOM_IN,
             })
         }
+        if(obj.parent_category_id === 'default' || obj.child_category_id === 'default'  || (obj.grandchild_category_id === 'default' && thirdCategory.selected )){
+            return showAlert({
+                type: DialogType.WARNING,
+                text: t('categoryText'),
+                title: t('categoryTitle'),
+                animationType: AnimationType.ZOOM_IN,
+            })
 
+        }
         for (let i = 0; i < e.target.image.files.length; i++) {
             formData.append('image', e.target.image.files[i], e.target.image.files[i].name)
         }
@@ -86,11 +105,7 @@ const AddProduct = props => {
         }
         )
         addProductHandler(formData)
-        // if(products.message.includes('successfully')){
-          
-        //     e.target.reset()
-        // }
-       
+
     }
 
     const categoryVisibility = e => {
@@ -103,7 +118,7 @@ const AddProduct = props => {
     }
 
     const addSizes = e => {
-       
+
         setValues(i => [...e.target.value.split(',')])
         if (e.target.value.includes(',')) {
         }
@@ -112,113 +127,127 @@ const AddProduct = props => {
 
     useEffect(() => {
         let productForm = document.getElementById('productForm');
-        if(products.message.includes('successfully')){
+        if (products.message.includes('successfully')) {
             showToast({
                 type: DialogType.SUCCESS,
-                text: 'doneUpdating',
+                text: t('doneSuccessfully'),
                 timeoutDuration: 3000,
                 showProgress: true,
+                position: ToastPosition[t('position')]
             })
             productForm.reset()
-        } else if(products.message.includes('something')){
-            showToast({
+            setSecondCategory({...secondCategory,...initialState.secondCategory})
+            setThirdCategory({...thirdCategory,...initialState.thirdCategory})
+            setSizes({...sizes, ...initialState.sizes})
+            setDiscount({...discount, ...initialState.discount})
+        } else if (products.message.includes('something')) {
+            showAlert({
                 type: DialogType.DANGER,
-                text: 'something went wrong',
+                text: t('somethingWentWrong'),
                 timeoutDuration: 3000,
                 showProgress: true,
             })
-        } else if(products.message){
-            showToast({
+        } else if (products.message) {
+            showAlert({
                 type: DialogType.ALERT,
                 text: products.message,
                 timeoutDuration: 3000,
                 showProgress: true,
             })
         }
+        dispatch(errorMessage({message: ''}))
     }, [products.message])
+    
+    useEffect(() => {
+        let labels = document.querySelectorAll('#label')
+        if (i18n.language === 'ar') {
+            labels.forEach(label => label.setAttribute('class', 'rightBorder'))
+        } else if (i18n.language === 'en') {
+            labels.forEach(label => label.setAttribute('class', 'leftBorder'));
+        }
 
-
+    }, [i18n.language])
     return (
         <>
 
             <h2>{t('add_product')}</h2>
-            {/* <Multiselect options={options}
-                onSelect={select}
-                onRemove={remove}
-                selectedValues={values}
-                displayValue="name"
-            /> */}
+            
             <form id='productForm' className="productForm" onSubmit={submitHandler}>
                 <section className="productInputs">
                     <div>
-                        <label className="label">{t('englishTitle')}</label>
+                        <label>{t('englishTitle')}*</label>
                         <input type="text" id="entitle" placeholder={t('englishTitle')} required />
                     </div>
                     <div>
-                        <label className="label">{t('arabicTitle')}</label>
+                        <label id="label">{t('arabicTitle')}*</label>
                         <input type="text" id="artitle" placeholder={t('arabicTitle')} required />
                     </div>
                     <div>
-                        <label className="label">{t('metaTitle')}</label>
+                        <label id="label">{t('metaTitle')}</label>
                         < input type="text" id="metatitle" placeholder={t('metaTitle')} />
                     </div>
                     <div>
-                        <label className="label">SKU</label>
+                        <label >SKU</label>
                         < input type="text" id="sku" placeholder="SKU" />
                     </div>
                     <div>
-                        <label className="label">{t('price')}</label>
-                        < input type="number" id="price" placeholder={t('price')} required />
+                        <label id="label">{t('price')}*</label>
+                        < input type="number" id="price" placeholder={t('price')} step='0.01' required />
                     </div>
                     <div>
-                        <label className="label">{t('brandName')}</label>
+                        <label id="label">{t('brandName')}</label>
                         <input type="text" id="brandName" placeholder={t('brandName')} />
                     </div>
                     <div style={{ display: !sizes.visible ? 'inherit' : 'none' }}>
-                        <label className="label">{t('quantity')}</label>
-                        <input type="number" id="quantity" placeholder={t('quantity')} />
+                        <section className="quantity" >
+                            <section className="quantityInputs">
+                                <label>{t('quantity')}*</label>
+                                <input type="number" id="quantity" placeholder={t('quantity')} />
+
+                            </section>
+                            <label>{t('quantityLabel')}</label>
+                        </section>
+
                     </div>
 
                 </section>
                 <div className='marginDiv'>
                     <div className='description'>
 
-                    <CFormFloating>
-                        <CFormTextarea
-                            placeholder="Leave a comment here"
-                            id="endescription"
-                            style={{ height: '100px' }}
-                        ></CFormTextarea>
-                        <CFormLabel htmlFor="floatingTextarea2">{t('englishDescrition')}</CFormLabel>
-                    </CFormFloating>
-                    <CFormFloating>
-                        <CFormTextarea
-                            placeholder="Leave a comment here"
-                            id="ardescription"
-                            style={{ height: '100px' }}
-                        ></CFormTextarea>
-                        <CFormLabel htmlFor="floatingTextarea3">{t('arabicDescription')}</CFormLabel>
-                    </CFormFloating>
+                        <CFormFloating>
+                            <CFormTextarea
+                                placeholder="Leave a comment here"
+                                id="endescription"
+                                style={{ height: '100px' }}
+                            ></CFormTextarea>
+                            <CFormLabel htmlFor="floatingTextarea2" required>{t('englishDescrition')}*</CFormLabel>
+                        </CFormFloating>
+                        <CFormFloating>
+                            <CFormTextarea
+                                placeholder="Leave a comment here"
+                                id="ardescription"
+                                style={{ height: '100px' }}
+                            ></CFormTextarea>
+                            <CFormLabel htmlFor="floatingTextarea3" required>{t('arabicDescription')}*</CFormLabel>
+                        </CFormFloating>
 
                     </div>
 
                 </div>
                 <div className='marginDiv'>
                     <CFormSelect aria-label="Default select example" required onChange={categoryVisibility} id='parentCategory'>
-                        <option>{t('parentCategory')}</option>
+                        <option value='default'>{t('parentCategory')}</option>
                         {category ? category.parentCategories.map((val, idx) =>
                             <option value={val.id} key={`parent_Category_${idx}`}>{val[`${i18n.language}title`]}</option>
                         )
 
                             : null}
-                        {/* <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3" disabled>Three</option> */}
+
                     </CFormSelect>
                 </div>
                 <div className='marginDiv'>
                     <CFormSelect aria-label="Default select example" disabled={!secondCategory.visible} onChange={categoryVisibility2} id='childCategory'>
-                        <option>{t('childCategory')}</option>
+                        <option value='default'>{t('childCategory')}</option>
 
                         {category ? category.childCategories.map((val, idx) =>
                             <option value={val.id} key={`child_Category_${idx}`}>{val[`${i18n.language}title`]}</option>
@@ -230,20 +259,20 @@ const AddProduct = props => {
 
                 <section className="TCS" >
                     <section>
-                        <CFormCheck id="flexCheckDefault" label="Select or Add third category" onChange={e => setThirdCategory({ ...thirdCategory, selected: e.target.checked })} disabled={!thirdCategory.visible} />
+                        <CFormCheck id="flexCheckDefault" label={t('selectOrAdd')} onChange={e => setThirdCategory({ ...thirdCategory, selected: e.target.checked })} disabled={!thirdCategory.visible} />
                     </section>
                     <section style={{ display: thirdCategory.selected ? 'inherit' : 'none', width: '20%' }}>
                         <section>
-                            <CFormCheck type="radio" name="TC" id="TC1" label="Select Third Category" defaultChecked onChange={e => setThirdCategory({ ...thirdCategory, select: !thirdCategory.select, add: !thirdCategory.add })} />
+                            <CFormCheck type="radio" name="TC" id="TC1" label={t('selectThird')} defaultChecked onChange={e => setThirdCategory({ ...thirdCategory, select: !thirdCategory.select, add: !thirdCategory.add })} />
 
                         </section>
                         <section>
 
-                            <CFormCheck type="radio" name="TC" id="TC2" label="Add my own category" onChange={e => setThirdCategory({ ...thirdCategory, select: !thirdCategory.select, add: !thirdCategory.add })} />
+                            <CFormCheck type="radio" name="TC" id="TC2" label={t('addOwn')} onChange={e => setThirdCategory({ ...thirdCategory, select: !thirdCategory.select, add: !thirdCategory.add })} />
                         </section>
 
-                        <CFormSelect aria-label="Default select example" disabled={!thirdCategory.visible} style={{ display: thirdCategory.select ? 'inherit' : 'none' }} id='grandChildCategory'>
-                            <option>{t('grandChildCategory')}</option>
+                        <CFormSelect aria-label="Default select example" id='grandChildCategory' disabled={!thirdCategory.visible} style={{ display: thirdCategory.select ? 'inherit' : 'none' }} >
+                            <option value='default'>{t('grandChildCategory')}</option>
 
                             {category ? category.grandChildCategories.map((val, idx) =>
                                 <option value={val.id} key={`grand_child_Category_${idx}`}>{val[`${i18n.language}title`]}</option>
@@ -253,41 +282,31 @@ const AddProduct = props => {
                         </CFormSelect>
 
 
-                        <input type={thirdCategory.add ? 'text' : 'hidden'} placeholder=" add your own category" className='thirdCategory' disabled={!thirdCategory.visible} id='grandChildCategory' />
+                        <input type={thirdCategory.add ? 'text' : 'hidden'} placeholder={t('addOwn')} className='thirdCategory' disabled={!thirdCategory.visible} id='addGrandChildCategory' />
                     </section>
 
 
                 </section>
                 <section className="TCS" >
                     <section>
-                        <CFormCheck id="size" label="Has Sizes" onChange={e => setSizes({ ...sizes, visible: e.target.checked })} />
+                        <CFormCheck id="size" label={t('sizes')} onChange={e => setSizes({ ...sizes, visible: e.target.checked })} />
                     </section>
                     <section className='radioBtns' style={{ display: sizes.visible ? 'inherit' : 'none', width: '20%' }}>
                         <section>
-                            <CFormCheck type="radio" name="s" id="TC1" label="Symbol Sizes" defaultChecked onChange={() => setSizes({ ...sizes, data: [...sizeSymbols], add: false })} />
+                            <CFormCheck type="radio" name="s" id="TC1" label={t('symbolSizes')} defaultChecked onChange={() => setSizes({ ...sizes, data: [...sizeSymbols], add: false })} />
 
                         </section>
 
                         <section>
 
-                            <CFormCheck type="radio" name="s" id="TC2" label="Numeric Sizes" onChange={() => setSizes({ ...sizes, data: [...sizeNumbers], add: false })} />
+                            <CFormCheck type="radio" name="s" id="TC2" label={t('numericSizes')} onChange={() => setSizes({ ...sizes, data: [...sizeNumbers], add: false })} />
                         </section>
                         <section>
 
-                            <CFormCheck type="radio" name="s" id="TC2" label="Add Other Type of Sizes" onChange={() => setSizes({ ...sizes, add: true })} />
+                            <CFormCheck type="radio" name="s" id="TC2" label={t('addOther')} onChange={() => setSizes({ ...sizes, add: true })} />
                         </section>
 
-                        {/* <CFormSelect aria-label="Default select example"  >
-                            <option disabled>Sizes</option>
-                            {sizes.data.map((val, idx) =>
-                          
-                          <option value={val} key={idx+val}>{val}</option>
-                          
-                            )
-                            
-                            }
-                           
-                        </CFormSelect> */}
+
                         <If condition={!sizes.add}>
                             <Then>
                                 <Multiselect options={sizes.data.map((val, idx) => { return { name: val, id: idx + 1 } })}
@@ -295,23 +314,18 @@ const AddProduct = props => {
                                     onRemove={remove}
                                     selectedValues={e => console.log(e)}
                                     displayValue="name"
+                                    placeholder={t('select')}
                                 />
 
                             </Then>
                             <Else>
-                                <CRow md={3}>
-                                    <CFormLabel htmlFor="validationServer05">Sizes</CFormLabel>
-                                    <CFormInput type="text" id="sizesInput" placeholder="Insert sizes comma sperated" required onChange={addSizes} />
+                                <CRow >
+                                    <CFormLabel htmlFor="validationServer05">{t('sizes')}</CFormLabel>
+                                    <CFormInput type="text" id="sizesInput" placeholder={t('inserSizes')} required onChange={addSizes} />
                                     <CButton color="secondary" type="button" onClick={() => setSelectedSizes(i => values.map((val, idx) => { return { name: val, id: idx++ } }))} >
-                                        Add
+                                        {t('add')}
                                     </CButton>
                                 </CRow>
-                                {/* <CCol md={3}>
-                                <CButton color="secondary" type="button" onClick={() => setSelectedSizes(i => values.map((val, idx) => { return { name: val, id: idx++ } }))} >
-                                        Add
-                                    </CButton>
-                                  
-                                </CCol> */}
                             </Else>
                         </If>
                         <div className="sizesContainer">
@@ -319,7 +333,7 @@ const AddProduct = props => {
                                 <div key={`size${idx}`} className="marginDiv sizesDiv"  >
                                     {/* <input type="text" id={`size${idx}`} defaultValue={val.name} key={`size${idx}`} /> */}
                                     <h5 className="sizeHead">{val.name}: </h5>
-                                    <input type="number" id={val.name} key={`sizeQty${idx}`} placeholder="Quantity" onChange={updateSizes} />
+                                    <input type="number" id={val.name} key={`sizeQty${idx}`} placeholder={t('quantity')} onChange={updateSizes} />
                                 </div>
                             )
 
@@ -329,20 +343,31 @@ const AddProduct = props => {
 
                     </section>
                     <section className="discountSection">
-                        <CFormCheck id="discount" label="Has Discount" onChange={e => setDiscount({ ...discount, hasDiscount: e.target.checked })} />
-                        <br />
-                        <input type={discount.hasDiscount ? 'number' : 'hidden'} placeholder="Insert discount rate" className="discountRate" step="0.01" onChange={e => setDiscount({ ...discount, discountRate: Number(e.target.value)})}/>
+                        <section>
+
+                            <CFormCheck id="discount" label={t('hasDiscount')} onChange={e => setDiscount({ ...discount, hasDiscount: e.target.checked })} />
+                            <input type={discount.hasDiscount ? 'number' : 'hidden'} placeholder={t('insertDiscount')} className="discountRate" step="0.01" max="0.99" onChange={e => setDiscount({ ...discount, discountRate: Number(e.target.value) })} />
+                        </section>
+
+                        <label>{t('discountLabel')}</label>
                     </section>
 
+                    <hr />
+                    <CInputGroup className="mb-3 upload">
+                        <section>
+                            <CFormInput type="file" id="image" multiple="multiple" onChange={e => console.log(e.target.files[0])} />
+                        </section>
+                        <br />
+                        <section>
+                            <label>{t('uploadLabel')}</label>
 
-                    <CInputGroup className="mb-3">
-                        <CFormInput type="file" id="image" multiple="multiple" onChange={e => console.log(e.target.files[0])} />
+                        </section>
                     </CInputGroup>
 
+                <label>- * {t('required')}</label>
                 </section>
-
                 <CButton type="submit" color="primary">
-                    Submit
+                    {t('submit')}
                 </CButton>
             </form>
         </>

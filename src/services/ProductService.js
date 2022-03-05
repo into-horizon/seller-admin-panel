@@ -9,10 +9,34 @@ class ProductService extends ApiService{
 
     async addProduct(data){
         try { 
-            let res = await this.post(`${this.path}`, data,  {'Content-Type': 'multipart/form-data', ...this.bearer(this.token())}); 
+            let res = await this.post(`${this.path}`, data,  {'Content-Type': 'multipart/form-data', ...this.bearer( await this.token())}); 
             return res;
         } catch (error) {
-            console.log("🚀 ~ file: ProductService.js ~ line 15 ~ ProductService ~ addProduct ~ error", error)
+            throw new Error(error.message); 
+        }
+    }
+    async getProductsByStatus(data){
+        try {
+            let res = await this.get(`${this.path}/store/${data.status}?limit=${data.limit}&offset=${data.offset}`, null, this.bearer( await this.token()))
+            return res
+        } catch (error) {
+            throw new Error(error.message); 
+        }
+    }
+
+    async addProductPicture(data){
+        try {
+            let res = await this.post(`${this.path}/picture`, data,  {'Content-Type': 'multipart/form-data', ...this.bearer( await this.token())})
+            return res
+        } catch (error) {
+            throw new Error(error.message); 
+        }
+    }
+    async deleteProductPicture(data){
+        try {
+            let res = await this.delete(`${this.path}/picture`, data,  this.bearer( await this.token()))
+            return res
+        } catch (error) {
             throw new Error(error.message); 
         }
     }

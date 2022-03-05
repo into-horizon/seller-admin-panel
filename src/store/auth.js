@@ -34,7 +34,9 @@ export const loginHandler = payload => async dispatch => {
     try {
         let response = await NewAuth.basicAuth(payload)
         if(response.status === 200) {
-            let user = await NewAuth.getStore(response.access_token)
+            cookie.save('access_token', response.access_token)
+            cookie.save('refresh_token', response.refresh_token)
+            let user = await NewAuth.getStore()
             dispatch(loginAction({loggedIn: true, user: {...response, ...user}}));
         } else{
             dispatch(loginAction({message: response.message}));
@@ -43,9 +45,9 @@ export const loginHandler = payload => async dispatch => {
        dispatch(loginAction({message: 'you are not a seller'}));
     }
 }
-export const getUser = (payload) => async (dispatch) =>{
+export const getUser = () => async (dispatch) =>{
     try {
-        let user = await NewAuth.getStore(payload)
+        let user = await NewAuth.getStore()
         if(user.id){
             dispatch(loginAction({loggedIn: true, user: {...user}}))
         }
@@ -60,6 +62,10 @@ export const logout = (token) => async dispatch =>{
     cookie.remove('refresh_token')
     dispatch(loginAction({logged: false, user: {}}))
     await NewAuth.logout(token)
+}
+
+export const endSession = () => async (dispatch, state)=> {
+    dispatch(loginAction({logged: false, user: {}}))
 }
 
 export const updateInfo = info => async (dispatch, state) => {
