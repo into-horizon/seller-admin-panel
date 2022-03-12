@@ -52,7 +52,7 @@ export default class ApiService {
   }
 
   bearer(token) {
-    return { Authorization: ` Bearer ${token}` }
+    return {session_id:cookie.load('session_id') , Authorization: ` Bearer ${token}` }
   }
 
   basic(data) {
@@ -66,11 +66,10 @@ export default class ApiService {
       endSession()
     }
     else {
-
       let result = await this.post('auth/refresh', null, this.bearer(cookie.load('refresh_token')))
       cookie.save('access_token', result.access_token)
+      cookie.save('refresh_token', result.refresh_token)  
       return result.access_token
-
     }
   }
   // token(){

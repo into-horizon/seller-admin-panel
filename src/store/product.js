@@ -15,7 +15,7 @@ const products = createSlice({
             return {...state, message: action.payload.message}
         },
         getProducts (state, action){
-            return {...state, currentProducts: {count: action.payload.result.count, products: action.payload.result.result}}
+            return {...state, message: action.payload.message, currentProducts: {count: action.payload.result.count, products: action.payload.result.result}}
         },
         addProductPicture(state, action){
             return {...state, message: action.payload.message, currentProducts: {...state.currentProducts, products:action.payload.result}}
