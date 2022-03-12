@@ -132,7 +132,7 @@
     width: 100%;
     height: 10rem;
     border: 1px solid grey;
-    padding: 1rem;
+    padding: 6rem 1rem;
     background-color: #fff;
     border-radius: 1rem;
 }
@@ -151,15 +151,21 @@
 .productPictures img{
    max-width: 100%;
     max-height: 9rem;
-    box-shadow: 5px 15px lightblue;
     box-shadow: 1px 5px lightblue;
+    /* box-shadow: 1px 5px lightblue; */
 }
 
-.deleteBtn{
+.deleteBtnEn{
     position: relative !important;
     top: -50px;
     left: 2.2rem;
 }
+.deleteBtnAr{
+    position: relative !important;
+    top: -50px;
+    right: 2.2rem;
+}
+
 .uploadLabel{
   display: inline-block;
   background-color: indigo;
@@ -171,3 +177,126 @@
   /* margin-top: 1rem; */
 
 }
+.productRender{
+    border: 3px solid #fff;
+
+    /* box-shadow: 1px 5px lightblue; */
+    margin: 1rem 0;
+    padding: 1rem;
+}
+.productTitles{
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem 0;
+}
+
+.sizesTable{
+    text-align: center;
+    margin: 1rem 2rem;
+}
+
+.sizesTable td, .sizesTable th {
+    border: 1px solid black;
+    width: 9rem;
+
+}
+.productsRender h6{
+    margin: 1.5rem 0;
+}
+
+.productbtns{
+    display: flex;
+    justify-content:space-between;
+    flex-direction: row;
+}
+.productbtns .productbtn:nth-child(1){
+    width: 20%;
+    /* display: flex;
+    align-items:center;
+    flex-direction: column; */
+}
+
+.productStatusHead{
+    padding: 1rem;
+}
+.discountForm{
+    width: 100%;
+    flex-direction: column;
+    
+   
+}
+.fieldset{
+    padding: 1rem;
+   border-width: 1px;
+   border-style: solid;
+   border-color: black;
+   border-radius: 1rem;
+}
+
+.legend{
+    float: none !important;
+    width: inherit;
+    margin: 0 1rem;
+}
+.discounRate{
+    width: 40%;
+    margin: 0 1rem;
+}
+.switchLabel, .react-switch-bg{
+    margin: auto 1rem;
+}
+
+.switchDiv{
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.discountFormBtns{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.productUl{
+    list-style-type: none;
+    margin: auto;
+    padding: 0;
+    /* justify-content: flex-start */
+   
+}
+.productUl li{
+   width: 70%;
+    margin: .5rem 0;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.productUl li input{
+    width: 30%;
+    border:rgb(235, 145, 145) solid 1px;
+    border-radius: 5px;
+}
+
+.productUl li button{
+   border: 0;
+   border-radius:  1rem;
+   background-color:rgb(235, 145, 145);
+   color: white;
+}
+
+.SQForm h6 input{
+    width: 30%;
+    border:rgb(235, 145, 145) solid 1px;
+    border-radius: 5px;
+}
+.SQForm h6 strong{
+    font-family: "Helvetica Neue",Helvetica,Arial;
+} 
+
+.SQForm{
+    width: 80%;
+}
+

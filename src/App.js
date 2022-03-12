@@ -10,6 +10,7 @@ import { If, Then, Else } from 'react-if'
 import { useTranslation } from 'react-i18next';
 import { Rings } from 'react-loader-spinner'
 import {getParentCategoriesHandler,getChildCategoriesHandler,getGrandChildCategoriesHandler} from './store/category'
+import { current } from '@reduxjs/toolkit';
 
 
 const loading = (
@@ -69,9 +70,10 @@ const App = props => {
    
     if (props.login.loggedIn) {
       // props.getUser(token)
-      history.push(currentPath || '/')
+      history.push(currentPath === '/login'? '/' : currentPath )
        setLoad(false)
     }else if (!props.login.loggedIn && !token) {
+      cookie.save('current_path', '/login')
       history.push('/login')
       setLoad(false)
     } 
