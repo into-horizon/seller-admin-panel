@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -27,7 +27,7 @@ const Login = (props) => {
   const [load, setLoad] = useState(true)
   const { login, loginHandler } = props
   const { showAlert } = usePopup();
-  const history = useHistory()
+  const navigate = useNavigate()
   const submitHandler = (e) => {
     setLoad(true)
     e.preventDefault()
@@ -36,13 +36,13 @@ const Login = (props) => {
   let currentPath = cookie.load('current_path')
   useEffect(() => {
     if (login.loggedIn) {
-      history.push(currentPath || '/')
+      navigate(currentPath === '/login'? '/' : currentPath)
     }
     setLoad(false)
   }, [])
   useEffect(() => {
     if (login.loggedIn) {
-      history.push(currentPath || '/')
+      navigate(currentPath === '/login'? '/' : currentPath)
     }
   }, [login.loggedIn])
   useEffect(() => {
@@ -54,7 +54,7 @@ const Login = (props) => {
           text: login.message
         });
         setLoad(false)
-      } else {
+      } else if(login.message.includes('unauthorized')) {
         if (login.message) {
           showAlert({
             title: "unauthorized",
@@ -63,10 +63,20 @@ const Login = (props) => {
           });
           setLoad(false)
         }
+      } else if(login.message.includes('verified')){
+        showAlert({
+          title: "Verified",
+          type: DialogType.INFO,
+          text: `${login.message}, please login now`
+        });
+        setLoad(false)
       }
       dispatch(deleteMessage())
     }
   }, [login.message])
+ useEffect(() => {
+  cookie.save('current_path', window.location.pathname, {path: '/'})
+ },[])
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>

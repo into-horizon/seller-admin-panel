@@ -6,7 +6,7 @@ import Product from '../services/ProductService';
 
 const products = createSlice({
     name: 'products',
-    initialState : {message: '', product: [], currentProducts: {count: 0, products: []}},
+    initialState : {message: '', product: [], currentProducts: {count: 0, products: [], searchData: [], searched: {}}},
     reducers: {
         addProduct(state, action){
             return {...state, message: action.payload.message, products: [...state.product, action.payload.result]}
@@ -22,6 +22,16 @@ const products = createSlice({
         }, 
         deleteProductPicture(state, action){
             return {...state, message: action.payload.message, currentProducts: {...state.currentProducts, products:action.payload.result}}
+        },
+        updateProduct(state, action){
+            return {...state, message: action.payload.message, currentProducts:{...state.currentProducts, products:action.payload.result}}
+        }, 
+        addSearchData(state, action){
+            return {...state, message: action.payload.message, currentProducts:{...state.currentProducts, searchData: action.payload.result}}
+        },
+        addSearchedProduct(state, action){
+            return {...state, message: action.payload.message, currentProducts:{...state.currentProducts, searched: action.payload.result}}
+        
         }
     }
 })
@@ -95,5 +105,93 @@ export const deleteProductPictureHandler = payload => async (dispatch, state) =>
         dispatch(errorMessage(() =>{return{message: error.message}}))
     }
 }
+export const updateSizeAndQuantity = payload => async (dispatch, state) => {
+    try {
+        let {result, message, status} = await Product.updateSizeAndQuantity(payload)
+        if(status === 200){
+            let newProducts = [...state().products.currentProducts.products].map(val => {
+                if( val.id === result.id){
+                    let product = {...val}
+                    product['size'] = result.size
+                    product['quantity'] = result.quantity
+                    
+                    return product
+                }   else return val 
+               
+            })
+            dispatch(updateProduct({result:[...newProducts], message: 'updated'}))
+        } else {
+            dispatch(errorMessage({message: {result, message, status}}))
+        }
+    } catch (error) {
+        dispatch(errorMessage(() =>{return{message: error.message}}))  
+    }
+}
+
+
+
+export const updateDiscount = payload => async (dispatch, state) => {
+    try {
+        let {result, message, status} = await Product.updateDiscount(payload)
+        if (status === 200){
+            let newProducts = [...state().products.currentProducts.products].map(val => {
+                if( val.id === result.id){
+                    let product = {...val}
+                    product['discount'] = result.discount
+                    product['discount_rate'] = result.discount_rate
+                   
+                    return product
+                }   else return val 
+               
+            })
+            dispatch(updateProduct({result:[...newProducts], message: 'updated'}))
+        } else {
+            dispatch(errorMessage({message: {result, message, status}}))
+        }
+    } catch (error) {
+        dispatch(errorMessage(() =>{return{message: error.message}}))  
+    }
+}
+export const getSearchDataHandler = payload => async (dispatch, state) => {
+    try {
+        let {data, status} = await Product.getSearchData(payload)
+        if(status === 200){
+            dispatch(addSearchData({message: 'searchData', result: data}))
+        } else {
+            dispatch(errorMessage({message: {data, status}}))
+        }
+    } catch (error) {
+        dispatch(errorMessage(() =>{return{message: error.message}}))  
+    }
+}
+
+export const getSearchedProductHandler = payload => async (dispatch, state) => {
+    try {
+        let product = await Product.getProduct(payload)
+       
+        if(product.id){
+            dispatch(addSearchedProduct({message: 'searchedProduct', result: product}))
+        } else {
+            dispatch(errorMessage({message:product}))
+        }
+    } catch (error) {
+        
+        dispatch(errorMessage(() =>{return{message: error.message}}))  
+    }
+}
+
+export const updateProductHandler = payload => async (dispatch, state) => {
+    try {
+        let {message, result, status} = await Product.updateProduct(payload)
+        if(status === 200){
+            dispatch(addSearchedProduct({message: 'product updated', result: {}}))
+        } else{
+            dispatch(errorMessage({message:{message, result, status}}))
+        }
+        
+    } catch (error) {
+        dispatch(errorMessage(() =>{return{message: error.message}}))  
+    }
+}
 export default products.reducer
-export const {addProduct,errorMessage,getProducts,addProductPicture,deleteProductPicture} = products.actions
+export const {addProduct,errorMessage,getProducts,addProductPicture,deleteProductPicture,updateProduct,addSearchData,addSearchedProduct} = products.actions

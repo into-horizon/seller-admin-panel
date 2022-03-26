@@ -22,6 +22,7 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import cookie from 'react-cookies';
+import {Link} from 'react-router-dom'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { logout } from 'src/store/auth'
@@ -73,10 +74,13 @@ const AppHeaderDropdown = (props) => {
           </CBadge>
         </CDropdownItem>
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
-        <CDropdownItem href="#/profile">
+        {/* <CDropdownItem href="" >
+        </CDropdownItem> */}
+          <Link to="/profile" className="dropdown-item">
           <CIcon icon={cilUser} className="me-2" />
           Profile
-        </CDropdownItem>
+
+          </Link>
         <CDropdownItem href="#">
           <CIcon icon={cilSettings} className="me-2" />
           Settings

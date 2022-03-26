@@ -33,4 +33,32 @@ export default class Auth extends ApiService {
             return error
         }
     }
+
+    async createStore(data){
+        try {
+            let response = await this.post(`${this.path}/email`, data, {'Content-Type': 'multipart/form-data'})
+            return response
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async verifyEmail(data){
+        try {
+            let response = await this.post(`${this.path}/verifyEmail`, data)
+            return response
+            
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async updateCode(data){
+        try {
+            let response = await this.post(`${this.path}/updateCode`, data)
+            return response
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }

@@ -59,17 +59,20 @@ export default class ApiService {
     return { Authorization: ` Basic ${btoa(`${data.email}:${data.password}`)}` }
   }
   async token() {
-    let token = cookie.load('access_token')
-
+    let token = cookie.load('access_token', {path:'/'})
+    
     if (!isJwtExpired(token)) return token
-    else if (isJwtExpired(cookie.load('refresh_token'))) {
+    else if (isJwtExpired(cookie.load('refresh_token'), {path: '/'}) || cookie.load('refresh_token') ===  'undefined') {
       endSession()
     }
     else {
-      let result = await this.post('auth/refresh', null, this.bearer(cookie.load('refresh_token')))
-      cookie.save('access_token', result.access_token)
-      cookie.save('refresh_token', result.refresh_token)  
-      return result.access_token
+     
+      let {refresh_token,access_token, status,session_id} = await this.post('auth/refresh', null, this.bearer(cookie.load('refresh_token'), {path: '/'}))
+      if(status ===200){
+        cookie.save('access_token', access_token,{path: '/'})
+        cookie.save('refresh_token', refresh_token,{path: '/'})  
+        return access_token
+      } else endSession()
     }
   }
   // token(){

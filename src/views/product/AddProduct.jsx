@@ -6,7 +6,7 @@ import { useSelector, connect, useDispatch } from 'react-redux';
 import { addProductHandler , errorMessage } from 'src/store/product';
 import { usePopup, DialogType, AnimationType, ToastPosition } from "react-custom-popup";
 import { useTranslation } from 'react-i18next';
-// import { CRow } from '@coreui/react-pro';
+
 const AddProduct = props => {
     const dispatch = useDispatch()
     const { showOptionDialog, showToast, showAlert } = usePopup();

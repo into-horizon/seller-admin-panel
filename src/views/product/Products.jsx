@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { CNav, CNavItem, CNavLink, CTabContent, CTabPane } from '@coreui/react'
 import ProductsRender from 'src/components/ProductsRender';
 import cookie from 'react-cookies'
+import { useTranslation } from 'react-i18next';
+
 const Products = props => {
     const [activeKey, setActiveKey] = useState(cookie.load('status') || 'approved')
+    const { t, i18n } = useTranslation('translation', { keyPrefix: 'addProduct' });
 
 
     const changeStatus = (e,status) =>{
@@ -13,17 +16,16 @@ const Products = props => {
     }
     return (
         <div className="products">
-            <h3>Your Products</h3>
+            <h2>{t('yourProducts')}</h2>
+            <hr />
             <CNav variant="pills" role="tablist">
                 <CNavItem>
                     <CNavLink
                         href=""
                         active={activeKey === 'approved'}
                         onClick={(e) => changeStatus(e, 'approved')}
-                     
-
                     >
-                       Approved
+                      {t('approved')}
                     </CNavLink>
                 </CNavItem>
                 <CNavItem>
@@ -32,7 +34,7 @@ const Products = props => {
                         active={activeKey === 'pending'}
                         onClick={(e) => changeStatus(e, 'pending')}
                     >
-                        Pending
+                         {t('pending')}
                     </CNavLink>
                 </CNavItem>
                 <CNavItem>
@@ -41,7 +43,7 @@ const Products = props => {
                         active={activeKey === 'rejected'}
                         onClick={(e) => changeStatus(e, 'rejected')}
                     >
-                        Rejected
+                          {t('rejected')}
                     </CNavLink>
                 </CNavItem>
             </CNav>
