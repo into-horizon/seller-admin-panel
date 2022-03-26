@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import store from './store/index'
 import './i18next';
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 const loading = (
   <div className="pt-3 text-center">
@@ -16,13 +16,13 @@ const loading = (
 )
 ReactDOM.render(
   <Provider store={store}>
-    <HashRouter>
+    <Router>
       <Suspense fallback={loading}>
         <App />
-
+      
       </Suspense>
 
-    </HashRouter>
+    </Router>
   </Provider>,
   document.getElementById('root'),
 )

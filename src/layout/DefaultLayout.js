@@ -1,21 +1,21 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
 const DefaultLayout = (props) => {
   const {login} = props
-  const history = useHistory()
-  useEffect(() => {
-    if(!login.loggedIn){
-      history.push('/login')
-    }
-  },[])
-  useEffect(() => {
-    if(!login.loggedIn){
-      history.push('/login')
-    }
-  },[login.loggedIn])
+  const history = useNavigate()
+  // useEffect(() => {
+  //   if(!login.loggedIn){
+  //     history.push('/login')
+  //   }
+  // },[])
+  // useEffect(() => {
+  //   if(!login.loggedIn){
+  //     history.push('/login')
+  //   }
+  // },[login.loggedIn])
 
 
   return (
@@ -24,6 +24,7 @@ const DefaultLayout = (props) => {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
         <div className="body flex-grow-1 px-3">
+          
           <AppContent />
         </div>
         <AppFooter />

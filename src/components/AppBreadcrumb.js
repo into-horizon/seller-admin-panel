@@ -10,7 +10,7 @@ const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
 
   const getRouteName = (pathname, routes) => {
-    cookie.save('current_path', pathname)
+    cookie.save('current_path', pathname, {path: '/'})
     const currentRoute = routes.find((route) => route.path === pathname)
     return currentRoute.name
   }

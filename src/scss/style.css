@@ -1,3 +1,7 @@
+h1,h2,h3,h4,h5,h6, strong, span, th, td,{
+    text-transform: capitalize;
+}
+
 .storeImageUpdate{
     margin: 2rem 0;
     display: flex;
@@ -209,12 +213,29 @@
     justify-content:space-between;
     flex-direction: row;
 }
-.productbtns .productbtn:nth-child(1){
-    width: 20%;
+.productbtns .productbtn:nth-child(1) {
+    width: 26%;
     /* display: flex;
     align-items:center;
     flex-direction: column; */
 }
+.productbtn:nth-child(2){
+    max-width: 50%;
+  
+  
+}
+.productbtn:nth-child(2) form{
+   width: 100%;
+   
+}
+
+.productbtn:nth-child(2) form fieldset{
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* justify-content: space-between;  */
+    
+ }
+
 
 .productStatusHead{
     padding: 1rem;
@@ -222,7 +243,7 @@
 .discountForm{
     width: 100%;
     flex-direction: column;
-    
+    margin-top: 1rem;
    
 }
 .fieldset{
@@ -231,12 +252,20 @@
    border-style: solid;
    border-color: black;
    border-radius: 1rem;
+   background-color:rgb(202, 182, 182);
 }
 
 .legend{
     float: none !important;
     width: inherit;
     margin: 0 1rem;
+    border: 1px solid black;
+    border-radius: 1rem;
+    background-color:#fff;
+    font-size: medium;
+    font-weight: bold;
+   
+    padding: .5rem;
 }
 .discounRate{
     width: 40%;
@@ -262,7 +291,7 @@
 .productUl{
     list-style-type: none;
     margin: auto;
-    padding: 0;
+    padding: 0 1rem;
     /* justify-content: flex-start */
    
 }
@@ -296,7 +325,19 @@
     font-family: "Helvetica Neue",Helvetica,Arial;
 } 
 
-.SQForm{
-    width: 80%;
+.SQForm h6{
+   text-align: center;
 }
 
+.SQForm{
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.addOwnSizes{
+    margin: auto 1rem;
+    border: 1px solid #fff;
+    padding: 1rem;
+    border-radius: 1rem;
+    width: 100%;
+}
