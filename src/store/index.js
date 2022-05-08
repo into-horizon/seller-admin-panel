@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import login from './auth'
 import category from './category'
 import products from './product'
+import address from './address'
 const initialState = {
   sidebarShow: true,
 }
@@ -21,7 +22,7 @@ const changeState = (state = initialState, { type, ...rest }) => {
   }
 }
 
-const reducers = combineReducers({changeState, login:login, category: category, products:products})
+const reducers = combineReducers({changeState, login:login, category: category, products:products,address:address })
 
 const store = configureStore({reducer: reducers, middleware: (getDefaultMiddleware) => getDefaultMiddleware(),}, applyMiddleware(thunk))
 export default store

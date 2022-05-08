@@ -82,6 +82,14 @@ class ProductService extends ApiService {
             throw new Error(error.message);
         }
     }
+    async deleteProduct(data) {
+        try {
+            let res = await this.delete(`${this.path}`, {id:data}, this.bearer(await this.token()))
+            return res
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
     
 
 }

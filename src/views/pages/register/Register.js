@@ -13,20 +13,23 @@ import {
   CFormLabel
 } from '@coreui/react'
 import { loginHandler, deleteMessage } from '../../../store/auth'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePopup, DialogType } from "react-custom-popup";
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilApplications, cilLocationPin, cilDescription, cilShortText, cilImagePlus } from '@coreui/icons'
 import { createStoreHandler } from '../../../store/auth'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import cookie from 'react-cookies'
+import { useTranslation } from 'react-i18next';
 
 
 const Register = (props) => {
+  const { t, i18n } = useTranslation('translation', { keyPrefix: 'register' });
   const dispatch = useDispatch()
   const { showAlert } = usePopup();
   const { user, message, loggedIn } = useSelector((state) => state.login)
   const { createStoreHandler } = props
+  const navigate = useNavigate()
   const submitHandler = e => {
     e.preventDefault();
     let obj = {
@@ -57,16 +60,16 @@ const Register = (props) => {
     if (message) {
       if (message.includes('not')) {
         showAlert({
-          title: message,
+          title: t(`notTitle`),
           type: DialogType.WARNING,
-          text: `there's no account associated with this email`
+          text: t(`notText`)
         });
       } else if (message.includes('exists')) {
         if (message) {
           showAlert({
-            title: message,
+            title: t(`existsTitle`),
             type: DialogType.WARNING,
-            text: 'you already have a seller account associated with this email'
+            text: t(`existsText`)
           });
         }
       }
@@ -75,7 +78,12 @@ const Register = (props) => {
   }, [message])
 
   useEffect(() => {
-    cookie.save('current_path', window.location.pathname, {path: '/'})
+    if (loggedIn) {
+      navigate('/')
+    } else {
+      cookie.save(`current_path${sessionStorage.tabID}`, window.location.pathname, { path: '/' })
+
+    }
   }, [])
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -85,17 +93,17 @@ const Register = (props) => {
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm onSubmit={submitHandler}>
-                  <h1>Register</h1>
-                  <p className="text-medium-emphasis">Create your account</p>
+                  <h1>{t('register')}</h1>
+                  <p className="text-medium-emphasis">{t('createAccount')}</p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Store Name" id="storeName" />
+                    <CFormInput placeholder={t('storeName')} id="storeName" />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Your horizon account email" autoComplete="email" id='email' />
+                    <CFormInput placeholder={t('yourEmail')} autoComplete="email" id='email' />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -103,9 +111,9 @@ const Register = (props) => {
                     </CInputGroupText>
                     <CFormInput
                       type="text"
-                      placeholder="City"
+                      placeholder={"City"}
                       autoComplete="home city"
-                      value="Amman"
+                      value={t('amman')}
                       readOnly
                       id="city"
                     />
@@ -116,9 +124,10 @@ const Register = (props) => {
                     </CInputGroupText>
                     <CFormInput
                       type="tel"
-                      placeholder="Mobile Number"
+                      placeholder={t('mobileNumber')}
                       autoComplete="phone"
                       id="mobile"
+                      className={`no${i18n.language}`}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -127,7 +136,7 @@ const Register = (props) => {
                     </CInputGroupText>
                     <CFormInput
                       type="text"
-                      placeholder="Caption"
+                      placeholder={t('caption')}
                       id='caption'
                     />
                   </CInputGroup>
@@ -137,11 +146,11 @@ const Register = (props) => {
                     </CInputGroupText>
                     <CFormInput
                       type="text"
-                      placeholder="About"
+                      placeholder={t('about')}
                       id='about'
                     />
                   </CInputGroup>
-                  <CFormLabel htmlFor="formFile">Choose a picture to your store</CFormLabel>
+                  <CFormLabel htmlFor="formFile">{t('choosePic')}</CFormLabel>
                   <CInputGroup className="mb-4">
                     <CInputGroupText>
                       <CIcon icon={cilImagePlus} />
@@ -149,22 +158,25 @@ const Register = (props) => {
                     <CFormInput type="file" id="formFile" />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton type="submit" color="success">Create Account</CButton>
+                    <CButton type="submit" color="success">{t('createBtn')}</CButton>
                   </div>
                 </CForm>
                 <div style={{ margin: '1rem auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ margin: '0 1rem'}}>
+                  <span style={{ margin: '0 1rem' }}>
 
-                    you already have an account
+                    {t('alreadyRegistered')}
                   </span>
-                  <Link to='/login' style={{textDecoration: 'none'}}>
+                  <Link to='/login' style={{ textDecoration: 'none' }}>
                     <strong>
 
-                    login
+                      {t('login')}
                     </strong>
                   </Link>
-
                 </div>
+                  <CRow>
+                    <CButton color='link' onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}>{i18n.language === 'en' ? 'عربي' : 'English'}</CButton>
+
+                  </CRow>
               </CCardBody>
             </CCard>
           </CCol>

@@ -25,18 +25,6 @@ const AppHeader = () => {
   const sidebarShow = useSelector((state) => state.changeState.sidebarShow)
   const { t, i18n } = useTranslation()
 
-  const langChange = () => {
-    let lang = localStorage.getItem('i18nextLng')
-    if (lang === 'en') {
-      i18n.changeLanguage('ar');
-      document.documentElement.setAttribute("lang", 'ar');
-      document.documentElement.setAttribute("dir", 'rtl');
-    } else {
-      i18n.changeLanguage('en');
-      document.documentElement.setAttribute("lang", 'en');
-      document.documentElement.setAttribute("dir", 'ltl');
-    }
-  }
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -62,7 +50,7 @@ const AppHeader = () => {
             <CNavLink href="#">Settings</CNavLink>
           </CNavItem>
         </CHeaderNav>
-      <CButton color="primary" onClick={langChange}>{t('lang')}</CButton>
+      <CButton color="primary" onClick={() =>i18n.changeLanguage(i18n.language === 'en'? 'ar': 'en')}>{t('lang')}</CButton>
         <CHeaderNav>
           <CNavItem>
             <CNavLink href="#">

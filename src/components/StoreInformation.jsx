@@ -25,6 +25,8 @@ const ProfileInfo = props => {
         delete newObj.store_rating
         delete newObj.access_token
         delete newObj.refresh_token
+        delete newObj.verification_code
+        delete newObj.verified_email
 
         setArr(arr => Object.keys(newObj))
     }
@@ -76,7 +78,9 @@ const ProfileInfo = props => {
         delete newObj.store_rating
         delete newObj.access_token
         delete newObj.refresh_token
-
+        delete newObj.verification_code
+        delete newObj.verified_email
+        
         setArr(arr => Object.keys(newObj))
     }, [])
 

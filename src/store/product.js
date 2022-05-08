@@ -15,7 +15,7 @@ const products = createSlice({
             return {...state, message: action.payload.message}
         },
         getProducts (state, action){
-            return {...state, message: action.payload.message, currentProducts: {count: action.payload.result.count, products: action.payload.result.result}}
+            return {...state, message: action.payload.message, currentProducts: {...state.currentProducts,count: action.payload.result.count, products: action.payload.result.result}}
         },
         addProductPicture(state, action){
             return {...state, message: action.payload.message, currentProducts: {...state.currentProducts, products:action.payload.result}}
@@ -32,6 +32,9 @@ const products = createSlice({
         addSearchedProduct(state, action){
             return {...state, message: action.payload.message, currentProducts:{...state.currentProducts, searched: action.payload.result}}
         
+        },
+        deleteProduct(state, action){
+            return {...state, message: action.payload.message, currentProducts:{...state.currentProducts, products: action.payload.result, count: action.payload.count}}
         }
     }
 })
@@ -167,7 +170,7 @@ export const getSearchDataHandler = payload => async (dispatch, state) => {
 
 export const getSearchedProductHandler = payload => async (dispatch, state) => {
     try {
-        let product = await Product.getProduct(payload)
+        let {status,product} = await Product.getProduct(payload)
        
         if(product.id){
             dispatch(addSearchedProduct({message: 'searchedProduct', result: product}))
@@ -193,5 +196,18 @@ export const updateProductHandler = payload => async (dispatch, state) => {
         dispatch(errorMessage(() =>{return{message: error.message}}))  
     }
 }
+
+export const deleteProductHandler = payload => async (dispatch, state) => {
+    try {
+        let res = await Product.deleteProduct(payload)
+        if(res.includes('deleted')){
+            let results = state().products.currentProducts.products.filter(product => product.id !== payload)
+            console.log("🚀 ~ file: product.js ~ line 205 ~ deleteProductHandler ~ results", results)
+            dispatch(deleteProduct({message: res, result: results, count:state().products.currentProducts.count - 1 }))
+        }
+    } catch (error) {
+        dispatch(errorMessage(() =>{return{message: error.message}}))  
+    }
+}
 export default products.reducer
-export const {addProduct,errorMessage,getProducts,addProductPicture,deleteProductPicture,updateProduct,addSearchData,addSearchedProduct} = products.actions
+export const {addProduct,errorMessage,getProducts,addProductPicture,deleteProductPicture,updateProduct,addSearchData,addSearchedProduct,deleteProduct} = products.actions
