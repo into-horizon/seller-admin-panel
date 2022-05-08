@@ -81,10 +81,15 @@ const AppHeaderDropdown = (props) => {
           Profile
 
           </Link>
-        <CDropdownItem href="#">
+          <Link to="/settings" className="dropdown-item">
           <CIcon icon={cilSettings} className="me-2" />
           Settings
-        </CDropdownItem>
+
+          </Link>
+        {/* <CDropdownItem href="#">
+          <CIcon icon={cilSettings} className="me-2" />
+          Settings
+        </CDropdownItem> */}
         <CDropdownItem href="#">
           <CIcon icon={cilCreditCard} className="me-2" />
           Payments
@@ -100,7 +105,7 @@ const AppHeaderDropdown = (props) => {
           </CBadge>
         </CDropdownItem> 
         <CDropdownDivider />
-        <CDropdownItem href="" onClick={(e ) =>{ e.preventDefault();logout()}}>
+        <CDropdownItem href="" onClick={(e) =>{ e.preventDefault();logout()}}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Logout
         </CDropdownItem>

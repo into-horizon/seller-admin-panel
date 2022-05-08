@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, connect, useDispatch } from 'react-redux';
 import { CPaginationItem, CPagination, CButton, CSpinner, CFormCheck, CFormInput, CFormLabel, CRow, CCol } from '@coreui/react'
-import { getProductsByStatusHandler, addProductPictureHandler, deleteProductPictureHandler } from 'src/store/product';
+import { getProductsByStatusHandler, addProductPictureHandler, deleteProductPictureHandler,deleteProductHandler } from 'src/store/product';
 import { If, Then, Else } from 'react-if'
 import { useTranslation } from 'react-i18next';
 import { errorMessage } from '../store/product'
@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateSizeAndQuantity, updateDiscount } from '../store/product'
 
 const ProductsRender = props => {
-    const { updateSizeAndQuantity, updateDiscount } = props;
+    const { updateSizeAndQuantity, updateDiscount,deleteProductHandler } = props;
     let sizeSymbols = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
     let sizeNumbers = []
     if (sizeNumbers.length === 0) {
@@ -186,7 +186,7 @@ const ProductsRender = props => {
         e.preventDefault()
         setActiveForm(e.target.id)
         updateDiscount({ id: id, discount: discount.discount, discount_rate: discount.discountRate })
-
+        setDisabledBtn({ ...disabledBtn, discountBtn: false })
     }
 
     const addOwnSizes = () => {
@@ -212,14 +212,13 @@ const ProductsRender = props => {
     useEffect(() => {
         if (products.message && products.message.includes('success')) {
             setLoading(false)
-            dispatch(errorMessage({ message: '' }))
         } else if (products.message && products.message.includes('updated')) {
             document.getElementById(activeForm).style.display = 'none'
             setSQLoad(false)
             setSizes(initialState.sizes)
             setDisabledBtn({ ...disabledBtn, SQBtn: false })
-            dispatch(errorMessage({ message: '' }))
         }
+        dispatch(errorMessage({ message: '' }))
     }, [products.message])
     return (
         <div className="productsRender">
@@ -319,6 +318,9 @@ const ProductsRender = props => {
                                     </div>
                                 </fieldset>
                             </form>
+                        </div>
+                        <div className="productbtn">
+                            <CButton color="danger" onClick={() =>deleteProductHandler(product.id)}>Delete</CButton>
                         </div>
                         <div className="productbtn">
                             <CButton color="success" className="SQBtn" disabled={disabledBtn.SQBtn} onClick={() => updateSQ(product.id, product.size)}>{t('EditSQ')}</CButton>
@@ -422,5 +424,5 @@ const mapStateToProps = (state) => ({
 
 })
 
-const mapDispatchToProps = { getProductsByStatusHandler, addProductPictureHandler, deleteProductPictureHandler, updateSizeAndQuantity, updateDiscount }
+const mapDispatchToProps = { getProductsByStatusHandler, addProductPictureHandler, deleteProductPictureHandler, updateSizeAndQuantity, updateDiscount,deleteProductHandler }
 export default connect(mapStateToProps, mapDispatchToProps)(ProductsRender)

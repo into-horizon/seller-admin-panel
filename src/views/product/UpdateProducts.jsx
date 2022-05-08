@@ -128,15 +128,17 @@ const UpdateProduct = (props) => {
         }
     }, [currentProducts.searched, i18n.language])
     useEffect(() => {
-        if(message && message.includes('updated')){
-            showToast({
-                type: DialogType.SUCCESS,
-                text: 'updated successfully',
-                timeoutDuration: 3000,
-                showProgress: true,
-                position: ToastPosition[t('position')]
-            })
-            
+        if(message){
+            console.log("🚀 ~ file: UpdateProducts.jsx ~ line 132 ~ useEffect ~ message", message)
+            if(message && message.includes('updated')){
+                showToast({
+                    type: DialogType.SUCCESS,
+                    text: 'updated successfully',
+                    timeoutDuration: 3000,
+                    showProgress: true,
+                    position: ToastPosition[t('position')]
+                })
+            }
         }
         dispatch(errorMessage({ message: '' }))
     },[message])

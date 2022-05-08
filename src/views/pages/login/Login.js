@@ -17,12 +17,14 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { If, Then, Else } from 'react-if'
-import { loginHandler,deleteMessage } from '../../../store/auth'
-import { connect , useDispatch } from 'react-redux'
+import { loginHandler, deleteMessage } from '../../../store/auth'
+import { connect, useDispatch } from 'react-redux'
 import { usePopup, DialogType } from "react-custom-popup";
 import cookie from 'react-cookies'
+import { useTranslation } from 'react-i18next';
 
 const Login = (props) => {
+  const { t, i18n } = useTranslation('translation', { keyPrefix: 'login' });
   const dispatch = useDispatch()
   const [load, setLoad] = useState(true)
   const { login, loginHandler } = props
@@ -36,17 +38,17 @@ const Login = (props) => {
   let currentPath = cookie.load('current_path')
   useEffect(() => {
     if (login.loggedIn) {
-      navigate(currentPath === '/login'? '/' : currentPath)
+      navigate(currentPath === '/login' ? '/' : currentPath)
     }
     setLoad(false)
   }, [])
   useEffect(() => {
     if (login.loggedIn) {
-      navigate(currentPath === '/login'? '/' : currentPath)
+      navigate(currentPath === '/login' ? '/' : currentPath)
     }
   }, [login.loggedIn])
   useEffect(() => {
-    if(login.message){
+    if (login.message) {
       if (login.message.includes('password')) {
         showAlert({
           title: "incorrect credentials",
@@ -54,7 +56,7 @@ const Login = (props) => {
           text: login.message
         });
         setLoad(false)
-      } else if(login.message.includes('unauthorized')) {
+      } else if (login.message.includes('unauthorized')) {
         if (login.message) {
           showAlert({
             title: "unauthorized",
@@ -63,7 +65,7 @@ const Login = (props) => {
           });
           setLoad(false)
         }
-      } else if(login.message.includes('verified')){
+      } else if (login.message.includes('verified')) {
         showAlert({
           title: "Verified",
           type: DialogType.INFO,
@@ -74,9 +76,9 @@ const Login = (props) => {
       dispatch(deleteMessage())
     }
   }, [login.message])
- useEffect(() => {
-  cookie.save('current_path', window.location.pathname, {path: '/'})
- },[])
+  useEffect(() => {
+    cookie.save(`current_path${sessionStorage.tabID}`, window.location.pathname, { path: '/' })
+  }, [])
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -86,13 +88,13 @@ const Login = (props) => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm onSubmit={submitHandler}>
-                    <h1>Login</h1>
-                    <p className="text-medium-emphasis">Sign In to your account</p>
+                    <h1>{t('login')}</h1>
+                    <p className="text-medium-emphasis">{t('signin')}</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="email" name="email" />
+                      <CFormInput placeholder={t('email')} autoComplete="email" name="email" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -100,7 +102,7 @@ const Login = (props) => {
                       </CInputGroupText>
                       <CFormInput
                         type="password"
-                        placeholder="Password"
+                        placeholder={t('password')}
                         autoComplete="current-password"
                         name="password"
                       />
@@ -113,7 +115,7 @@ const Login = (props) => {
                           </Then>
                           <Else>
                             <CButton color="primary" className="px-4" type="submit">
-                              Login
+                              {t('login')}
                             </CButton>
 
                           </Else>
@@ -121,9 +123,12 @@ const Login = (props) => {
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
-                          Forgot password?
+                          {t('forgotPassword')}
                         </CButton>
                       </CCol>
+                    </CRow>
+                    <CRow>
+                        <CButton color='link' onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}>{i18n.language === 'en' ? 'عربي' : 'English'}</CButton>
                     </CRow>
                   </CForm>
                 </CCardBody>
@@ -131,14 +136,13 @@ const Login = (props) => {
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
+                    <h2>{t('signup')}</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      {t('registerText')}
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
+                        {t('registerNow')}
                       </CButton>
                     </Link>
                   </div>

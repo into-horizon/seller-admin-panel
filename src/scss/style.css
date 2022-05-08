@@ -1,5 +1,27 @@
-h1,h2,h3,h4,h5,h6, strong, span, th, td,{
+h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-letter{
     text-transform: capitalize;
+}
+
+.mrgn50 {
+    margin: 50px 0;
+}
+/* ::-webkit-input-placeholder {
+    text-align: center;
+  } */
+
+  .noen::placeholder{
+      text-align: left;
+  }
+  .noar::placeholder{
+    text-align: right;
+}
+
+.noen{
+    text-align: left;
+}
+
+.noar{
+    text-align: right;
 }
 
 .storeImageUpdate{

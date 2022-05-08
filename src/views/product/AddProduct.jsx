@@ -3,7 +3,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import { CFormSelect, CFormLabel, CFormText, CFormCheck, CFormInput, CButton, CFormFloating, CFormTextarea, CFormFeedback, CCol, CForm, CRow, CInputGroup, CInputGroupText } from '@coreui/react'
 import { If, Then, Else } from 'react-if'
 import { useSelector, connect, useDispatch } from 'react-redux';
-import { addProductHandler , errorMessage } from 'src/store/product';
+import { addProductHandler, errorMessage } from 'src/store/product';
 import { usePopup, DialogType, AnimationType, ToastPosition } from "react-custom-popup";
 import { useTranslation } from 'react-i18next';
 
@@ -25,9 +25,9 @@ const AddProduct = props => {
 
     const initialState = {
         values: [],
-        secondCategory : { visible: false},
-        thirdCategory: {visible: false, selected: false, add: false, select: true},
-        sizes: {visible: false, add: false},
+        secondCategory: { visible: false },
+        thirdCategory: { visible: false, selected: false, add: false, select: true },
+        sizes: { visible: false, add: false },
         selectedSizes: [],
         sizesDetails: [],
         discount: { hasDiscount: false, discountRate: 0 }
@@ -68,7 +68,7 @@ const AddProduct = props => {
             ardescription: e.target.ardescription.value,
             parent_category_id: e.target.parentCategory.value,
             child_category_id: e.target.childCategory.value,
-            grandchild_category_id: e.target.grandChildCategory.value === 'default' ? null :e.target.grandChildCategory.value ,
+            grandchild_category_id: e.target.grandChildCategory.value === 'default' ? null : e.target.grandChildCategory.value,
             size: sizesDetails.length > 0 ? JSON.stringify(sizesDetails) : null,
             discount: discount.hasDiscount,
             discount_rate: discount.discountRate,
@@ -84,7 +84,7 @@ const AddProduct = props => {
                 animationType: AnimationType.ZOOM_IN,
             })
         }
-        if(obj.parent_category_id === 'default' || obj.child_category_id === 'default'  || (obj.grandchild_category_id === 'default' && thirdCategory.selected )){
+        if (obj.parent_category_id === 'default' || obj.child_category_id === 'default' || (obj.grandchild_category_id === 'default' && thirdCategory.selected)) {
             return showAlert({
                 type: DialogType.WARNING,
                 text: t('categoryText'),
@@ -136,10 +136,10 @@ const AddProduct = props => {
                 position: ToastPosition[t('position')]
             })
             productForm.reset()
-            setSecondCategory({...secondCategory,...initialState.secondCategory})
-            setThirdCategory({...thirdCategory,...initialState.thirdCategory})
-            setSizes({...sizes, ...initialState.sizes})
-            setDiscount({...discount, ...initialState.discount})
+            setSecondCategory({ ...secondCategory, ...initialState.secondCategory })
+            setThirdCategory({ ...thirdCategory, ...initialState.thirdCategory })
+            setSizes({ ...sizes, ...initialState.sizes })
+            setDiscount({ ...discount, ...initialState.discount })
         } else if (products.message.includes('something')) {
             showAlert({
                 type: DialogType.DANGER,
@@ -155,9 +155,9 @@ const AddProduct = props => {
                 showProgress: true,
             })
         }
-        dispatch(errorMessage({message: ''}))
+        dispatch(errorMessage({ message: '' }))
     }, [products.message])
-    
+
     useEffect(() => {
         let labels = document.querySelectorAll('#label')
         if (i18n.language === 'ar') {
@@ -171,49 +171,106 @@ const AddProduct = props => {
         <>
 
             <h2>{t('add_product')}</h2>
-            
+
             <form id='productForm' className="productForm" onSubmit={submitHandler}>
                 <section className="productInputs">
-                    <div>
-                        <label>{t('englishTitle')}*</label>
-                        <input type="text" id="entitle" placeholder={t('englishTitle')} required />
-                    </div>
-                    <div>
-                        <label id="label">{t('arabicTitle')}*</label>
-                        <input type="text" id="artitle" placeholder={t('arabicTitle')} required />
-                    </div>
-                    <div>
-                        <label id="label">{t('metaTitle')}</label>
-                        < input type="text" id="metatitle" placeholder={t('metaTitle')} />
-                    </div>
-                    <div>
-                        <label >SKU</label>
-                        < input type="text" id="sku" placeholder="SKU" />
-                    </div>
-                    <div>
-                        <label id="label">{t('price')}*</label>
-                        < input type="number" id="price" placeholder={t('price')} step='0.01' required />
-                    </div>
-                    <div>
-                        <label id="label">{t('brandName')}</label>
-                        <input type="text" id="brandName" placeholder={t('brandName')} />
-                    </div>
-                    <div style={{ display: !sizes.visible ? 'inherit' : 'none' }}>
-                        <section className="quantity" >
-                            <section className="quantityInputs">
-                                <label>{t('quantity')}*</label>
-                                <input type="number" id="quantity" placeholder={t('quantity')} />
-
-                            </section>
-                            <label>{t('quantityLabel')}</label>
-                        </section>
-
-                    </div>
-
                 </section>
-                <div className='marginDiv'>
-                    <div className='description'>
+                <CRow xs={{ cols: 'auto' }}>
+                    <div className="row justify-content-md-center mrgn50">
+                        <CCol  >
+                            <CCol>
 
+                                <label>{t('englishTitle')}*</label>
+                            </CCol>
+                            <CCol>
+                                <input type="text" id="entitle" placeholder={t('englishTitle')} required />
+
+                            </CCol>
+
+                        </CCol>
+                        <CCol   >
+                            <CCol>
+                                <label >{t('arabicTitle')}*</label>
+
+                            </CCol>
+                            <CCol>
+                                <input type="text" id="artitle" placeholder={t('arabicTitle')} required />
+
+                            </CCol>
+                        </CCol>
+                        <CCol >
+                            <CCol>
+
+                                <label >{t('metaTitle')}</label>
+                            </CCol>
+                            <CCol>
+                                < input type="text" id="metatitle" placeholder={t('metaTitle')} />
+
+                            </CCol>
+                        </CCol>
+                        <CCol >
+                            <CCol>
+                                <label >SKU</label>
+
+                            </CCol>
+                            <CCol>
+
+                                < input type="text" id="sku" placeholder="SKU" />
+                            </CCol>
+                        </CCol>
+                        <CCol >
+                            <CCol>
+                                <label >{t('price')}*</label>
+
+                            </CCol>
+                            <CCol>
+                                < input type="number" className={`no${i18n.language}`} id="price" placeholder={t('price')} step='0.01' required />
+
+                            </CCol>
+                        </CCol>
+                        <CCol  >
+                            <CCol>
+                                <label >{t('brandName')}</label>
+
+                            </CCol>
+                            <CCol>
+                                <input type="text" id="brandName" placeholder={t('brandName')} />
+
+                            </CCol>
+                        </CCol>
+                        {!sizes.visible && <CCol sm="auto" >
+                            {/* <section className="quantity" >
+                                </section>
+                                <section className="quantityInputs">
+                            </section> */}
+                            {/* <CCol xs={12} md={12}> 
+                            </CCol> */}
+                            <CRow>
+
+                                <label>{t('quantity')}*</label>
+                            </CRow>
+                            <CRow>
+
+                                <input type="number" id="quantity" className={`no${i18n.language}`} placeholder={t('quantity')} />
+                            </CRow>
+                            <CRow>
+                                <label>{t('quantityLabel')}</label>
+
+                            </CRow>
+
+
+
+                        </CCol>}
+
+                    </div>
+                </CRow>
+
+                <div className="row justify-content-md-center mrgn50">
+                    <div className='description'>
+                    </div>
+
+
+                    <CCol md={6}>
                         <CFormFloating>
                             <CFormTextarea
                                 placeholder="Leave a comment here"
@@ -222,6 +279,8 @@ const AddProduct = props => {
                             ></CFormTextarea>
                             <CFormLabel htmlFor="floatingTextarea2" required>{t('englishDescrition')}*</CFormLabel>
                         </CFormFloating>
+                    </CCol>
+                    <CCol md={6}>
                         <CFormFloating>
                             <CFormTextarea
                                 placeholder="Leave a comment here"
@@ -230,8 +289,7 @@ const AddProduct = props => {
                             ></CFormTextarea>
                             <CFormLabel htmlFor="floatingTextarea3" required>{t('arabicDescription')}*</CFormLabel>
                         </CFormFloating>
-
-                    </div>
+                    </CCol>
 
                 </div>
                 <div className='marginDiv'>
@@ -364,7 +422,7 @@ const AddProduct = props => {
                         </section>
                     </CInputGroup>
 
-                <label>- * {t('required')}</label>
+                    <label>- * {t('required')}</label>
                 </section>
                 <CButton type="submit" color="primary">
                     {t('submit')}

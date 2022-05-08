@@ -10,6 +10,7 @@ import { If, Then, Else } from 'react-if'
 import { useTranslation } from 'react-i18next';
 import { Rings } from 'react-loader-spinner'
 import { getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler } from './store/category'
+import { getAddress} from './store/address'
 import { current } from '@reduxjs/toolkit';
 
 
@@ -32,11 +33,11 @@ const Verify = React.lazy(() => import('./views/pages/verify/verify'))
 const App = props => {
   const navigate = useNavigate()
 
-  const { getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler } = props
+  const { getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler,getAddress } = props
   const { t, i18n } = useTranslation();
   const [load, setLoad] = useState(true)
   let token = cookie.load('access_token')
-  let currentPath = cookie.load('current_path')
+  let currentPath = cookie.load(`current_path${sessionStorage.tabID}`)
   useEffect(() => {
     getParentCategoriesHandler()
     getChildCategoriesHandler()
@@ -55,10 +56,12 @@ const App = props => {
 
     if (!props.login.user.id && token) {
       props.getUser()
-
+      getAddress()
     }
-
-
+     let tabID = sessionStorage.tabID ? 
+     sessionStorage.tabID : 
+     sessionStorage.tabID = (Math.random() * 1000).toFixed(0);
+    cookie.save(`current_path${sessionStorage.tabID}`, window.location)
   }, [])
 
   useEffect(() => {
@@ -68,15 +71,27 @@ const App = props => {
       setLoad(false)
     } else if (!props.login.loggedIn && !token && !props.login.user.id) {
       let path =  cookie.load('current_path') === '/register'? cookie.load('current_path'): '/login'
-      cookie.save('current_path', path, {path: '/'})
+      cookie.save(`current_path${sessionStorage.tabID}`, path, {path: '/'})
       navigate(path)
       setLoad(false)
-    } else if (!props.login.user.verified_email){
+    } else if (props.login.user.verified_email === false) {
       navigate('/verify')
       setLoad(false)
     }
 
   }, [props.login.loggedIn, props.login.user])
+
+  useEffect(() =>{
+    if (i18n.language === 'en') {
+     
+      document.documentElement.setAttribute("lang", 'en');
+      document.documentElement.setAttribute("dir", 'ltl');
+    } else {
+      
+      document.documentElement.setAttribute("lang", 'ar');
+      document.documentElement.setAttribute("dir", 'rtl');
+    }
+  }, [i18n.language])
 
   return (
     <PopupProvider>
@@ -112,5 +127,5 @@ const mapStateToProps = (state) => ({
   login: state.login
 
 });
-const mapDispatchToProps = { getUser, getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler };
+const mapDispatchToProps = { getUser, getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler,getAddress };
 export default connect(mapStateToProps, mapDispatchToProps)(App)

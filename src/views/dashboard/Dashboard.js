@@ -17,6 +17,10 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CAccordion,
+  CAccordionItem,
+  CAccordionHeader,
+  CAccordionBody
 } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
@@ -42,7 +46,9 @@ import {
   cilPeople,
   cilUser,
   cilUserFemale,
+  cilWarning
 } from '@coreui/icons'
+import { useTranslation } from 'react-i18next';
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
@@ -50,11 +56,13 @@ import avatar3 from 'src/assets/images/avatars/3.jpg'
 import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
-
+import {useSelector} from 'react-redux'
 const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
 const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
 const Dashboard = () => {
+  const {message, user, loggedIn} = useSelector((state) => state.login)
+  const { t } = useTranslation('translation', { keyPrefix: 'dashboard' });
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
@@ -182,6 +190,24 @@ const Dashboard = () => {
 
   return (
     <>
+      {user.status !== 'approved' && <CAccordion flush>
+        <CAccordionItem itemKey={1}>
+          <CAccordionHeader>
+          <CIcon icon={cilWarning} />
+          <span style={{ margin: '0 0.5em' }}>
+            {user.status ==='pending' && t('pendingStatus')}
+            {user.status ==='rejected' && t('rejectedStatus')}
+          </span>
+          </CAccordionHeader>
+          <CAccordionBody>
+            {user.status === 'pending' && <p><strong>{t('moreInfo')}</strong>  <span>{t('pendingInfo')}</span></p> }
+            {user.status === 'rejected' && <p><strong>{t('rejectedReason')}: </strong>  <span>{user.rejected_reason}</span></p>}
+
+          </CAccordionBody>
+        </CAccordionItem>
+       
+      </CAccordion>}
+     <br />
       <WidgetsDropdown />
       <CCard className="mb-4">
         <CCardBody>

@@ -9,13 +9,13 @@ const category = createSlice({
     initialState : {parentCategories: [], childCategories: [], grandChildCategories: []},
     reducers: {
         getParentCategories(state,action){
-            return {...state, parentCategories: action.payload}
+            return {...state, parentCategories: action.payload.response}
         },
         getChildCategories(state,action){
-            return {...state, childCategories: action.payload}
+            return {...state, childCategories: action.payload.response}
         },
         getGrandChildCategories(state,action){
-            return {...state, grandChildCategories: action.payload}
+            return {...state, grandChildCategories: action.payload.response}
         },
     }
 })
