@@ -20,7 +20,9 @@ import {
   CAccordion,
   CAccordionItem,
   CAccordionHeader,
-  CAccordionBody
+  CAccordionBody,
+  CWidgetStatsF,
+  CWidgetStatsB
 } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
@@ -56,17 +58,24 @@ import avatar3 from 'src/assets/images/avatars/3.jpg'
 import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
 const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
 const Dashboard = () => {
-  const {message, user, loggedIn} = useSelector((state) => state.login)
+  const { message, user: { rejected_reason, status, ontime_orders, overall_orders, fulfilled_orders }, loggedIn } = useSelector((state) => state.login)
   const { t } = useTranslation('translation', { keyPrefix: 'dashboard' });
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
+  const colorLevel = n =>{
+    if ( n >= 80 ) return 'success'
+    else if ( n >= 60) return ''
+    else if ( n >= 50) return 'warning'
+    else return 'danger'
+    
+  }
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
     { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
@@ -190,25 +199,125 @@ const Dashboard = () => {
 
   return (
     <>
-      {user.status !== 'approved' && <CAccordion flush>
+      {status !== 'approved' && <CAccordion flush>
         <CAccordionItem itemKey={1}>
           <CAccordionHeader>
-          <CIcon icon={cilWarning} />
-          <span style={{ margin: '0 0.5em' }}>
-            {user.status ==='pending' && t('pendingStatus')}
-            {user.status ==='rejected' && t('rejectedStatus')}
-          </span>
+            <CIcon icon={cilWarning} />
+            <span style={{ margin: '0 0.5em' }}>
+              {status === 'pending' && t('pendingStatus')}
+              {status === 'rejected' && t('rejectedStatus')}
+            </span>
           </CAccordionHeader>
           <CAccordionBody>
-            {user.status === 'pending' && <p><strong>{t('moreInfo')}</strong>  <span>{t('pendingInfo')}</span></p> }
-            {user.status === 'rejected' && <p><strong>{t('rejectedReason')}: </strong>  <span>{user.rejected_reason}</span></p>}
+            {status === 'pending' && <p><strong>{t('moreInfo')}</strong>  <span>{t('pendingInfo')}</span></p>}
+            {status === 'rejected' && <p><strong>{t('rejectedReason')}: </strong>  <span>{rejected_reason}</span></p>}
 
           </CAccordionBody>
         </CAccordionItem>
-       
+
       </CAccordion>}
-     <br />
-      <WidgetsDropdown />
+      <br />
+      {/* <WidgetsDropdown /> */}
+      <CRow>
+        <CCol xs={12}>
+          <CWidgetStatsB
+            className="mb-3"
+            progress={{ color: 'primary', value: ((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100 }}
+            color={colorLevel(((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100)}
+            // color= {colorLevel(40)}
+            title="overall performance rate"
+            value={((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100 + '%'}
+          />
+        </CCol>
+      </CRow>
+      <CRow>
+        {/* <CCol xs={4}>
+          <CWidgetStatsB
+            className="mb-3"
+            progress={{ color: 'success', value: 100 }}
+            text="total item purchased"
+            title="placed order items"
+            value={overall_orders}
+          />
+        </CCol> */}
+        <CCol xs={4}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="primary"
+            inverse
+            progress={{ value: (fulfilled_orders / overall_orders) * 100 }}
+            text="items you have accepted"
+            title="fulfillment rate"
+            value={(fulfilled_orders / overall_orders).toFixed(2) * 100 + '%'}
+          />
+        </CCol>
+        <CCol xs={4}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="success"
+            inverse
+            progress={{ value: (ontime_orders / fulfilled_orders) * 100 }}
+            text="items were accepted on time"
+            title="acceptance on time rate"
+            value={(ontime_orders / fulfilled_orders).toFixed(2) * 100 + '%'}
+          />
+        </CCol>
+        <CCol xs={4}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="danger"
+            inverse
+            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 }}
+            text="items were canceled"
+            title="cancellation rate"
+            value={((overall_orders - fulfilled_orders) / overall_orders).toFixed(2) * 100 + '%'}
+          />
+        </CCol>
+      </CRow>
+      <CRow>
+        <CCol xs={3}>
+          <CWidgetStatsB
+            className="mb-3"
+            progress={{ color: 'success', value: 100 }}
+            text="total item purchased"
+            title="placed order items"
+            value={overall_orders}
+          />
+        </CCol>
+        <CCol xs={3}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="primary"
+            inverse
+            progress={{ value: (fulfilled_orders / overall_orders) * 100 }}
+            text="items you have accepted"
+            title="accepted item"
+            value={fulfilled_orders}
+          />
+        </CCol>
+        <CCol xs={3}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="success"
+            inverse
+            progress={{ value: (ontime_orders / fulfilled_orders) * 100 }}
+            text="items were accepted on time"
+            title="accepted on time"
+            value={ontime_orders}
+          />
+        </CCol>
+        <CCol xs={3}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="danger"
+            inverse
+            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 }}
+            text="items were canceled"
+            title="canceled items"
+            value={overall_orders - fulfilled_orders}
+          />
+        </CCol>
+      </CRow>
       <CCard className="mb-4">
         <CCardBody>
           <CRow>

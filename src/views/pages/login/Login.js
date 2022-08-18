@@ -35,7 +35,7 @@ const Login = (props) => {
     e.preventDefault()
     loginHandler({ email: e.target.email.value, password: e.target.password.value })
   }
-  let currentPath = cookie.load('current_path')
+  let currentPath = cookie.load(`current_path${sessionStorage.tabID}`)
   useEffect(() => {
     if (login.loggedIn) {
       navigate(currentPath === '/login' ? '/' : currentPath)
@@ -109,20 +109,20 @@ const Login = (props) => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <If condition={load}>
+                            <CButton color="primary" className="px-4" type="submit"> 
+                              {load? <CSpinner color="light" size="sm"/>: t('login')}
+                            </CButton>
+                        {/* <If condition={load}>
                           <Then>
                             <CSpinner color="primary" />
                           </Then>
                           <Else>
-                            <CButton color="primary" className="px-4" type="submit">
-                              {t('login')}
-                            </CButton>
 
                           </Else>
-                        </If>
+                        </If> */}
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                        <CButton color="link" className="px-0" onClick={() =>navigate('/reference')}> 
                           {t('forgotPassword')}
                         </CButton>
                       </CCol>

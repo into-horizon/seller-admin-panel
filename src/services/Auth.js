@@ -61,4 +61,28 @@ export default class Auth extends ApiService {
             throw new Error(error.message);
         }
     }
+    async provideReference(reference){
+        try {
+            let response = await this.post('auth/user/password/generateToken', {reference: reference})
+            return response
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    async validateToken(token){
+        try {
+            let response = await this.post('auth/user/password/validateToken', {token: token})
+            return response
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    async resetPassword(token, password){
+        try {
+            let response = await this.post('auth/user/password/resetByToken', {token: token, password: password})
+            return response
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }

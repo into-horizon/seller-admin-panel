@@ -4,8 +4,9 @@ import { CFormFloating, CFormInput, CFormLabel, CButton } from '@coreui/react';
 import { useTranslation } from 'react-i18next';
 import { usePopup, DialogType } from "react-custom-popup";
 import { updateInfo, updateName } from "../store/auth"
-
+import {useNavigate} from 'react-router-dom'
 const ProfileInfo = props => {
+    const navigate = useNavigate()
     const { updateInfo, updateName } = props
     const { showOptionDialog, showToast } = usePopup();
     const { t } = useTranslation('translation', { keyPrefix: 'profile' });
@@ -29,6 +30,7 @@ const ProfileInfo = props => {
         delete newObj.verified_email
 
         setArr(arr => Object.keys(newObj))
+        navigate('/dashboard')
     }
     const updateHandler = () => {
         showOptionDialog({
@@ -101,7 +103,7 @@ const ProfileInfo = props => {
             )}
 
             <CButton color="primary" onClick={updateHandler}>{t('update')}</CButton>
-            <CButton color="light" onClick={cancelHandler}>{t('cancel')}</CButton>
+            <CButton color="light" onClick={()=> navigate('/dashboard')}>{t('cancel')}</CButton>
 
         </>
     )

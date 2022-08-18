@@ -58,6 +58,7 @@ const Register = (props) => {
 
   useEffect(() => {
     if (message) {
+      console.log("🚀 ~ file: Register.js ~ line 61 ~ useEffect ~ message", message)
       if (message.includes('not')) {
         showAlert({
           title: t(`notTitle`),

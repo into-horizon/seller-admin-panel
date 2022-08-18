@@ -90,9 +90,9 @@ export const addProductPictureHandler = payload => async (dispatch, state) => {
 }
 export const deleteProductPictureHandler = payload => async (dispatch, state) =>{
     try {
-        let result = await Product.deleteProductPicture(payload)
+        let {status, message} = await Product.deleteProductPicture(payload)
         let x = state().products
-        if(result){
+        if(status===200){
             let y = {...x}
             let newState = y.currentProducts.products.map(product =>{
                 let newProduct = {...product}
@@ -102,7 +102,7 @@ export const deleteProductPictureHandler = payload => async (dispatch, state) =>
             })
             dispatch(deleteProductPicture({message: 'success', result: newState}))
         } else{
-            dispatch(errorMessage({message: result}))
+            dispatch(errorMessage({message: message}))
         }
     } catch (error) {
         dispatch(errorMessage(() =>{return{message: error.message}}))
@@ -111,14 +111,13 @@ export const deleteProductPictureHandler = payload => async (dispatch, state) =>
 export const updateSizeAndQuantity = payload => async (dispatch, state) => {
     try {
         let {result, message, status} = await Product.updateSizeAndQuantity(payload)
+        console.log("🚀 ~ file: product.js ~ line 114 ~ updateSizeAndQuantity ~ result", result)
         if(status === 200){
             let newProducts = [...state().products.currentProducts.products].map(val => {
                 if( val.id === result.id){
-                    let product = {...val}
-                    product['size'] = result.size
-                    product['quantity'] = result.quantity
+                  
                     
-                    return product
+                    return {...val,...result}
                 }   else return val 
                
             })
