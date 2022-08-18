@@ -4,7 +4,7 @@ import { connect, useSelector } from 'react-redux'
 import Products from '../services/ProductService'
 import defaultProductImg from '../assets/images/default-store-350x350.jpg'
 import { CTable, CTableHead, CTableRow, CTableHeaderCell, CTableDataCell, CTableBody, CFormSelect, CButton, CSpinner, CCol, CRow, CModal, CModalHeader, CModalFooter, CModalTitle, CForm } from '@coreui/react'
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import { useNavigate } from 'react-router-dom'
 import Pdf from './Pdf'
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
@@ -28,14 +28,14 @@ const OrderModel = ({ data,updateOrderItemHandler }) => {
         setLoading(false)
         // setOrders(data)
     }, [data])
-    const generatePDF = () => {
-        const doc = new jsPDF('landscape', 'pt', 'a4')
-        doc.html(document.getElementById('orders'), {
-            callback: (pdf) => {
-                pdf.save('mypdf.pdf')
-            }
-        })
-    }
+    // const generatePDF = () => {
+    //     const doc = new jsPDF('landscape', 'pt', 'a4')
+    //     doc.html(document.getElementById('orders'), {
+    //         callback: (pdf) => {
+    //             pdf.save('mypdf.pdf')
+    //         }
+    //     })
+    // }
     const updateItem = (e, item) =>{
         console.log("🚀 ~ file: OrdersModel.jsx ~ line 41 ~ updateItem ~ itemAction", itemAction)
         e.preventDefault();
