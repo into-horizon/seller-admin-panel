@@ -49,7 +49,7 @@ const StorePicture = props => {
         </If>
             <div className="storeImageUpdate">
                 <CButton color="primary" onClick={changeType} >{t(`${text}`)}</CButton>
-                <input type={type} id='imageInput' className="storeImage" onChange={changeHandler} accept="image/*" />
+                <input type={type} id='imageInput' className="storeImage" onChange={changeHandler} accept="image/png,image/jpeg"  />
 
             </div>
         </>

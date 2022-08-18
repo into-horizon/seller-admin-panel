@@ -2,18 +2,19 @@ import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
-
+import { useSelector } from 'react-redux';
 import { CBadge } from '@coreui/react'
+
 
 export const AppSidebarNav = ({ items }) => {
   const {t, i18n} = useTranslation('translation', { keyPrefix: 'routes' });
-
+  const pendingOrders = useSelector((state) => state.orders.pendingOrders)
   const location = useLocation()
   const navLink = (name, icon, badge) => {
     return (
       <>
         {icon && icon}
-        {name && name}
+        {name && name === 'Pending Orders' && pendingOrders.length > 0? `${name}(${pendingOrders.length})` : name}
         {badge && (
           <CBadge color={badge.color} className="ms-auto">
             {badge.text}

@@ -17,7 +17,7 @@ class ProductService extends ApiService {
     }
     async getProductsByStatus(data) {
         try {
-            let res = await this.get(`${this.path}/store/${data.status}?limit=${data.limit}&offset=${data.offset}`, null, this.bearer(await this.token()))
+            let res = await this.get(`${this.path}/store/${data.status}?limit=${data.limit}&offset=${data.offset}`, null)
             return res
         } catch (error) {
             throw new Error(error.message);
@@ -34,7 +34,7 @@ class ProductService extends ApiService {
     }
     async deleteProductPicture(data) {
         try {
-            let res = await this.delete(`${this.path}/picture`, data, this.bearer(await this.token()))
+            let res = await this.delete(`${this.path}/picture`, data)
             return res
         } catch (error) {
             throw new Error(error.message);
@@ -43,7 +43,7 @@ class ProductService extends ApiService {
 
     async updateSizeAndQuantity(data) {
         try {
-            let res = await this.update(`${this.path}/quantityandsize`, data, this.bearer(await this.token()))
+            let res = await this.update(`${this.path}/quantityandsize`, data)
             return res;
         } catch (error) {
             throw new Error(error.message);
@@ -51,7 +51,7 @@ class ProductService extends ApiService {
     }
     async updateDiscount(data) {
         try {
-            let res = await this.update(`${this.path}/discount`, data, this.bearer(await this.token()))
+            let res = await this.update(`${this.path}/discount`, data)
             return res;
         } catch (error) {
             throw new Error(error.message);
@@ -59,7 +59,7 @@ class ProductService extends ApiService {
     }
     async getSearchData(data){
       try {
-          let res = await this.get(`${this.path}/searchData/${JSON.stringify(data)}`, null, this.bearer(await this.token()));
+          let res = await this.get(`${this.path}/searchData/${JSON.stringify(data)}`, null);
           return res;
       } catch (error) {
           throw new Error(error.message);
@@ -76,7 +76,7 @@ class ProductService extends ApiService {
 
     async updateProduct(data){
         try {
-            let res = await this.update(`${this.path}`, data, this.bearer(await this.token()));
+            let res = await this.update(`${this.path}`, data);
             return res 
         } catch (error) {
             throw new Error(error.message);
@@ -84,7 +84,7 @@ class ProductService extends ApiService {
     }
     async deleteProduct(data) {
         try {
-            let res = await this.delete(`${this.path}`, {id:data}, this.bearer(await this.token()))
+            let res = await this.delete(`${this.path}`, {id:data})
             return res
         } catch (error) {
             throw new Error(error.message);

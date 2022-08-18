@@ -1,14 +1,43 @@
 h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-letter{
     text-transform: capitalize;
 }
-
-.mrgn50 {
+/* label{
+    text-align: right;
+} */
+.pointer{
+    cursor: pointer;
+}
+.pointer:hover{
+    background-color: skyblue
+}
+.mrgn50{
     margin: 50px 0;
+}
+.mgn-top50{
+    margin-top: 20px !important;
+}
+.m-2-1rem{
+    margin: 2rem 1rem;
+}
+.m-10rem{
+    margin-bottom: 15rem ;
+    margin-left: 1rem;
+}
+.padding {
+    padding: 2rem
+}
+.background{
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 2rem;
+    
 }
 /* ::-webkit-input-placeholder {
     text-align: center;
   } */
-
+.m-5rem{
+    margin: 0 .5rem
+}
   .noen::placeholder{
       text-align: left;
   }
@@ -251,12 +280,12 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
    
 }
 
-.productbtn:nth-child(2) form fieldset{
-    /* display: flex; */
-    /* flex-direction: row; */
-    /* justify-content: space-between;  */
+/* .productbtn:nth-child(2) form fieldset{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
     
- }
+ } */
 
 
 .productStatusHead{
@@ -266,6 +295,7 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     width: 100%;
     flex-direction: column;
     margin-top: 1rem;
+    background-color: transparent;
    
 }
 .fieldset{
@@ -292,6 +322,9 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
 .discounRate{
     width: 40%;
     margin: 0 1rem;
+    border: 1px solid rgba(149, 148, 148, 0.803);
+    border-radius: .3rem;
+    padding: .3rem
 }
 .switchLabel, .react-switch-bg{
     margin: auto 1rem;
@@ -301,6 +334,7 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
+    margin: 1rem;
 }
 
 .discountFormBtns{

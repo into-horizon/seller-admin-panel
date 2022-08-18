@@ -12,7 +12,7 @@ export default class ApiService {
       method: 'get',
       url: `${api}/${endpoint}`,
       params: params,
-      headers: headers
+      headers: headers?? this.bearer(await this.token())
     })
 
     return res.data
@@ -22,7 +22,7 @@ export default class ApiService {
       method: 'post',
       url: `${api}/${endpoint}`,
       data: data,
-      headers: header,
+      headers: header?? this.bearer(await this.token()),
       params: params,
 
     });
@@ -35,7 +35,7 @@ export default class ApiService {
       url: `${api}/${endpoint}`,
       params: params,
       data: data,
-      headers: header
+      headers: header?? this.bearer(await this.token())
     });
     return res.data
   }
@@ -46,7 +46,7 @@ export default class ApiService {
       url: `${api}/${endpoint}`,
       data: data,
       params: params,
-      headers: header
+      headers: header?? this.bearer(await this.token())
     });
     return res.data
   }
@@ -59,20 +59,23 @@ export default class ApiService {
     return { Authorization: ` Basic ${btoa(`${data.email}:${data.password}`)}` }
   }
   async token() {
-    let token = cookie.load('access_token', {path:'/'})
-    
-    if (!isJwtExpired(token)) return token
-    else if (isJwtExpired(cookie.load('refresh_token'), {path: '/'}) || cookie.load('refresh_token') ===  'undefined') {
-      endSession()
+    let token = cookie.load('access_token', { path: '/' })
+
+    if (!token) return 
+    else if (!isJwtExpired(token)) {
+      return token
     }
     else {
-     
-      let {refresh_token,access_token, status,session_id} = await this.post('auth/refresh', null, this.bearer(cookie.load('refresh_token'), {path: '/'}))
-      if(status ===200){
-        cookie.save('access_token', access_token,{path: '/'})
-        cookie.save('refresh_token', refresh_token,{path: '/'})  
+
+      let { refresh_token, access_token, status, session_id } = await this.post('auth/refresh', null, this.bearer(cookie.load('refresh_token',{ path: '/' }) ))
+      if (status === 200) {
+        cookie.remove('access_token', { path: '/' })
+        cookie.remove('refresh_token', { path: '/' })
+        cookie.save('access_token', access_token, { path: '/' })
+        cookie.save('refresh_token', refresh_token, { path: '/' })
+
         return access_token
-      } else endSession()
+      } else console.log('expired session')
     }
   }
   // token(){
