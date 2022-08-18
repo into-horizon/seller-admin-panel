@@ -49,6 +49,14 @@ const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
+const Profile = React.lazy(() => import('./views/pages/profile/Profile'))
+const AddProduct = React.lazy(() => import('./views/product/AddProduct'))
+const Products = React.lazy(() => import('./views/product/Products'))
+const UpdateProduct = React.lazy(() => import('./views/product/UpdateProducts'))
+const Settings = React.lazy(() => import('./views/pages/settings/Settings'))
+const PendingOrders = React.lazy(() => import('./components/PendingOrders'))
+const OrdersOverview = React.lazy(() => import('./components/OrderOverView'))
+const Pdf = React.lazy(() => import('./components/PdfView'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -95,6 +103,18 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', component: Modals },
   { path: '/notifications/toasts', name: 'Toasts', component: Toasts },
   { path: '/widgets', name: 'Widgets', component: Widgets },
+  { path: '/profile', name: 'Profile', component: Profile },
+  { path: '/product', name: 'Products', component: Products , exact: true},
+  { path: '/product/add', name: 'addProduct', component: AddProduct },
+  { path: '/product/products', name: 'myProducts', component: Products },
+  { path: '/product/updateProduct', name: 'updateProduct', component: UpdateProduct , role: 'storeOwner' },
+  { path: '/settings', name: 'Settings', component: Settings , exact: true},
+  { path: '/order', name: 'Order', component: PendingOrders, exact: true},
+  { path: '/order/pendingOrders', name: 'Pending Orders', component: PendingOrders},
+  { path: '/order/overview', name: 'Orders Overview', component: OrdersOverview},
+  { path: '/pdf', name: 'pdf', component: Pdf},
+ 
+
 ]
 
 export default routes
