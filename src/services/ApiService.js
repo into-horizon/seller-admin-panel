@@ -12,7 +12,7 @@ export default class ApiService {
       method: 'get',
       url: `${api}/${endpoint}`,
       params: params,
-      headers: headers?? this.bearer(await this.token())
+      headers: headers|| this.bearer(await this.token())
     })
 
     return res.data
@@ -22,7 +22,7 @@ export default class ApiService {
       method: 'post',
       url: `${api}/${endpoint}`,
       data: data,
-      headers: header?? this.bearer(await this.token()),
+      headers: header|| this.bearer(await this.token()),
       params: params,
 
     });
@@ -35,7 +35,7 @@ export default class ApiService {
       url: `${api}/${endpoint}`,
       params: params,
       data: data,
-      headers: header?? this.bearer(await this.token())
+      headers: header|| this.bearer(await this.token())
     });
     return res.data
   }
@@ -46,7 +46,7 @@ export default class ApiService {
       url: `${api}/${endpoint}`,
       data: data,
       params: params,
-      headers: header?? this.bearer(await this.token())
+      headers: header|| this.bearer(await this.token())
     });
     return res.data
   }
