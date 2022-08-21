@@ -12,7 +12,7 @@ import { Rings } from 'react-loader-spinner'
 import { getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler } from './store/category'
 import { getAddress } from './store/address'
 import { current } from '@reduxjs/toolkit';
-
+// import "@coreui/coreui/scss/coreui";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -43,7 +43,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
   let token = cookie.load('access_token')
   const checkUnAuth = route => {
     let unAuth = ['/login', '/register', '/reference']
-    if (unAuth.includes(route) || route?.startsWith('/resetPassword')) {
+    if (unAuth.some(x=> x===route || x.startsWith('/resetPassword')) ) {
       return true
     } else return false
   }

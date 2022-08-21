@@ -43,5 +43,5 @@ class Address extends ApiService {
         }
     }
 }
-const NewAddress = new Address();
-export default NewAddress;
+
+export default new Address();

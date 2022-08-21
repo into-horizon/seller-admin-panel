@@ -112,13 +112,13 @@ const UpdateProduct = (props) => {
 
         }
     }, [currentProducts.searchData, i18n.language])
-    useEffect(() => {
-        if (currentProducts.searched?.id) {
-            setLoading(false)
-            dispatch(errorMessage({ message: '' }))
-        }
-        document.getElementById('productForm')?.reset();
-    }, [currentProducts.searched])
+    // useEffect(() => {
+    //     if (currentProducts.searched?.id) {
+    //         setLoading(false)
+    //         dispatch(errorMessage({ message: '' }))
+    //     }
+    //     document.getElementById('productForm')?.reset();
+    // }, [currentProducts.searched])
     useEffect(() => {
         let labels = document.querySelectorAll('#label')
         if (i18n.language === 'ar') {
