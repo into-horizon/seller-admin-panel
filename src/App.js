@@ -125,7 +125,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
           <Route path="/reference" name="reference" element={<Reference />} />
           <Route path="/resetPassword/:token" name="password reset" element={<ResetPassword load={x => setLoad(x)} />} />
-          <Route path="*" name="Home" element={<DefaultLayout />} />
+          <Route path="/*" name="Home" element={<DefaultLayout />} />
           <Route path="*" name="Page 404" element={<Page404 />} />
         </Routes>}
       </React.Suspense>
