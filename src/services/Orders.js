@@ -32,6 +32,14 @@ class Orders extends ApiService {
             throw new Error(error.message);
         }
     }
+    async getStatues() {
+        try {
+            let result = await this.get(`${this.path}/statues`)
+            return result
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 const NewOrders = new Orders();

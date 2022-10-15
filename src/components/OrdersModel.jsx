@@ -37,9 +37,8 @@ const OrderModel = ({ data,updateOrderItemHandler }) => {
     //     })
     // }
     const updateItem = (e, item) =>{
-        console.log("🚀 ~ file: OrdersModel.jsx ~ line 41 ~ updateItem ~ itemAction", itemAction)
         e.preventDefault();
-        itemAction === 'canceled'? updateOrderItemHandler({...item, status: e.target.status.value, rejected_reason: e.target.rejected_reason.value})  : updateOrderItemHandler({...item, status: e.target.status.value })
+        itemAction === 'canceled'? updateOrderItemHandler({...item, status: e.target.status.value, cancellation_reason: e.target.cancellation_reason.value})  : updateOrderItemHandler({...item, status: e.target.status.value })
         closeModel()
     } 
 
@@ -61,7 +60,7 @@ const OrderModel = ({ data,updateOrderItemHandler }) => {
                             </CFormSelect>
                         </CCol>
                         {itemAction === 'canceled' && <CCol md={11} className="m-2-1rem">
-                            <CFormSelect id='rejected_reason' required={itemAction === 'rejected'}>
+                            <CFormSelect id='cancellation_reason' required={itemAction === 'rejected'}>
                                 <option value="incorrect item">incorrect item</option>
                                 <option value="out of stock">out of stock</option>
                                 <option value="defective">defective</option>
@@ -79,7 +78,6 @@ const OrderModel = ({ data,updateOrderItemHandler }) => {
     }
     return (
         <>
-            <h2>pending orders</h2>
             {loading && <CSpinner />}
             { data.map((order, idx) =>
                 <div id='orders' key={idx} style={{ border: '1px solid black', backgroundColor: 'white', borderRadius: '2rem', padding: '2rem', margin: '2rem 0' }}>

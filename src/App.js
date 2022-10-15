@@ -43,7 +43,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
   let token = cookie.load('access_token')
   const checkUnAuth = route => {
     let unAuth = ['/login', '/register', '/reference']
-    if (unAuth.some(x=> x===route || x.startsWith('/resetPassword')) ) {
+    if (unAuth.some(x=> x===route )  || route?.startsWith('/resetPassword')) {
       return true
     } else return false
   }
@@ -57,14 +57,10 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
     getGrandChildCategoriesHandler()
 
     let lang = localStorage.getItem('i18nextLng')
-    if (lang === 'en') {
-      i18n.changeLanguage(lang);
-      document.documentElement.setAttribute("lang", 'en');
-      document.documentElement.setAttribute("dir", 'ltl');
+    if (lang ) {
+    i18n.changeLanguage(lang);
     } else {
-      i18n.changeLanguage(lang);
-      document.documentElement.setAttribute("lang", 'ar');
-      document.documentElement.setAttribute("dir", 'rtl');
+      i18n.changeLanguage('en')
     }
 
     if (!id && token) {
@@ -97,7 +93,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
 
       document.documentElement.setAttribute("lang", 'en');
       document.documentElement.setAttribute("dir", 'ltl');
-    } else {
+    } else if (i18n.language === 'ar') {
 
       document.documentElement.setAttribute("lang", 'ar');
       document.documentElement.setAttribute("dir", 'rtl');

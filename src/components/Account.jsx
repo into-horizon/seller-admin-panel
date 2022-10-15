@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Account = props =>{
+const Account = props => {
     return (
         <>
-        <h2>account</h2>
+            <h2>account</h2>
         </>
     )
 }

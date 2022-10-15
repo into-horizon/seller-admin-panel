@@ -1,5 +1,8 @@
 {
     "lang": "عربي",
+    "globals": {
+        "update": "update", "cancel": "cancel", "add": "add", "confirm": "Confirm","deleteText": "Are you sure you want to delete?", "deleteTitle": "Delete Item", "successDelete": "Deleted Successfully", "ToastPosition": "BOTTOM_RIGHT", "wentWrong": "Something went wrong", "delete":"Delete", "close": "Close", "saveChanges": "Save Changes"
+    },
     "colors": { "White":"White",
         "Black":"Black",
         "Blue":"Blue",
@@ -24,5 +27,6 @@
     "routes":{"addProduct": "Add Product", "updateProduct": "Update Product", "Products": "Products", "myProducts": "My Products", "Home": "Home"},
     "register": {"register": "Register", "createAccount": "Create your account", "storeName": "Store Name", "yourEmail": "Your horizon account email", "amman": "Amman", "mobileNumber": "Mobile Number", "caption": "Caption", "about": "About", "choosePic": "Choose a picture to your store","createBtn": "Create Account", "alreadyRegistered": "You Already Have An Account", "login": "login", "notTitle": "User not found", "notText": "there's no account associated with this email", "existsTitle": "Account already exists", "existsText": "you already have a seller account associated with this email"},
     "login": {"login": "login", "signin": "Sign In to your account", "email": "email", "password": "password", "forgotPassword": "Forgot password?", "signup": "Sign up", "registerText": "You can now register as a seller and publish your products, then reach more customers, sell easily and make money with us.", "registerNow": "Register Now!"},
-    "account": {"settings": "Account Settings", "address": "Address", "payment": "Payment", "addressDetails":{"add": "add new address", "firstName": "First Name", "lastName": "Last Name", "city":"City", "mobile": "Mobile Number", "region": "Region", "building": "Building Number/Name", "apartment":"Apartment Number", "delete": "Delete", "update":"Update", "cancel":"Cancel", "confirm": "Confirm", "street": "Street","submit":"Submit","deleteText": "Are you sure you want to delete this address?", "deleteTitle": "Delete Address", "successDelete": "Deleted Successfully"} }
+    "account": {"settings": "Account Settings", "address": "Address", "payment": "Transfer Account", "addressDetails":{"add": "add new address", "firstName": "First Name", "lastName": "Last Name", "city":"City", "mobile": "Mobile Number", "region": "Region", "building": "Building Number/Name", "apartment":"Apartment Number", "delete": "Delete", "update":"Update", "cancel":"Cancel", "confirm": "Confirm", "street": "Street","submit":"Submit","deleteText": "Are you sure you want to delete this address?", "deleteTitle": "Delete Address", "successDelete": "Deleted Successfully"} },
+    "bankAccount": {"addAccount": "Add Account", "bankAccount": "Bank Account", "cliq": "Cliq", "ewallet": "e-wallet", "transferAccount": "Transfer Account", "reference": "Reference Number", "title": "Title"}
 }

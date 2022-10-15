@@ -64,6 +64,8 @@ const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
 const Dashboard = () => {
   const { message, user: { rejected_reason, status, ontime_orders, overall_orders, fulfilled_orders }, loggedIn } = useSelector((state) => state.login)
+  console.log("🚀 ~ file: Dashboard.js ~ line 67 ~ Dashboard ~ overall_orders", overall_orders)
+  console.log("🚀 ~ file: Dashboard.js ~ line 67 ~ Dashboard ~ rejected_reason", rejected_reason)
   const { t } = useTranslation('translation', { keyPrefix: 'dashboard' });
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -222,11 +224,11 @@ const Dashboard = () => {
         <CCol xs={12}>
           <CWidgetStatsB
             className="mb-3"
-            progress={{ color: 'primary', value: ((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100 }}
-            color={colorLevel(((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100)}
+            progress={{ color: 'primary', value: (((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100) }}
+            color={colorLevel((((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100))}
             // color= {colorLevel(40)}
             title="overall performance rate"
-            value={((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100 + '%'}
+            value={(overall_orders? (((overall_orders - (fulfilled_orders - ontime_orders))/ (overall_orders)) * 100).toFixed(2) : 0) + '%'}
           />
         </CCol>
       </CRow>
@@ -245,10 +247,10 @@ const Dashboard = () => {
             className="mb-3"
             color="primary"
             inverse
-            progress={{ value: (fulfilled_orders / overall_orders) * 100 }}
+            progress={{ value: (fulfilled_orders / overall_orders) * 100 ??0 }}
             text="items you have accepted"
             title="fulfillment rate"
-            value={(fulfilled_orders / overall_orders).toFixed(2) * 100 + '%'}
+            value={(overall_orders?(fulfilled_orders / overall_orders).toFixed(2) * 100 : 0 )+ '%'}
           />
         </CCol>
         <CCol xs={4}>
@@ -256,10 +258,10 @@ const Dashboard = () => {
             className="mb-3"
             color="success"
             inverse
-            progress={{ value: (ontime_orders / fulfilled_orders) * 100 }}
+            progress={{ value: (ontime_orders / fulfilled_orders) * 100 ?? 0 }}
             text="items were accepted on time"
             title="acceptance on time rate"
-            value={(ontime_orders / fulfilled_orders).toFixed(2) * 100 + '%'}
+            value={(overall_orders?(ontime_orders / fulfilled_orders).toFixed(2) * 100 :0 )+ '%'}
           />
         </CCol>
         <CCol xs={4}>
@@ -267,10 +269,10 @@ const Dashboard = () => {
             className="mb-3"
             color="danger"
             inverse
-            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 }}
+            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 ??0 }}
             text="items were canceled"
             title="cancellation rate"
-            value={((overall_orders - fulfilled_orders) / overall_orders).toFixed(2) * 100 + '%'}
+            value={(overall_orders?((overall_orders - fulfilled_orders) / overall_orders).toFixed(2) * 100 : 0 )+ '%'}
           />
         </CCol>
       </CRow>
@@ -289,7 +291,7 @@ const Dashboard = () => {
             className="mb-3"
             color="primary"
             inverse
-            progress={{ value: (fulfilled_orders / overall_orders) * 100 }}
+            progress={{ value: (fulfilled_orders / overall_orders) * 100 ??0 }}
             text="items you have accepted"
             title="accepted item"
             value={fulfilled_orders}
@@ -300,7 +302,7 @@ const Dashboard = () => {
             className="mb-3"
             color="success"
             inverse
-            progress={{ value: (ontime_orders / fulfilled_orders) * 100 }}
+            progress={{ value: (ontime_orders / fulfilled_orders) * 100 ?? 0 }}
             text="items were accepted on time"
             title="accepted on time"
             value={ontime_orders}
@@ -311,7 +313,7 @@ const Dashboard = () => {
             className="mb-3"
             color="danger"
             inverse
-            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 }}
+            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 ?? 0 }}
             text="items were canceled"
             title="canceled items"
             value={overall_orders - fulfilled_orders}

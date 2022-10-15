@@ -10,7 +10,8 @@ import {
   cilPencil,
   cilPuzzle,
   cilSpeedometer,
-  cilStar,cilCart
+  cilStar,cilCart,
+  cilMoney
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -49,6 +50,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Products',
     to: '/product',
+    approved: true,
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     items: [
       {
@@ -77,12 +79,32 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Pending Orders',
-        to: '/order/pendingOrders',
+        to: '/order/pendingOrders', 
+        approved: true,
       },
       {
         component: CNavItem,
         name: 'Orders Overview',
         to: '/order/overview',
+      },
+     
+    ]
+  },
+  {
+    component: CNavGroup,
+    name: 'Finance',
+    to: '/finance',
+    icon: <CIcon icon={cilMoney} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Statement',
+        to: '/finance/statement',
+      },
+      {
+        component: CNavItem,
+        name: 'Amounts Summary',
+        to: '/finance/summary',
       },
      
     ]
