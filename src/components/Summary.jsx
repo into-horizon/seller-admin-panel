@@ -165,7 +165,7 @@ export const Summary = ({ getPendingAmounts, getCashAccount, getAccountsHandler,
                                         <CTableDataCell>{new Date(withdrawal.created_at).toLocaleDateString()}</CTableDataCell>
                                         <CTableDataCell>{withdrawal.updated ? new Date(withdrawal.updated).toLocaleDateString() : '-'}</CTableDataCell>
                                         <CTableDataCell >
-                                            {withdrawal.document ? <a href={withdrawal.document} target="_blank">
+                                            {withdrawal.document ? <a href={withdrawal.document} target="_blank" >
 
                                                 <CIcon icon={cilPaperclip} />
                                             </a> : '-'}

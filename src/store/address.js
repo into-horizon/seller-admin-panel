@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Address from "src/services/Address";
+import Address from "../services/Address";
 
 const address = createSlice({
     name: 'address',

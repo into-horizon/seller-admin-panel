@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Withdrawal from "src/services/Withdrawal";
+import Withdrawal from "../services/Withdrawal";
 import {updateWithdrawn } from './finance'
 const withdrawal = createSlice({
     name: "withdrawal",

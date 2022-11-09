@@ -13,6 +13,8 @@ import { getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCat
 import { getAddress } from './store/address'
 import { current } from '@reduxjs/toolkit';
 // import "@coreui/coreui/scss/coreui";
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
 
 const loading = (
   <div className="pt-3 text-center">

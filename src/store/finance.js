@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import Finance from "src/services/Finance";
+import Finance from "../services/Finance";
 
 const finance = createSlice({
     name: 'finance',

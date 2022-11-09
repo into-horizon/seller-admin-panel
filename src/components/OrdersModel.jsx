@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom'
 import Pdf from './Pdf'
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
-
 const OrderModel = ({ data,updateOrderItemHandler }) => {
     // const{ pendingOrders} = useSelector(state => state.orders)
     const navigate = useNavigate()
