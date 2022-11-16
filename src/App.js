@@ -12,6 +12,8 @@ import { Rings } from 'react-loader-spinner'
 import { getParentCategoriesHandler, getChildCategoriesHandler, getGrandChildCategoriesHandler } from './store/category'
 import { getAddress } from './store/address'
 import { current } from '@reduxjs/toolkit';
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
 // import "@coreui/coreui/scss/coreui";
 
 const loading = (
