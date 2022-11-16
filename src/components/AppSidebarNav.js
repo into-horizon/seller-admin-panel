@@ -9,6 +9,8 @@ import { CBadge } from '@coreui/react'
 export const AppSidebarNav = ({ items }) => {
   const {t, i18n} = useTranslation('translation', { keyPrefix: 'routes' });
   const pendingOrders = useSelector((state) => state.orders.pendingOrders)
+  const {status} = useSelector((state) => state.login.user)
+  console.log("🚀 ~ file: AppSidebarNav.js ~ line 13 ~ AppSidebarNav ~ status", status)
   const location = useLocation()
   const navLink = (name, icon, badge) => {
     return (
@@ -25,10 +27,10 @@ export const AppSidebarNav = ({ items }) => {
   }
 
   const navItem = (item, index) => {
-    const { component, name, badge, icon, ...rest } = item
+    const { component, name, badge, icon,approved, ...rest } = item
     const Component = component
     return (
-      <Component
+      (approved?  status ==='approved': true )&&<Component
         {...(rest.to &&
           !rest.items && {
             component: NavLink,
@@ -42,10 +44,10 @@ export const AppSidebarNav = ({ items }) => {
     )
   }
   const navGroup = (item, index) => {
-    const { component, name, icon, to, ...rest } = item
+    const { component, name, icon, to,approved, ...rest } = item
     const Component = component
     return (
-      <Component
+      (approved?  status ==='approved': true )&& <Component
         idx={String(index)}
         key={index}
         toggler={navLink(name, icon)}

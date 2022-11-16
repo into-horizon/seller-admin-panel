@@ -82,8 +82,11 @@ const ProfileInfo = props => {
         delete newObj.refresh_token
         delete newObj.verification_code
         delete newObj.verified_email
-        
-        setArr(arr => Object.keys(newObj))
+        delete newObj.fulfilled_orders
+        delete newObj.overall_orders
+        delete newObj.ontime_orders
+        delete newObj.followers
+        setArr(() => Object.keys(newObj))
     }, [])
 
     const changeHandler = e => {

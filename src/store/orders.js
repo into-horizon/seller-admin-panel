@@ -4,7 +4,7 @@ import Orders from '../services/Orders'
 
 const orders = createSlice({
     name: 'orders',
-    initialState: {pendingOrders: {orders: [], count: 0 } , ordersOverview:{orders: [], count: 0} , messages:''},
+    initialState: {pendingOrders: {orders: [], count: 0 } , ordersOverview:{orders: [], count: 0} , messages:'', statuses: []},
     reducers: {
         addPendingOrders(state, action) {
             return { ...state, pendingOrders: action.payload }
@@ -14,6 +14,9 @@ const orders = createSlice({
         },
         addOverviewOrders(state, action) {
             return { ...state, ordersOverview: action.payload }
+        },
+        addStatues(state, action) {
+            return { ...state, statuses: action.payload }
         }
     }
 })
@@ -55,5 +58,16 @@ export const updateOrderItemHandler = payload => async (dispatch, state) => {
     }
 }
 
+export const getStatuesHandler = () => async (dispatch) => {
+    try {
+        let {data, status} = await Orders.getStatues()
+        if (status === 200 ){
+            dispatch(addStatues(data))
+        } 
+    } catch (error) {
+        dispatch(errorMessage(error.message))
+    }
+}
+
 export default orders.reducer
-export const { addPendingOrders, errorMessage, addOverviewOrders } = orders.actions
+export const { addPendingOrders, errorMessage, addOverviewOrders,addStatues } = orders.actions

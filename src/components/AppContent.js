@@ -5,8 +5,10 @@ import cookie from 'react-cookies'
 // routes config
 import routes from '../routes'
 import { useTranslation } from 'react-i18next';
+import {useSelector} from 'react-redux'
 
 const AppContent = () => {
+  const {status} = useSelector((state) => state.login.user)
 const navigate = useNavigate()
 const { t } = useTranslation('translation', { keyPrefix: 'routes' });
 t('addProduct')
@@ -27,7 +29,7 @@ useEffect(()=>{
             const Item = route.component
             const name = t(route.name) || route.name
             return (
-              route.component && (
+              route.component && (route.approved? route.approved && status ==='approved': true) && (
                 <Route
                   key={idx}
                   path={route.path}

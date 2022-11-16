@@ -75,7 +75,7 @@ export default class ApiService {
         cookie.save('refresh_token', refresh_token, { path: '/' })
 
         return access_token
-      } else console.log('expired session')
+      } else return 
     }
   }
   // token(){

@@ -96,7 +96,11 @@ export const updateName = name => async (dispatch, state) => {
 export const updateStorePicture = data => async (dispatch, state) => {
     try {
         let response = await NewUpdate.updateStorePicture(data);
-        dispatch(loginAction({ user: { ...state().login.user, store_picture: response.result.store_picture } }))
+        let {status} = response
+        if(status === 200) {
+
+            dispatch(loginAction({ user: { ...state().login.user, store_picture: response.result.store_picture } }))
+        }
     } catch (error) {
         console.log("🚀 ~ file: auth.js ~ line 88 ~ updateStorePicture ~ error", error)
 
