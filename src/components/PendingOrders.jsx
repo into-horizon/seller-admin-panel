@@ -8,14 +8,15 @@ import Paginator from './Paginator';
 
 
 const PendingOrders = ({ orders, getPendingOrdersHandler, count }) => {
-console.log("🚀 ~ file: PendingOrders.jsx ~ line 11 ~ PendingOrders ~ orders", orders)
+    const [params, setParams] = useState({ limit:10, offset: 10})
     useEffect(() => {
         getPendingOrdersHandler()
     }, [])
     return (
-        <>
+        <>  
+            <h2>pending orders</h2>
             {orders ? <OrdersModel data={orders} /> : <CSpinner />}
-            <Paginator count={Number(count)} changeData={getPendingOrdersHandler} cookie='pending'/>
+            <Paginator params={params} count={Number(count)} changeData={getPendingOrdersHandler} cookieName='pendingOrder'/>
         </>
     )
 }

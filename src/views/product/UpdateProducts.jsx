@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children} from 'react';
 import { useLocation } from "react-router-dom";
 import { connect, useSelector, useDispatch } from 'react-redux'
-import { CFormSelect, CFormLabel, CFormText, CFormCheck, CFormInput, CButton, CFormFloating, CFormTextarea, CFormFeedback, CCol, CForm, CRow, CInputGroup, CInputGroupText } from '@coreui/react'
+import { CFormSelect, CFormLabel, CFormText, CFormCheck, CFormInput, CButton, CFormFloating, CFormTextarea, CFormFeedback, CCol, CForm, CRow, CInputGroup, CInputGroupText, CSpinner } from '@coreui/react'
 import { usePopup, DialogType, AnimationType, ToastPosition } from "react-custom-popup";
 import { getSearchDataHandler, getSearchedProductHandler, updateProductHandler } from "../../store/product"
 import { useTranslation } from 'react-i18next';
@@ -12,8 +12,8 @@ const UpdateProduct = (props) => {
     const { showOptionDialog, showToast, showAlert } = usePopup();
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation('translation', { keyPrefix: 'addProduct' });
-    const { message, currentProducts, products } = useSelector(state => state.products)
-    const category = useSelector(state => state.category)
+    const { message, currentProducts:{count, products,searchData,searched},  } = useSelector(state => state.products)
+    const {parentCategories,childCategories, grandChildCategories} = useSelector(state => state.category)
     let sizeSymbols = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
     let sizeNumbers = []
     if (sizeNumbers.length === 0) {
@@ -30,21 +30,21 @@ const UpdateProduct = (props) => {
     const initialState = {
         values: [],
         secondCategory: { visible: false },
-        thirdCategory: { visible: false, selected: false, add: false, select: true },
+        thirdCategory: { visible: false, selected: false, add: false, select: true, data:[] },
         sizes: { visible: false, add: false },
         selectedSizes: [],
         sizesDetails: [],
         discount: { hasDiscount: false, discountRate: 0 }
     }
 
-    const [secondCategory, setSecondCategory] = useState({ visible: true, data: [] })
-    const [thirdCategory, setThirdCategory] = useState({ visible: true, selected: false, add: false, select: true, data: [] })
+    const [secondCategory, setSecondCategory] = useState({ visible: true, data: [...childCategories] })
+    const [thirdCategory, setThirdCategory] = useState({ visible: true, selected: false, add: false, select: true, data: [...grandChildCategories] })
 
 
     const changeHandler = product => {
         if (product[0]) {
             setLoading(true);
-            getSearchedProductHandler(product[0].id)
+            getSearchedProductHandler(product[0].id).then(()=> setLoading(false))
 
         }
     }
@@ -91,12 +91,12 @@ const UpdateProduct = (props) => {
 
     }
     const categoryVisibility = e => {
-        let x = { ...secondCategory, visible: true }
-        setSecondCategory(x)
+        setSecondCategory(x => {return{...x,visible: true, data: childCategories.filter(val=> val.parent_id === e.target.value)}})
+        setThirdCategory(initialState.thirdCategory)
     }
     const categoryVisibility2 = e => {
-        let x = { ...thirdCategory, visible: true }
-        setThirdCategory(x)
+       
+        setThirdCategory(x=> {return{ ...x, visible: true, data: grandChildCategories.filter(val=> val.parent_id === e.target.value) } })
     }
 
     useEffect(() => {
@@ -107,18 +107,12 @@ const UpdateProduct = (props) => {
         
     }, [])
     useEffect(() => {
-        if (currentProducts.searchData) {
-            setOptions(currentProducts.searchData.map(val => { return { name: val[`${i18n.language}title`], id: val.id, key: val.id, value: val.id } }))
+        if (searchData) {
+            setOptions(searchData.map(val => { return { name: val[`${i18n.language}title`], id: val.id, key: val.id, value: val.id } }))
 
         }
-    }, [currentProducts.searchData, i18n.language])
-    // useEffect(() => {
-    //     if (currentProducts.searched?.id) {
-    //         setLoading(false)
-    //         dispatch(errorMessage({ message: '' }))
-    //     }
-    //     document.getElementById('productForm')?.reset();
-    // }, [currentProducts.searched])
+    }, [searchData, i18n.language])
+   
     useEffect(() => {
         let labels = document.querySelectorAll('#label')
         if (i18n.language === 'ar') {
@@ -126,10 +120,9 @@ const UpdateProduct = (props) => {
         } else if (i18n.language === 'en') {
             labels.forEach(label => label.setAttribute('class', 'leftBorder'));
         }
-    }, [currentProducts.searched, i18n.language])
+    }, [searched, i18n.language])
     useEffect(() => {
         if(message){
-            console.log("🚀 ~ file: UpdateProducts.jsx ~ line 132 ~ useEffect ~ message", message)
             if(message && message.includes('updated')){
                 showToast({
                     type: DialogType.SUCCESS,
@@ -142,38 +135,42 @@ const UpdateProduct = (props) => {
         }
         dispatch(errorMessage({ message: '' }))
     },[message])
+    useEffect(()=>{
+        setSecondCategory(x=>{return{...x, data: childCategories.filter(val=> val.parent_id === searched.parent_category_id)}})
+        setThirdCategory(x=>{return{...x, data: childCategories.filter(val=> val.parent_id === searched.child_category_id)}})
+    }, [searched])
     return (
         <div className="r">
             <h2>update product</h2>
             <div style={{ width: '50%', margin: 'auto' }}>
                 <Select options={options} onChange={changeHandler} labelField='name' searchable={true} searchBy='name' direction='auto' loading={loading} />
             </div>
-            <div>
-                {currentProducts.searched?.id && <form id='productForm' className="productForm" onSubmit={e => submitHandler(e, currentProducts.searched.id)}>
+          { loading ? <CSpinner color='primary'/> :  <div>
+                {searched?.id && <form id='productForm' className="productForm" onSubmit={e => submitHandler(e, searched.id)}>
                     <section className="productInputs">
                         <div>
                             <label>{t('englishTitle')}*</label>
-                            <input type="text" id="entitle" placeholder={t('englishTitle')} required defaultValue={currentProducts.searched.entitle} />
+                            <input type="text" id="entitle" placeholder={t('englishTitle')} required defaultValue={searched.entitle} />
                         </div>
                         <div>
                             <label id="label">{t('arabicTitle')}*</label>
-                            <input type="text" id="artitle" placeholder={t('arabicTitle')} required defaultValue={currentProducts.searched.artitle} />
+                            <input type="text" id="artitle" placeholder={t('arabicTitle')} required defaultValue={searched.artitle} />
                         </div>
                         <div>
                             <label id="label">{t('metaTitle')}</label>
-                            < input type="text" id="metatitle" placeholder={t('metaTitle')} defaultValue={currentProducts.searched.metaTitle} />
+                            <input type="text" id="metatitle" placeholder={t('metaTitle')} defaultValue={searched.metaTitle} />
                         </div>
                         <div>
                             <label >SKU</label>
-                            < input type="text" id="sku" placeholder="SKU" defaultValue={currentProducts.searched.sku} />
+                            < input type="text" id="sku" placeholder="SKU" defaultValue={searched.sku} />
                         </div>
                         <div>
                             <label id="label">{t('price')}*</label>
-                            < input type="number" id="price" placeholder={t('price')} step='0.01' required defaultValue={currentProducts.searched.price} />
+                            < input type="number" id="price" placeholder={t('price')} step='0.01' required defaultValue={searched.price} />
                         </div>
                         <div>
                             <label id="label">{t('brandName')}</label>
-                            <input type="text" id="brandName" placeholder={t('brandName')} defaultValue={currentProducts.searched.brand_name} />
+                            <input type="text" id="brandName" placeholder={t('brandName')} defaultValue={searched.brand_name} />
                         </div>
 
                     </section>
@@ -185,15 +182,15 @@ const UpdateProduct = (props) => {
                                     placeholder="Leave a comment here"
                                     id="endescription"
                                     style={{ height: '100px' }}
-                                    defaultValue={currentProducts.searched.endescription}
+                                    defaultValue={searched.endescription}
                                 ></CFormTextarea>
-                                <CFormLabel htmlFor="floatingTextarea2" value={currentProducts.searched.endescription} required>{t('englishDescrition')}*</CFormLabel>
+                                <CFormLabel htmlFor="floatingTextarea2" value={searched.endescription} required>{t('englishDescrition')}*</CFormLabel>
                             </CFormFloating>
                             <CFormFloating>
                                 <CFormTextarea
                                     placeholder="Leave a comment here"
                                     id="ardescription"
-                                    defaultValue={currentProducts.searched.ardescription}
+                                    defaultValue={searched.ardescription}
                                     style={{ height: '100px' }}
                                 ></CFormTextarea>
                                 <CFormLabel htmlFor="floatingTextarea3" required>{t('arabicDescription')}*</CFormLabel>
@@ -203,33 +200,33 @@ const UpdateProduct = (props) => {
 
                     </div>
                     <div className='marginDiv'>
-                        <CFormSelect aria-label="Default select example" required onChange={categoryVisibility} id='parentCategory' defaultValue={currentProducts.searched.parent_category.id} >
+                        <CFormSelect aria-label="Default select example" required onChange={categoryVisibility} id='parentCategory' defaultValue={searched.parent_category_id} >
                             <option value='default'>{t('parentCategory')}</option>
-                            {category && category.parentCategories.map((val, idx) =>
-                                <option value={val.id} key={`parent_Category_${idx}`}>{val[`${i18n.language}title`]}</option>
-                            )
+                            {Children.toArray(parentCategories.map((val) =>
+                                <option value={val.id} >{val[`${i18n.language}title`]}</option>
+                            ))
 
                             }
 
                         </CFormSelect>
                     </div>
                     <div className='marginDiv'>
-                        <CFormSelect aria-label="Default select example" disabled={!secondCategory.visible} onChange={categoryVisibility2} id='childCategory' defaultValue={currentProducts.searched.child_category.id}>
+                        <CFormSelect aria-label="Default select example" disabled={!secondCategory.visible} onChange={categoryVisibility2} id='childCategory' defaultValue={searched.child_category_id}>
                             <option value='default'>{t('childCategory')}</option>
 
-                            {category ? category.childCategories.map((val, idx) =>
-                                <option value={val.id} key={`child_Category_${idx}`} >{val[`${i18n.language}title`]}</option>
-                            )
+                           {Children.toArray(secondCategory.data.map((val) =>
+                                <option value={val.id}>{val[`${i18n.language}title`]}</option>
+                            ))
 
-                                : null}
+                               }
                         </CFormSelect>
                     </div>
 
                     <section className="TCS" >
                         <section>
-                            <CFormCheck id="flexCheckDefault" label={t('selectOrAdd')} onChange={e => setThirdCategory({ ...thirdCategory, selected: e.target.checked })} checked={(currentProducts.searched.grandChild_category? true: false || thirdCategory.selected)} />
+                            <CFormCheck id="flexCheckDefault" label={t('selectOrAdd')} onChange={e => setThirdCategory({ ...thirdCategory, selected: e.target.checked })} checked={(searched.grandChild_category? true: false || thirdCategory.selected)} disabled={thirdCategory.data.length === 0}/>
                         </section>
-                       {(currentProducts.searched.grandChild_category|| thirdCategory.selected) && <section style={{  width: '20%' }}>
+                       {(thirdCategory.data.length > 0|| thirdCategory.selected) && <section style={{  width: '20%' }}>
                             <section>
                                 <CFormCheck type="radio" name="TC" id="TC1" label={t('selectThird')} defaultChecked onChange={e => setThirdCategory({ ...thirdCategory, select: !thirdCategory.select, add: !thirdCategory.add })} />
 
@@ -239,14 +236,14 @@ const UpdateProduct = (props) => {
                                 <CFormCheck type="radio" name="TC" id="TC2" label={t('addOwn')} onChange={e => setThirdCategory({ ...thirdCategory, select: !thirdCategory.select, add: !thirdCategory.add })} disabled />
                             </section>
 
-                            <CFormSelect aria-label="Default select example" id='grandChildCategory' disabled={!thirdCategory.visible} style={{ display: thirdCategory.select ? 'inherit' : 'none' }} defaultValue={currentProducts.searched.grandChild_category?.id}>
+                            <CFormSelect aria-label="Default select example" id='grandChildCategory' disabled={!thirdCategory.visible} style={{ display: thirdCategory.select ? 'inherit' : 'none' }} defaultValue={searched.grandChild_category?.id}>
                                 <option value='default'>{t('grandChildCategory')}</option>
 
-                                {category ? category.grandChildCategories.map((val, idx) =>
-                                    <option value={val.id} key={`grand_child_Category_${idx}`}>{val[`${i18n.language}title`]}</option>
-                                )
+                                {Children.toArray(thirdCategory.data.map((val) =>
+                                    <option value={val.id}>{val[`${i18n.language}title`]}</option>
+                                ))
 
-                                    : null}
+                                   }
                             </CFormSelect>
 
 
@@ -260,7 +257,7 @@ const UpdateProduct = (props) => {
                         {t('submit')}
                     </CButton>
                 </form>}
-            </div>
+            </div>}
         </div>
     )
 }

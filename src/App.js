@@ -15,6 +15,8 @@ import { current } from '@reduxjs/toolkit';
 import * as buffer from "buffer";
 window.Buffer = buffer.Buffer;
 // import "@coreui/coreui/scss/coreui";
+import * as buffer from "buffer";
+window.Buffer = buffer.Buffer;
 
 const loading = (
   <div className="pt-3 text-center">
@@ -45,7 +47,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
   let token = cookie.load('access_token')
   const checkUnAuth = route => {
     let unAuth = ['/login', '/register', '/reference']
-    if (unAuth.some(x=> x===route || x.startsWith('/resetPassword')) ) {
+    if (unAuth.some(x=> x===route )  || route?.startsWith('/resetPassword')) {
       return true
     } else return false
   }
@@ -59,14 +61,10 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
     getGrandChildCategoriesHandler()
 
     let lang = localStorage.getItem('i18nextLng')
-    if (lang === 'en') {
-      i18n.changeLanguage(lang);
-      document.documentElement.setAttribute("lang", 'en');
-      document.documentElement.setAttribute("dir", 'ltl');
+    if (lang ) {
+    i18n.changeLanguage(lang);
     } else {
-      i18n.changeLanguage(lang);
-      document.documentElement.setAttribute("lang", 'ar');
-      document.documentElement.setAttribute("dir", 'rtl');
+      i18n.changeLanguage('en')
     }
 
     if (!id && token) {
@@ -99,7 +97,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
 
       document.documentElement.setAttribute("lang", 'en');
       document.documentElement.setAttribute("dir", 'ltl');
-    } else {
+    } else if (i18n.language === 'ar') {
 
       document.documentElement.setAttribute("lang", 'ar');
       document.documentElement.setAttribute("dir", 'rtl');
@@ -127,7 +125,7 @@ const { loggedIn, user:{id,verified_email}} = useSelector((state) => state.login
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
           <Route path="/reference" name="reference" element={<Reference />} />
           <Route path="/resetPassword/:token" name="password reset" element={<ResetPassword load={x => setLoad(x)} />} />
-          <Route path="*" name="Home" element={<DefaultLayout />} />
+          <Route path="/*" name="Home" element={<DefaultLayout />} />
           <Route path="*" name="Page 404" element={<Page404 />} />
         </Routes>}
       </React.Suspense>

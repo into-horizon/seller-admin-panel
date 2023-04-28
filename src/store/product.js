@@ -169,7 +169,7 @@ export const getSearchDataHandler = payload => async (dispatch, state) => {
 
 export const getSearchedProductHandler = payload => async (dispatch, state) => {
     try {
-        let {status,product} = await Product.getProduct(payload)
+        let {status,data:product} = await Product.getProduct(payload)
        
         if(product.id){
             dispatch(addSearchedProduct({message: 'searchedProduct', result: product}))
@@ -198,10 +198,9 @@ export const updateProductHandler = payload => async (dispatch, state) => {
 
 export const deleteProductHandler = payload => async (dispatch, state) => {
     try {
-        let res = await Product.deleteProduct(payload)
-        if(res.includes('deleted')){
+        let {message, status,data} = await Product.deleteProduct(payload)
+        if(status ===200){
             let results = state().products.currentProducts.products.filter(product => product.id !== payload)
-            console.log("🚀 ~ file: product.js ~ line 205 ~ deleteProductHandler ~ results", results)
             dispatch(deleteProduct({message: res, result: results, count:state().products.currentProducts.count - 1 }))
         }
     } catch (error) {
