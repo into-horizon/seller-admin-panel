@@ -391,3 +391,8 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     border-radius: 1rem;
     width: 100%;
 }
+
+.lg-spinner {
+    height: 3rem !important;
+    width: 3rem !important;
+}

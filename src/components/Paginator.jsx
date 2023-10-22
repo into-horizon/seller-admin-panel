@@ -17,8 +17,8 @@ const  Paginator = ({count, onChangePage, changeData,cookieName, params}) =>  {
     const changePage = n => {
         setSelectedPage(n)
         cookie.save(cookieName, n)
-        changeData({...params , limit: limit?? 5, offset: (offset?? 5) * (n - 1)})
-        // onChangePage(n)
+        changeData?.({...params , limit: limit?? 5, offset: (offset?? 5) * (n - 1)})
+        onChangePage?.(n)
     }
     return (
         <CPagination aria-label="Page navigation example">

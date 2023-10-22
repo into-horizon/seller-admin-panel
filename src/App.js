@@ -15,7 +15,7 @@ import { current } from '@reduxjs/toolkit';
 import * as buffer from "buffer";
 window.Buffer = buffer.Buffer;
 // import "@coreui/coreui/scss/coreui";
-import * as buffer from "buffer";
+// import * as buffer from "buffer";
 window.Buffer = buffer.Buffer;
 
 const loading = (
