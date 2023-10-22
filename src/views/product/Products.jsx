@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { CNav, CNavItem, CNavLink, CTabContent, CTabPane } from '@coreui/react'
-import ProductsRender from 'src/components/ProductsRender';
+import ProductsRender from './ProductsRender';
 import cookie from 'react-cookies'
 import { useTranslation } from 'react-i18next';
 
 const Products = props => {
     const [activeKey, setActiveKey] = useState(cookie.load('status') || 'approved')
     const { t, i18n } = useTranslation('translation', { keyPrefix: 'addProduct' });
-
 
     const changeStatus = (e,status) =>{
         e.preventDefault();

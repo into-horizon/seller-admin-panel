@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {CNav,CNavItem ,CNavLink} from '@coreui/react'
-import Account from '../../../components/Account'
-import Address from '../address/Address'
+import Account from './account/Account'
+import Address from './address/Address'
 import { useTranslation } from 'react-i18next';
-import BankAccount from 'src/components/BankAccount';
+import BankAccount from './transfer-account/BankAccount';
 
 const Settings = props => {
     const [activeKey, setActiveKey] = useState('settings')
