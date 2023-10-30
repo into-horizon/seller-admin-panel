@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
 import Finance from "../services/Finance";
-import build from "enzyme";
+import { triggerToast } from "./toast";
+import { DialogType } from "react-custom-popup";
 
 const initialState = {
   loading: false,
@@ -21,9 +21,6 @@ const finance = createSlice({
   reducers: {
     addData(state, action) {
       return { ...state, ...action.payload };
-    },
-    errorMessage(state, action) {
-      return { ...state, message: action.payload };
     },
     updateWithdrawn(state, action) {
       return { ...state, withdrawn: state.withdrawn + action.payload };
@@ -66,7 +63,9 @@ export const getTransactions = createAsyncThunk(
       }
     } catch (error) {
       rejectWithValue(error.message);
-      dispatch(errorMessage(error.message));
+      dispatch(
+        triggerToast({ type: DialogType.DANGER, message: error.message })
+      );
     }
   }
 );
@@ -76,46 +75,38 @@ export const getPendingAmounts = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const { status, data } = await Finance.getAmountsSummary();
-      console.log("🚀 ~ file: finance.js:79 ~ data:", data);
       const getAmount = (type, status) => {
         return (
-          data.find(
-            (amount) => amount.type === type && amount.status === status
-          )?.sum?.toFixed(2) ?? 0
+          data
+            .find((amount) => amount.type === type && amount.status === status)
+            ?.sum?.toFixed(2) ?? 0
         );
       };
-      const pending = getAmount('credit','pending') - getAmount('credit','released') - getAmount('credit', 'canceled')
-      const released = getAmount('credit', 'released') - getAmount('debit', 'transferred')
-      const refunded = getAmount('debit', 'refunded') 
-      // let { status: s1, amount: pending } = await Finance.pendingAmounts();
-      // let { status: s2, amount: released } = await Finance.releasedAmounts();
-      // let { status: s3, amount: refunded } = await Finance.refundedAmounts();
-      // let { status: s4, amount: canceled } =
-      //   await Finance.canceledWithdrawnAmount();
-      // let { status: s5, amount: transferred } =
-      //   await Finance.transferredAmount();
-      // let { status: s6, amount: withdrawn } = await Finance.withdrawnAmount();
-      if (
-        status === 200 &&
-      ) {
+      if (status === 200) {
+        const pending =
+          getAmount("credit", "pending") -
+          getAmount("credit", "released") -
+          getAmount("credit", "canceled");
+        const released =
+          getAmount("credit", "released") - getAmount("debit", "transferred");
+        const refunded = getAmount("debit", "refunded");
         dispatch(
           addData({
             pending: pending,
             released: released,
             refunded: refunded,
-            transferred: transferred,
-            canceledWithdrawn: canceled,
-            withdrawn: withdrawn,
           })
         );
       }
     } catch (error) {
       rejectWithValue(error.message);
-      dispatch(errorMessage(error.message));
+      dispatch(
+        triggerToast({ type: DialogType.DANGER, message: error.message })
+      );
     }
   }
 );
 
-export const { addData, errorMessage, updateWithdrawn } = finance.actions;
+export const { addData, updateWithdrawn } = finance.actions;
 
 export default finance.reducer;

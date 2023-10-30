@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getPendingOrdersHandler } from 'src/store/orders';
 import { connect } from 'react-redux'
 import OrdersModel from '../OrdersModel'
-import { CSpinner } from '@coreui/react-pro';
+import { CSpinner } from '@coreui/react';
 import Paginator from '../../../components/Paginator';
 
 

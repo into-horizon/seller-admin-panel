@@ -4,7 +4,7 @@ import {
   getStatuesHandler,
 } from "../../../store/orders";
 import OrdersModel from "../OrdersModel";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import Paginator from "../../../components/Paginator";
 import {
   CForm,
@@ -21,53 +21,58 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilSearch } from "@coreui/icons";
 import LoadingSpinner from "src/components/LoadingSpinner";
+import { useSearchParams } from "react-router-dom";
+import _ from "lodash";
+import { getSearchParamsObject } from "src/services/utils";
 const OrdersOverview = ({
-  getOverviewOrdersHandler,
+  // getOverviewOrdersHandler,
   orders,
   count,
   getStatuesHandler,
   statuses,
+  loading,
 }) => {
-  const [params, setParams] = useState({ limit: 5, offset: 0 });
-  const [orderStatus, setOrderStatus] = useState("");
+  const pageSize = 5;
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("status");
-  const [orderId, setOrder] = useState("");
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const updateSearchParams = (key, value) => {
+    let data = {};
+    for (const name of searchParams.keys()) {
+      if (!_.isEmpty(searchParams.get(name))) {
+        data[name] = searchParams.get(name);
+      }
+    }
+    data[key] = value;
+    setSearchParams(data);
+  };
+
   const submitHandler = (e) => {
-    setLoading(true);
-    setOrder(e.target.order?.value);
-    setOrderStatus(e.target.status?.value);
-    setParams((x) => {
-      return {
-        ...x,
-        order_id: e.target.order?.value,
-        status: e.target.status?.value,
-      };
-    });
     e.preventDefault();
-    Promise.all([
+    handlePageChange(1);
+  };
+  const handlePageChange = (n) => {
+    // updateSearchParams("page", n);
+    setSearchParams({...getSearchParamsObject(searchParams), page: n})
+    dispatch(
       getOverviewOrdersHandler({
-        status: e.target.status?.value,
-        order_id: e.target.order?.value,
-      }),
-    ]).then(() => setLoading(false));
+        ...getSearchParamsObject(searchParams),
+        page: n,
+        pageSize,
+      })
+    );
   };
   useEffect(() => {
-    Promise.all([getOverviewOrdersHandler(params), getStatuesHandler()]).then(
-      () => setLoading(false)
-    );
+    const page = searchParams.get("page");
+    if (_.isEmpty(page)) {
+      setSearchParams({ page: 1 });
+      handlePageChange(1);
+    } else {
+      handlePageChange(page);
+    }
+    getStatuesHandler();
   }, []);
 
-  const handlePageChange = (n) => {
-    setParams((params) => {
-      setLoading(true);
-      const newParams = { ...params, offset: (n - 1) * params.limit };
-      Promise.all([
-        getOverviewOrdersHandler({ ...params, offset: (n - 1) * params.limit }),
-      ]).then(() => setLoading(false));
-      return newParams;
-    });
-  };
   return (
     <>
       <h2>orders overview</h2>
@@ -83,6 +88,7 @@ const OrdersOverview = ({
             label="order status"
             defaultChecked
             onChange={(e) => setSearchType(e.target.value)}
+            checked={searchType === "status"}
           />
         </CCol>
         <CCol md={2}>
@@ -92,6 +98,7 @@ const OrdersOverview = ({
             value="number"
             label="order number"
             onChange={(e) => setSearchType(e.target.value)}
+            checked={!!searchParams.get("order_id") || searchType === "number"}
           />
         </CCol>
 
@@ -101,7 +108,10 @@ const OrdersOverview = ({
               <CCol>
                 <CFormSelect
                   id="status"
-                  onChange={(e) => setOrderStatus(e.target.value)}
+                  onChange={(e) =>
+                    setSearchParams({ status: e.target.value, page: 1 })
+                  }
+                  value={searchParams.get("status") ?? ""}
                 >
                   <option value="">All</option>
                   {React.Children.toArray(
@@ -129,6 +139,16 @@ const OrdersOverview = ({
                   placeholder="order number"
                   aria-label="default input example"
                   id="order"
+                  value={searchParams.get("order_id") ?? ""}
+                  onChange={(e) => {
+                    if (_.isEmpty(e.target.value)) {
+                      setSearchParams((original) =>
+                        original.delete("order_id")
+                      );
+                    } else {
+                      setSearchParams({ order_id: e.target.value, page: 1 });
+                    }
+                  }}
                 />
               </CCol>
               <CCol>
@@ -149,8 +169,9 @@ const OrdersOverview = ({
           <OrdersModel data={orders} />
           <Paginator
             count={Number(count)}
-            params={params}
+            pageSize={pageSize}
             onChangePage={handlePageChange}
+            page={searchParams.get("page")}
           />
         </>
       )}
@@ -159,9 +180,10 @@ const OrdersOverview = ({
 };
 
 const mapStateToProps = (state) => ({
-  orders: state.orders.ordersOverview.orders,
+  orders: state.orders.ordersOverview.data,
   count: state.orders.ordersOverview?.count,
   statuses: state.orders.statuses,
+  loading: state.orders.loading,
 });
 
 const mapDispatchToProps = { getOverviewOrdersHandler, getStatuesHandler };

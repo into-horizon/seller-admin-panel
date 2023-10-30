@@ -5,12 +5,9 @@ class Finance extends ApiService {
     super();
     this.path = "api/v1/store";
   }
-  async getTransactions({ limit, offset }) {
+  async getTransactions(data) {
     try {
-      let result = await this.get(`${this.path}/transactions`, {
-        limit: limit,
-        offset: offset,
-      });
+      let result = await this.get(`${this.path}/transactions`, this.getLimitOffsetFromParams(data));
       return result;
     } catch (error) {
       throw new Error(error.message);

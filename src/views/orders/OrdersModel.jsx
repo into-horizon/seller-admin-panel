@@ -26,12 +26,9 @@ import {
 // import jsPDF from 'jspdf';
 import { useNavigate } from "react-router-dom";
 import Pdf from "../../components/Pdf";
-import { PDFDownloadLink, Document, Page } from "@react-pdf/renderer";
+// import { PDFDownloadLink, Document, Page } from "@react-pdf/renderer";
 
 const OrderModel = ({ data, updateOrderItemHandler }) => {
-  // const{ pendingOrders} = useSelector(state => state.orders)
-  const navigate = useNavigate();
-  // const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true);
   const [itemAction, setItemAction] = useState("");
   const [itemId, setItemId] = useState("");
@@ -40,7 +37,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
     setItemAction("");
     setItemId("");
   };
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(false);
     // setOrders(data)
   }, [data]);
@@ -109,7 +106,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
   return (
     <>
       {loading && <CSpinner color="primary" />}
-      {data.map((order, idx) => (
+      {data?.map((order, idx) => (
         <div
           id="orders"
           key={idx}
@@ -190,9 +187,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
                     <CTableDataCell>{item.price}</CTableDataCell>
                     <CTableDataCell>{item.quantity}</CTableDataCell>
                     {item.size && <CTableDataCell>{item.size}</CTableDataCell>}
-                    <CTableDataCell>
-                      {item.status}
-                    </CTableDataCell>
+                    <CTableDataCell>{item.status}</CTableDataCell>
                     {item.status === "pending" && (
                       <CTableDataCell>
                         <CModal
@@ -216,7 +211,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
             </div>
           ))}
 
-          <Pdf order={order}/>
+          <Pdf order={order} />
         </div>
       ))}
     </>

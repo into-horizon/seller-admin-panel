@@ -324,12 +324,6 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     margin: auto 1rem;
 }
 
-.switchDiv{
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    margin: 1rem;
-}
 
 .discountFormBtns{
     margin-top: 1rem;

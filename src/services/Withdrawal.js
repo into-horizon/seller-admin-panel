@@ -9,7 +9,7 @@ class Withdrawal extends ApiService {
 
     async getWithdrawals(payload) {
         try {
-            let result = await this.get(this.path,payload)
+            let result = await this.get(this.path,this.getLimitOffsetFromParams(payload))
             return result
         } catch (error) {
             return error
