@@ -126,13 +126,7 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     margin: auto .5rem !important;
 }   
 
-.sizesContainer{
-    /* display: flexbox;
-    flex-wrap: wrap;
-    flex-direction: row; */
-    /* justify-content: space-around; */
-    /* width: 100%; */
-}
+
 
 .radioBtns{
     display: flex;
@@ -330,12 +324,6 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     margin: auto 1rem;
 }
 
-.switchDiv{
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    margin: 1rem;
-}
 
 .discountFormBtns{
     margin-top: 1rem;
@@ -396,4 +384,9 @@ h1,h2,h3,h4,h5,h6, strong, span, th, td, input::first-letter,button::first-lette
     padding: 1rem;
     border-radius: 1rem;
     width: 100%;
+}
+
+.lg-spinner {
+    height: 3rem !important;
+    width: 3rem !important;
 }

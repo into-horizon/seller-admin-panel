@@ -109,8 +109,8 @@ const Login = (props) => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                            <CButton color="primary" className="px-4" type="submit"> 
-                              {load? <CSpinner color="light" size="sm"/>: t('login')}
+                            <CButton color="primary" className="px-4" type="submit" disabled={load}> 
+                              {load? <CSpinner color="light" size="sm"/>: t('login') }
                             </CButton>
                         {/* <If condition={load}>
                           <Then>

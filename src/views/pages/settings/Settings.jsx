@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {CNav,CNavItem ,CNavLink} from '@coreui/react'
-import Account from '../../../components/Account'
-import Address from '../address/Address'
+import Account from './account/Account'
+import Address from './address/Address'
 import { useTranslation } from 'react-i18next';
+import BankAccount from './transfer-account/BankAccount';
 
 const Settings = props => {
     const [activeKey, setActiveKey] = useState('settings')
@@ -27,14 +28,14 @@ const Settings = props => {
                     <CNavLink href="#" active={}>Link</CNavLink>
                 </CNavItem> */}
                 <CNavItem>
-                    <CNavLink href="#" active={activeKey === 'payment'} disabled onClick={() => setActiveKey('payment')}>
+                    <CNavLink href="#" active={activeKey === 'payment'}  onClick={() => setActiveKey('payment')}>
                        {t('payment')}
                     </CNavLink>
                 </CNavItem>
             </CNav>
                 {activeKey === 'settings' && <Account/>}
                 {activeKey === 'address' && <Address/>}
-
+                {activeKey === 'payment' && <BankAccount/>}
         </>
     )
 }

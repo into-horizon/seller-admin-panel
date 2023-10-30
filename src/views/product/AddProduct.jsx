@@ -10,6 +10,7 @@ import ColorSelector from 'src/components/ColorSelector';
 import Colors from '../../services/colors'
 import CIcon from '@coreui/icons-react';
 import { cilTrash, cilPlus } from '@coreui/icons';
+import _ from 'lodash';
 
 
 const AddProduct = props => {
@@ -23,13 +24,7 @@ const AddProduct = props => {
     const { addProductHandler } = props
 
     let sizeSymbols = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-    let sizeNumbers = []
-    if (sizeNumbers.length === 0) {
-        for (let i = 30; i <= 50; i++) {
-            sizeNumbers.push(i)
-        }
-
-    }
+    let sizeNumbers = _.range(30,51)
 
     const initialState = {
         values: [],

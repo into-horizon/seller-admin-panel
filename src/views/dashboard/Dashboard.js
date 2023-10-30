@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy } from "react";
 
 import {
   CAvatar,
@@ -22,11 +22,11 @@ import {
   CAccordionHeader,
   CAccordionBody,
   CWidgetStatsF,
-  CWidgetStatsB
-} from '@coreui/react'
-import { CChartLine } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
-import CIcon from '@coreui/icons-react'
+  CWidgetStatsB,
+} from "@coreui/react";
+import { CChartLine } from "@coreui/react-chartjs";
+import { getStyle, hexToRgba } from "@coreui/utils";
+import CIcon from "@coreui/icons-react";
 import {
   cibCcAmex,
   cibCcApplePay,
@@ -48,185 +48,224 @@ import {
   cilPeople,
   cilUser,
   cilUserFemale,
-  cilWarning
-} from '@coreui/icons'
-import { useTranslation } from 'react-i18next';
+  cilWarning,
+} from "@coreui/icons";
+import { useTranslation } from "react-i18next";
 
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
-import { useSelector } from 'react-redux'
-const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
-const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
+import avatar1 from "src/assets/images/avatars/1.jpg";
+import avatar2 from "src/assets/images/avatars/2.jpg";
+import avatar3 from "src/assets/images/avatars/3.jpg";
+import avatar4 from "src/assets/images/avatars/4.jpg";
+import avatar5 from "src/assets/images/avatars/5.jpg";
+import avatar6 from "src/assets/images/avatars/6.jpg";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
-  const { message, user: { rejected_reason, status, ontime_orders, overall_orders, fulfilled_orders }, loggedIn } = useSelector((state) => state.login)
-  const { t } = useTranslation('translation', { keyPrefix: 'dashboard' });
+  const {
+    message,
+    user: {
+      rejected_reason,
+      status,
+      ontime_orders,
+      overall_orders,
+      fulfilled_orders,
+      performance_rate,
+      sales_rate,
+    },
+    loggedIn,
+  } = useSelector((state) => state.login);
+  const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const random = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min)
-  }
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
 
-  const colorLevel = n =>{
-    if ( n >= 80 ) return 'success'
-    else if ( n >= 60) return ''
-    else if ( n >= 50) return 'warning'
-    else return 'danger'
-    
-  }
+  const colorLevel = (n) => {
+    if (n >= 80) return "success";
+    else if (n >= 60) return "";
+    else if (n >= 50) return "warning";
+    else return "danger";
+  };
   const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
+    { title: "Visits", value: "29.703 Users", percent: 40, color: "success" },
+    { title: "Unique", value: "24.093 Users", percent: 20, color: "info" },
+    {
+      title: "Pageviews",
+      value: "78.706 Views",
+      percent: 60,
+      color: "warning",
+    },
+    { title: "New Users", value: "22.123 Users", percent: 80, color: "danger" },
+    {
+      title: "Bounce Rate",
+      value: "Average Rate",
+      percent: 40.15,
+      color: "primary",
+    },
+  ];
 
   const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
+    { title: "Monday", value1: 34, value2: 78 },
+    { title: "Tuesday", value1: 56, value2: 94 },
+    { title: "Wednesday", value1: 12, value2: 67 },
+    { title: "Thursday", value1: 43, value2: 91 },
+    { title: "Friday", value1: 22, value2: 73 },
+    { title: "Saturday", value1: 53, value2: 82 },
+    { title: "Sunday", value1: 9, value2: 69 },
+  ];
 
   const progressGroupExample2 = [
-    { title: 'Male', icon: cilUser, value: 53 },
-    { title: 'Female', icon: cilUserFemale, value: 43 },
-  ]
+    { title: "Male", icon: cilUser, value: 53 },
+    { title: "Female", icon: cilUserFemale, value: 43 },
+  ];
 
   const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
+    { title: "Organic Search", icon: cibGoogle, percent: 56, value: "191,235" },
+    { title: "Facebook", icon: cibFacebook, percent: 15, value: "51,223" },
+    { title: "Twitter", icon: cibTwitter, percent: 11, value: "37,564" },
+    { title: "LinkedIn", icon: cibLinkedin, percent: 8, value: "27,319" },
+  ];
 
   const tableExample = [
     {
-      avatar: { src: avatar1, status: 'success' },
+      avatar: { src: avatar1, status: "success" },
       user: {
-        name: 'Yiorgos Avraamu',
+        name: "Yiorgos Avraamu",
         new: true,
-        registered: 'Jan 1, 2021',
+        registered: "Jan 1, 2021",
       },
-      country: { name: 'USA', flag: cifUs },
+      country: { name: "USA", flag: cifUs },
       usage: {
         value: 50,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
+        period: "Jun 11, 2021 - Jul 10, 2021",
+        color: "success",
       },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
+      payment: { name: "Mastercard", icon: cibCcMastercard },
+      activity: "10 sec ago",
     },
     {
-      avatar: { src: avatar2, status: 'danger' },
+      avatar: { src: avatar2, status: "danger" },
       user: {
-        name: 'Avram Tarasios',
+        name: "Avram Tarasios",
         new: false,
-        registered: 'Jan 1, 2021',
+        registered: "Jan 1, 2021",
       },
-      country: { name: 'Brazil', flag: cifBr },
+      country: { name: "Brazil", flag: cifBr },
       usage: {
         value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'info',
+        period: "Jun 11, 2021 - Jul 10, 2021",
+        color: "info",
       },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
+      payment: { name: "Visa", icon: cibCcVisa },
+      activity: "5 minutes ago",
     },
     {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'India', flag: cifIn },
+      avatar: { src: avatar3, status: "warning" },
+      user: { name: "Quintin Ed", new: true, registered: "Jan 1, 2021" },
+      country: { name: "India", flag: cifIn },
       usage: {
         value: 74,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'warning',
+        period: "Jun 11, 2021 - Jul 10, 2021",
+        color: "warning",
       },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
+      payment: { name: "Stripe", icon: cibCcStripe },
+      activity: "1 hour ago",
     },
     {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'France', flag: cifFr },
+      avatar: { src: avatar4, status: "secondary" },
+      user: { name: "Enéas Kwadwo", new: true, registered: "Jan 1, 2021" },
+      country: { name: "France", flag: cifFr },
       usage: {
         value: 98,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'danger',
+        period: "Jun 11, 2021 - Jul 10, 2021",
+        color: "danger",
       },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
+      payment: { name: "PayPal", icon: cibCcPaypal },
+      activity: "Last month",
     },
     {
-      avatar: { src: avatar5, status: 'success' },
+      avatar: { src: avatar5, status: "success" },
       user: {
-        name: 'Agapetus Tadeáš',
+        name: "Agapetus Tadeáš",
         new: true,
-        registered: 'Jan 1, 2021',
+        registered: "Jan 1, 2021",
       },
-      country: { name: 'Spain', flag: cifEs },
+      country: { name: "Spain", flag: cifEs },
       usage: {
         value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'primary',
+        period: "Jun 11, 2021 - Jul 10, 2021",
+        color: "primary",
       },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
+      payment: { name: "Google Wallet", icon: cibCcApplePay },
+      activity: "Last week",
     },
     {
-      avatar: { src: avatar6, status: 'danger' },
+      avatar: { src: avatar6, status: "danger" },
       user: {
-        name: 'Friderik Dávid',
+        name: "Friderik Dávid",
         new: true,
-        registered: 'Jan 1, 2021',
+        registered: "Jan 1, 2021",
       },
-      country: { name: 'Poland', flag: cifPl },
+      country: { name: "Poland", flag: cifPl },
       usage: {
         value: 43,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
+        period: "Jun 11, 2021 - Jul 10, 2021",
+        color: "success",
       },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
+      payment: { name: "Amex", icon: cibCcAmex },
+      activity: "Last week",
     },
-  ]
+  ];
 
   return (
     <>
-      {status !== 'approved' && <CAccordion flush>
-        <CAccordionItem itemKey={1}>
-          <CAccordionHeader>
-            <CIcon icon={cilWarning} />
-            <span style={{ margin: '0 0.5em' }}>
-              {status === 'pending' && t('pendingStatus')}
-              {status === 'rejected' && t('rejectedStatus')}
-            </span>
-          </CAccordionHeader>
-          <CAccordionBody>
-            {status === 'pending' && <p><strong>{t('moreInfo')}</strong>  <span>{t('pendingInfo')}</span></p>}
-            {status === 'rejected' && <p><strong>{t('rejectedReason')}: </strong>  <span>{rejected_reason}</span></p>}
-
-          </CAccordionBody>
-        </CAccordionItem>
-
-      </CAccordion>}
+      {status !== "approved" && (
+        <CAccordion flush>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader>
+              <CIcon icon={cilWarning} />
+              <span style={{ margin: "0 0.5em" }}>
+                {status === "pending" && t("pendingStatus")}
+                {status === "rejected" && t("rejectedStatus")}
+              </span>
+            </CAccordionHeader>
+            <CAccordionBody>
+              {status === "pending" && (
+                <p>
+                  <strong>{t("moreInfo")}</strong>{" "}
+                  <span>{t("pendingInfo")}</span>
+                </p>
+              )}
+              {status === "rejected" && (
+                <p>
+                  <strong>{t("rejectedReason")}: </strong>{" "}
+                  <span>{rejected_reason}</span>
+                </p>
+              )}
+            </CAccordionBody>
+          </CAccordionItem>
+        </CAccordion>
+      )}
       <br />
       {/* <WidgetsDropdown /> */}
       <CRow>
         <CCol xs={12}>
           <CWidgetStatsB
             className="mb-3"
-            progress={{ color: 'primary', value: ((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100 }}
-            color={colorLevel(((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100)}
+            progress={{ color: "primary", value: performance_rate }}
+            color={colorLevel(performance_rate)}
             // color= {colorLevel(40)}
-            title="overall performance rate"
-            value={((overall_orders - (fulfilled_orders - ontime_orders))/ overall_orders).toFixed(2) * 100 + '%'}
+            title={t("performanceRate")}
+            value={performance_rate + "%"}
+          />
+        </CCol>
+        <CCol xs={12}>
+          <CWidgetStatsB
+            className="mb-3"
+            progress={{ color: "primary", value: sales_rate * 20 }}
+            color={colorLevel(sales_rate * 20)}
+            // color= {colorLevel(40)}
+            title={t("salesRate")}
+            value={sales_rate * 20 + "%"}
           />
         </CCol>
       </CRow>
@@ -245,10 +284,14 @@ const Dashboard = () => {
             className="mb-3"
             color="primary"
             inverse
-            progress={{ value: (fulfilled_orders / overall_orders) * 100 }}
+            progress={{ value: (fulfilled_orders / overall_orders) * 100 ?? 0 }}
             text="items you have accepted"
-            title="fulfillment rate"
-            value={(fulfilled_orders / overall_orders).toFixed(2) * 100 + '%'}
+            title={t("fulfillmentRate")}
+            value={
+              (overall_orders
+                ? (fulfilled_orders / overall_orders).toFixed(2) * 100
+                : 0) + "%"
+            }
           />
         </CCol>
         <CCol xs={4}>
@@ -256,10 +299,14 @@ const Dashboard = () => {
             className="mb-3"
             color="success"
             inverse
-            progress={{ value: (ontime_orders / fulfilled_orders) * 100 }}
+            progress={{ value: (ontime_orders / fulfilled_orders) * 100 ?? 0 }}
             text="items were accepted on time"
-            title="acceptance on time rate"
-            value={(ontime_orders / fulfilled_orders).toFixed(2) * 100 + '%'}
+            title={t("acceptanceRate")}
+            value={
+              (overall_orders
+                ? (ontime_orders / fulfilled_orders).toFixed(2) * 100
+                : 0) + "%"
+            }
           />
         </CCol>
         <CCol xs={4}>
@@ -267,10 +314,21 @@ const Dashboard = () => {
             className="mb-3"
             color="danger"
             inverse
-            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 }}
+            progress={{
+              value:
+                ((overall_orders - fulfilled_orders) / overall_orders) * 100 ??
+                0,
+            }}
             text="items were canceled"
-            title="cancellation rate"
-            value={((overall_orders - fulfilled_orders) / overall_orders).toFixed(2) * 100 + '%'}
+            title={t("cancellationRate")}
+            value={
+              (overall_orders
+                ? (
+                    (overall_orders - fulfilled_orders) /
+                    overall_orders
+                  ).toFixed(2) * 100
+                : 0) + "%"
+            }
           />
         </CCol>
       </CRow>
@@ -278,9 +336,9 @@ const Dashboard = () => {
         <CCol xs={3}>
           <CWidgetStatsB
             className="mb-3"
-            progress={{ color: 'success', value: 100 }}
+            progress={{ color: "success", value: 100 }}
             text="total item purchased"
-            title="placed order items"
+            title={t("placedOrderItems")}
             value={overall_orders}
           />
         </CCol>
@@ -289,9 +347,9 @@ const Dashboard = () => {
             className="mb-3"
             color="primary"
             inverse
-            progress={{ value: (fulfilled_orders / overall_orders) * 100 }}
+            progress={{ value: (fulfilled_orders / overall_orders) * 100 ?? 0 }}
             text="items you have accepted"
-            title="accepted item"
+            title={t("acceptedItems")}
             value={fulfilled_orders}
           />
         </CCol>
@@ -300,9 +358,9 @@ const Dashboard = () => {
             className="mb-3"
             color="success"
             inverse
-            progress={{ value: (ontime_orders / fulfilled_orders) * 100 }}
+            progress={{ value: (ontime_orders / fulfilled_orders) * 100 ?? 0 }}
             text="items were accepted on time"
-            title="accepted on time"
+            title={t("acceptedOnTime")}
             value={ontime_orders}
           />
         </CCol>
@@ -311,9 +369,13 @@ const Dashboard = () => {
             className="mb-3"
             color="danger"
             inverse
-            progress={{ value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 }}
+            progress={{
+              value:
+                ((overall_orders - fulfilled_orders) / overall_orders) * 100 ??
+                0,
+            }}
             text="items were canceled"
-            title="canceled items"
+            title={t("canceledItems")}
             value={overall_orders - fulfilled_orders}
           />
         </CCol>
@@ -325,19 +387,21 @@ const Dashboard = () => {
               <h4 id="traffic" className="card-title mb-0">
                 Traffic
               </h4>
-              <div className="small text-medium-emphasis">January - July 2021</div>
+              <div className="small text-medium-emphasis">
+                January - July 2021
+              </div>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
               <CButton color="primary" className="float-end">
                 <CIcon icon={cilCloudDownload} />
               </CButton>
               <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
+                {["Day", "Month", "Year"].map((value) => (
                   <CButton
                     color="outline-secondary"
                     key={value}
                     className="mx-0"
-                    active={value === 'Month'}
+                    active={value === "Month"}
                   >
                     {value}
                   </CButton>
@@ -346,15 +410,23 @@ const Dashboard = () => {
             </CCol>
           </CRow>
           <CChartLine
-            style={{ height: '300px', marginTop: '40px' }}
+            style={{ height: "300px", marginTop: "40px" }}
             data={{
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+              labels: [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+              ],
               datasets: [
                 {
-                  label: 'My First dataset',
-                  backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                  borderColor: getStyle('--cui-info'),
-                  pointHoverBackgroundColor: getStyle('--cui-info'),
+                  label: "My First dataset",
+                  backgroundColor: hexToRgba(getStyle("--cui-info"), 10),
+                  borderColor: getStyle("--cui-info"),
+                  pointHoverBackgroundColor: getStyle("--cui-info"),
                   borderWidth: 2,
                   data: [
                     random(50, 200),
@@ -368,10 +440,10 @@ const Dashboard = () => {
                   fill: true,
                 },
                 {
-                  label: 'My Second dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-success'),
-                  pointHoverBackgroundColor: getStyle('--cui-success'),
+                  label: "My Second dataset",
+                  backgroundColor: "transparent",
+                  borderColor: getStyle("--cui-success"),
+                  pointHoverBackgroundColor: getStyle("--cui-success"),
                   borderWidth: 2,
                   data: [
                     random(50, 200),
@@ -384,10 +456,10 @@ const Dashboard = () => {
                   ],
                 },
                 {
-                  label: 'My Third dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-danger'),
-                  pointHoverBackgroundColor: getStyle('--cui-danger'),
+                  label: "My Third dataset",
+                  backgroundColor: "transparent",
+                  borderColor: getStyle("--cui-danger"),
+                  pointHoverBackgroundColor: getStyle("--cui-danger"),
                   borderWidth: 1,
                   borderDash: [8, 5],
                   data: [65, 65, 65, 65, 65, 65, 65],
@@ -438,32 +510,39 @@ const Dashboard = () => {
                 <strong>
                   {item.value} ({item.percent}%)
                 </strong>
-                <CProgress thin className="mt-2" color={item.color} value={item.percent} />
+                <CProgress
+                  thin
+                  className="mt-2"
+                  color={item.color}
+                  value={item.percent}
+                />
               </CCol>
             ))}
           </CRow>
         </CCardFooter>
       </CCard>
 
-      <WidgetsBrand withCharts />
-
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
+            <CCardHeader>Traffic {" & "} Sales</CCardHeader>
             <CCardBody>
               <CRow>
                 <CCol xs={12} md={6} xl={6}>
                   <CRow>
                     <CCol sm={6}>
                       <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
+                        <div className="text-medium-emphasis small">
+                          New Clients
+                        </div>
                         <div className="fs-5 fw-semibold">9,123</div>
                       </div>
                     </CCol>
                     <CCol sm={6}>
                       <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Recurring Clients</div>
+                        <div className="text-medium-emphasis small">
+                          Recurring Clients
+                        </div>
                         <div className="fs-5 fw-semibold">22,643</div>
                       </div>
                     </CCol>
@@ -473,7 +552,9 @@ const Dashboard = () => {
                   {progressGroupExample1.map((item, index) => (
                     <div className="progress-group mb-4" key={index}>
                       <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">{item.title}</span>
+                        <span className="text-medium-emphasis small">
+                          {item.title}
+                        </span>
                       </div>
                       <div className="progress-group-bars">
                         <CProgress thin color="info" value={item.value1} />
@@ -487,13 +568,17 @@ const Dashboard = () => {
                   <CRow>
                     <CCol sm={6}>
                       <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Pageviews</div>
+                        <div className="text-medium-emphasis small">
+                          Pageviews
+                        </div>
                         <div className="fs-5 fw-semibold">78,623</div>
                       </div>
                     </CCol>
                     <CCol sm={6}>
                       <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Organic</div>
+                        <div className="text-medium-emphasis small">
+                          Organic
+                        </div>
                         <div className="fs-5 fw-semibold">49,123</div>
                       </div>
                     </CCol>
@@ -506,7 +591,9 @@ const Dashboard = () => {
                       <div className="progress-group-header">
                         <CIcon className="me-2" icon={item.icon} size="lg" />
                         <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">{item.value}%</span>
+                        <span className="ms-auto fw-semibold">
+                          {item.value}%
+                        </span>
                       </div>
                       <div className="progress-group-bars">
                         <CProgress thin color="warning" value={item.value} />
@@ -522,8 +609,10 @@ const Dashboard = () => {
                         <CIcon className="me-2" icon={item.icon} size="lg" />
                         <span>{item.title}</span>
                         <span className="ms-auto fw-semibold">
-                          {item.value}{' '}
-                          <span className="text-medium-emphasis small">({item.percent}%)</span>
+                          {item.value}{" "}
+                          <span className="text-medium-emphasis small">
+                            ({item.percent}%)
+                          </span>
                         </span>
                       </div>
                       <div className="progress-group-bars">
@@ -543,9 +632,13 @@ const Dashboard = () => {
                       <CIcon icon={cilPeople} />
                     </CTableHeaderCell>
                     <CTableHeaderCell>User</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">
+                      Country
+                    </CTableHeaderCell>
                     <CTableHeaderCell>Usage</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">
+                      Payment Method
+                    </CTableHeaderCell>
                     <CTableHeaderCell>Activity</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -553,17 +646,25 @@ const Dashboard = () => {
                   {tableExample.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
+                        <CAvatar
+                          size="md"
+                          src={item.avatar.src}
+                          status={item.avatar.status}
+                        />
                       </CTableDataCell>
                       <CTableDataCell>
                         <div>{item.user.name}</div>
                         <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
+                          <span>{item.user.new ? "New" : "Recurring"}</span> |
+                          Registered: {item.user.registered}
                         </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
+                        <CIcon
+                          size="xl"
+                          icon={item.country.flag}
+                          title={item.country.name}
+                        />
                       </CTableDataCell>
                       <CTableDataCell>
                         <div className="clearfix">
@@ -571,16 +672,24 @@ const Dashboard = () => {
                             <strong>{item.usage.value}%</strong>
                           </div>
                           <div className="float-end">
-                            <small className="text-medium-emphasis">{item.usage.period}</small>
+                            <small className="text-medium-emphasis">
+                              {item.usage.period}
+                            </small>
                           </div>
                         </div>
-                        <CProgress thin color={item.usage.color} value={item.usage.value} />
+                        <CProgress
+                          thin
+                          color={item.usage.color}
+                          value={item.usage.value}
+                        />
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         <CIcon size="xl" icon={item.payment.icon} />
                       </CTableDataCell>
                       <CTableDataCell>
-                        <div className="small text-medium-emphasis">Last login</div>
+                        <div className="small text-medium-emphasis">
+                          Last login
+                        </div>
                         <strong>{item.activity}</strong>
                       </CTableDataCell>
                     </CTableRow>
@@ -592,7 +701,7 @@ const Dashboard = () => {
         </CCol>
       </CRow>
     </>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
