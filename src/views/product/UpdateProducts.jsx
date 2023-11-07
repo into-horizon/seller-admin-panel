@@ -11,7 +11,7 @@ import Select from "react-dropdown-select";
 const UpdateProduct = (props) => {
     const { showOptionDialog, showToast, showAlert } = usePopup();
     const dispatch = useDispatch()
-    const { t, i18n } = useTranslation('translation', { keyPrefix: 'addProduct' });
+    const { t, i18n } = useTranslation('product');
     const { message, currentProducts:{count, products,searchData,searched},  } = useSelector(state => state.products)
     const {parentCategories,childCategories, grandChildCategories} = useSelector(state => state.category)
     let sizeSymbols = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];

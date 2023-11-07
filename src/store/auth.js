@@ -1,52 +1,107 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import cookie from "react-cookies";
 import Auth from "../services/Auth";
 import Update from "src/services/Update";
+import { showDialog } from "./dialog";
+import { DialogType } from "react-custom-popup";
+import { triggerToast } from "./toast";
 const NewAuth = new Auth();
 const NewUpdate = new Update();
 
 const login = createSlice({
   name: "login",
-  initialState: { loggedIn: false, user: {}, message: "" },
+  initialState: { loggedIn: false, user: {}, message: "", loading: false },
   reducers: {
     loginAction(state, action) {
       return { ...state, ...action.payload };
     },
 
-    deleteMessage(state, action) {
+    deleteMessage(state) {
       return { ...state, message: "" };
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(loginHandler.fulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(loginHandler.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(loginHandler.rejected, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(getUser.fulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(getUser.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getUser.rejected, (state) => {
+      state.loading = false;
+    });
+  },
 });
 
-export const loginHandler = (payload) => async (dispatch) => {
-  try {
-    let response = await NewAuth.basicAuth(payload);
-    if (response.status === 200) {
-      cookie.save("access_token", response.access_token, { path: "/" });
-      cookie.save("refresh_token", response.refresh_token, { path: "/" });
-      cookie.save("session_id", response.session_id, { path: "/" });
+export const loginHandler = createAsyncThunk(
+  "auth/login",
+  async (payload, { dispatch, rejectWithValue }) => {
+    try {
+      let response = await NewAuth.basicAuth(payload);
+      if (response.status === 200) {
+        cookie.save("access_token", response.access_token, { path: "/" });
+        cookie.save("refresh_token", response.refresh_token, { path: "/" });
+        cookie.save("session_id", response.session_id, { path: "/" });
+        let user = await NewAuth.getStore();
+        dispatch(loginAction({ loggedIn: true, user: { ...user } }));
+      } else {
+        dispatch(
+          showDialog({
+            message: response.message,
+            type: DialogType.DANGER,
+            title: "login error",
+          })
+        );
+        rejectWithValue(response.message);
+      }
+    } catch (err) {
+      dispatch(
+        showDialog({
+          message: "you are not a seller",
+          type: DialogType.DANGER,
+          title: "unauthorized",
+        })
+      );
+      rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getUser = createAsyncThunk(
+  "auth/getUser",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
       let user = await NewAuth.getStore();
-      dispatch(loginAction({ loggedIn: true, user: { ...user } }));
-    } else {
-      dispatch(loginAction({ message: response.message }));
+      if (user?.id) {
+        dispatch(loginAction({ loggedIn: true, user: { ...user } }));
+      } else {
+        dispatch(logout());
+        dispatch(
+          triggerToast({
+            message: "session has expired",
+            type: DialogType.WARNING,
+          })
+        );
+        rejectWithValue("session has expired");
+      }
+    } catch (error) {
+      rejectWithValue(error.message);
+      dispatch(
+        triggerToast({ message: error.message, type: DialogType.WARNING })
+      );
+      dispatch(loginAction({ loggedIn: false, user: {} }));
     }
-  } catch (err) {
-    dispatch(loginAction({ message: "you are not a seller" }));
   }
-};
-export const getUser = () => async (dispatch) => {
-  try {
-    let user = await NewAuth.getStore();
-    if (user?.id) {
-      dispatch(loginAction({ loggedIn: true, user: { ...user } }));
-    } else {
-      dispatch(logout());
-    }
-  } catch (error) {
-    dispatch(loginAction({ loggedIn: false, user: {} }));
-  }
-};
+);
 
 export const logout = () => async (dispatch) => {
   await NewAuth.logout();

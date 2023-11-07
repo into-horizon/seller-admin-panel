@@ -1,4 +1,5 @@
 import _ from "lodash";
+import * as _history from "history";
 
 export const getSearchParamsObject = (searchParams) => {
   let data = {};
@@ -23,3 +24,5 @@ export const updateSearchParams = (
   data[key] = value;
   setSearchParams(data);
 };
+
+export const history = _history.createBrowserHistory();

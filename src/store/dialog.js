@@ -11,10 +11,10 @@ const globalDialog = createSlice({
   initialState,
   reducers: {
     showDialog(_, action) {
-      return { ...action.payload };
+      return action.payload;
     },
     resetState() {
-      return { ...initialState };
+      return initialState;
     },
   },
 });

@@ -24,7 +24,7 @@ import {
   CWidgetStatsF,
   CWidgetStatsB,
 } from "@coreui/react";
-import { CChartLine } from "@coreui/react-chartjs";
+import { CChart, CChartLine } from "@coreui/react-chartjs";
 import { getStyle, hexToRgba } from "@coreui/utils";
 import CIcon from "@coreui/icons-react";
 import {
@@ -59,10 +59,10 @@ import avatar4 from "src/assets/images/avatars/4.jpg";
 import avatar5 from "src/assets/images/avatars/5.jpg";
 import avatar6 from "src/assets/images/avatars/6.jpg";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "src/components/LoadingSpinner";
 
 const Dashboard = () => {
   const {
-    message,
     user: {
       rejected_reason,
       status,
@@ -72,7 +72,7 @@ const Dashboard = () => {
       performance_rate,
       sales_rate,
     },
-    loggedIn,
+    loading,
   } = useSelector((state) => state.login);
   const { t } = useTranslation("translation", { keyPrefix: "dashboard" });
   const random = (min, max) => {
@@ -215,7 +215,9 @@ const Dashboard = () => {
       activity: "Last week",
     },
   ];
-
+  if (loading) {
+    return <LoadingSpinner />;
+  }
   return (
     <>
       {status !== "approved" && (
@@ -248,7 +250,7 @@ const Dashboard = () => {
       <br />
       {/* <WidgetsDropdown /> */}
       <CRow>
-        <CCol xs={12}>
+        <CCol xs={6}>
           <CWidgetStatsB
             className="mb-3"
             progress={{ color: "primary", value: performance_rate }}
@@ -258,7 +260,7 @@ const Dashboard = () => {
             value={performance_rate + "%"}
           />
         </CCol>
-        <CCol xs={12}>
+        <CCol xs={6}>
           <CWidgetStatsB
             className="mb-3"
             progress={{ color: "primary", value: sales_rate * 20 }}
@@ -378,6 +380,33 @@ const Dashboard = () => {
             title={t("canceledItems")}
             value={overall_orders - fulfilled_orders}
           />
+        </CCol>
+      </CRow>
+      <CRow className="justify-content-center align-items-center">
+        <CCol xs={6}>
+          <CCard className="p-5 my-2">
+            <CChart
+              type="doughnut"
+              data={{
+                labels: [t("acceptedItems"), t("canceledItems")],
+                datasets: [
+                  {
+                    backgroundColor: ["#41B883", "#E46651"],
+                    data: [fulfilled_orders, overall_orders - fulfilled_orders],
+                  },
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    labels: {
+                      color: getStyle("--cui-body-color"),
+                    },
+                  },
+                },
+              }}
+            />
+          </CCard>
         </CCol>
       </CRow>
       <CCard className="mb-4">

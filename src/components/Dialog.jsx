@@ -21,7 +21,7 @@ export const GlobalDialog = () => {
   const showDialog = (title, message) => {
     showAlert({
       type: DialogType.DANGER,
-      text: message,
+      text:  message,
       title: title,
       animationType: AnimationType.FADE_IN,
       outAnimationType: OutAnimationType.FADE_OUT,

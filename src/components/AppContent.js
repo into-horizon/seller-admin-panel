@@ -6,23 +6,16 @@ import cookie from "react-cookies";
 import routes from "../routes";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "./LoadingSpinner";
 
 const AppContent = () => {
   const { status } = useSelector((state) => state.login.user);
-  const navigate = useNavigate();
   const location = useLocation()
   const { t } = useTranslation("translation", { keyPrefix: "routes" });
   t("addProduct");
-  // useEffect(() => {
-  //   let currentPath = cookie.load(`current_path${sessionStorage.tabID}`);
-  //   navigate(currentPath);
-  //   if (window.location.pathname === "/") {
-  //     navigate("/dashboard");
-  //   }
-  // }, []);
   return (
     <CContainer lg>
-      <Suspense fallback={<CSpinner color="primary" />}>
+      <Suspense fallback={<LoadingSpinner/>}>
         <Routes>
           {routes.map((route, idx) => {
             const Item = route.component;
@@ -43,7 +36,7 @@ const AppContent = () => {
             );
           })}
         </Routes>
-       {location.pathname === '/' && <Navigate from="/" to="/dashboard" />}
+       {location.pathname === '/' && <Navigate to="/dashboard" />}
       </Suspense>
     </CContainer>
   );

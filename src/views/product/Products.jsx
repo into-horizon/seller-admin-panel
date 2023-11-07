@@ -8,9 +8,7 @@ const Products = (props) => {
   const [activeKey, setActiveKey] = useState(
     cookie.load("status") || "approved"
   );
-  const { t, i18n } = useTranslation("translation", {
-    keyPrefix: "addProduct",
-  });
+  const { t } = useTranslation("product");
 
   const changeStatus = (e, status) => {
     e.preventDefault();

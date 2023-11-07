@@ -7,6 +7,7 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSwitch,
   CModal,
   CModalFooter,
   CModalHeader,
@@ -15,7 +16,6 @@ import {
 } from "@coreui/react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Switch from "react-switch";
 
 const DiscountModal = ({ product, onSubmit, loading }) => {
   const { t, i18n } = useTranslation("translation", {
@@ -49,20 +49,23 @@ const DiscountModal = ({ product, onSubmit, loading }) => {
           <CCardBody className="p-3">
             <CRow className="align-items-center justify-content-center">
               <CCol xs="6 row">
-                <CCol x="auto">
+                <CCol xs="auto my-3">
                   <CFormLabel htmlFor="discount" className="my-auto">
                     {t("discount")}
                   </CFormLabel>
                 </CCol>
-                <CCol x="auto">
-                  <Switch
+                <CCol xs="auto my-3">
+                  <CFormSwitch
+                    size="lg"
                     name="discount"
                     className="my-auto"
-                    onChange={(i) =>
-                      setDiscountForm((x) => ({ ...x, discount: i }))
+                    onChange={(e) =>
+                      setDiscountForm((x) => ({
+                        ...x,
+                        discount: e.target.checked,
+                      }))
                     }
-                    checked={discountForm?.discount }
-                    
+                    checked={!!discountForm?.discount}
                   />
                 </CCol>
               </CCol>

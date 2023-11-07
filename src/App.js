@@ -12,12 +12,15 @@ import {
   getParentCategoriesHandler,
   getChildCategoriesHandler,
   getGrandChildCategoriesHandler,
+  getCategories,
 } from "./store/category";
 import { getAddress } from "./store/address";
 import GlobalToast from "./components/Toast";
 import GlobalDialog from "./components/Dialog";
 import { CCol, CContainer, CRow } from "@coreui/react";
 import * as buffer from "buffer";
+import Auth from "./services/Auth";
+import { history } from "./services/utils";
 window.Buffer = buffer.Buffer;
 
 const loading = (
@@ -40,23 +43,23 @@ const ResetPassword = React.lazy(() =>
   import("./views/pages/password/ResetPassword")
 );
 
-const App = (props) => {
+const App = ({
+  getParentCategoriesHandler,
+  getChildCategoriesHandler,
+  getGrandChildCategoriesHandler,
+  getAddress,
+  getCategories,
+  getUser,
+}) => {
   const {
     loggedIn,
     user: { id, verified_email },
   } = useSelector((state) => state.login);
 
   const navigate = useNavigate();
-  const to = useParams().token;
-  const {
-    getParentCategoriesHandler,
-    getChildCategoriesHandler,
-    getGrandChildCategoriesHandler,
-    getAddress,
-  } = props;
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [load, setLoad] = useState(true);
-  const location = useLocation()
+  const location = useLocation();
   let token = cookie.load("access_token");
   const checkUnAuth = (route) => {
     let unAuth = ["/login", "/register", "/reference"];
@@ -71,42 +74,43 @@ const App = (props) => {
     let tabID = sessionStorage.tabID
       ? sessionStorage.tabID
       : (sessionStorage.tabID = (Math.random() * 1000).toFixed(0));
-    // cookie.save(
-    //   `current_path${sessionStorage.tabID}`,
-    //   location.pathname
-    // );
-    getParentCategoriesHandler();
-    getChildCategoriesHandler();
-    getGrandChildCategoriesHandler();
-
-    let lang = localStorage.getItem("i18nextLng");
+    const lang = localStorage.getItem("i18nextLng");
     if (lang) {
       i18n.changeLanguage(lang);
     } else {
       i18n.changeLanguage("en");
     }
-
-    if (!id && token) {
-      props.getUser();
-      getAddress();
-    }
   }, []);
 
   useEffect(() => {
-    let currentPath = location.pathname
-
-    if (loggedIn && id && verified_email) {
-      // navigate(checkUnAuth(currentPath) ? "/" : currentPath);
-      setLoad(false);
-    } else if (!loggedIn && !token && !id) {
-      let path = checkUnAuth(currentPath) ? currentPath : "/login";
-      // cookie.save(`current_path${sessionStorage.tabID}`, path, { path: "/" });
-      navigate(path);
-      setLoad(false);
-    } else if (verified_email === false) {
-      navigate("/verify");
-      setLoad(false);
-    }
+    let currentPath = location.pathname;
+    Promise.all([new Auth().checkAPI()])
+      .then(() => {
+        if (location.pathname === "/500") {
+          navigate("/");
+        }
+        getParentCategoriesHandler();
+        getChildCategoriesHandler();
+        getGrandChildCategoriesHandler();
+        getCategories();
+        if (!id && token) {
+          getUser();
+          getAddress();
+        }
+        if (loggedIn && id && verified_email) {
+          navigate(!checkUnAuth(location.pathname) ?  location.pathname: '/');
+        } else if (!loggedIn && !token && !id) {
+          let path = checkUnAuth(currentPath) ? currentPath : "/login";
+          navigate(path);
+        } else if (verified_email === false) {
+          navigate("/verify");
+        }
+        setLoad(false);
+      })
+      .catch(() => {
+        setLoad(false);
+        navigate("/500");
+      });
   }, [loggedIn, verified_email]);
 
   useEffect(() => {
@@ -118,6 +122,7 @@ const App = (props) => {
       document.documentElement.setAttribute("dir", "rtl");
     }
   }, [i18n.language]);
+
   const Loading = () => (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -133,7 +138,7 @@ const App = (props) => {
     <PopupProvider>
       <GlobalToast />
       <GlobalDialog />
-      <React.Suspense fallback={<Loading/>}>
+      <React.Suspense fallback={<Loading />}>
         {load && <Loading />}
         {!load && (
           <Routes>
@@ -170,5 +175,6 @@ const mapDispatchToProps = {
   getChildCategoriesHandler,
   getGrandChildCategoriesHandler,
   getAddress,
+  getCategories,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);
