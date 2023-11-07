@@ -9,7 +9,7 @@ const ColorSelector = ({
   onChange: propsOnChange,
   className,
 }) => {
-  const { t, i18n } = useTranslation("translation", { keyPrefix: "colors" });
+  const { t } = useTranslation("color");
   const [color, setColor] = useState(value);
   const onChange = (e) => {
     setColor(e.target.value);

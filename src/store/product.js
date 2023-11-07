@@ -8,6 +8,7 @@ const initialState = {
   message: "",
   product: [],
   currentProducts: { count: 0, products: [], searchData: [], searched: {} },
+  success: false,
 };
 
 const products = createSlice({
@@ -89,6 +90,9 @@ const products = createSlice({
         },
       };
     },
+    resetSuccess(state) {
+      state.success = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getProductsByStatusHandler.fulfilled, (state) => {
@@ -100,25 +104,38 @@ const products = createSlice({
     builder.addCase(getProductsByStatusHandler.rejected, (state) => {
       state.loading = false;
     });
+    builder.addCase(addProductHandler.fulfilled, (state) => {
+      state.loading = false;
+      state.success = true;
+    });
+    builder.addCase(addProductHandler.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addProductHandler.rejected, (state) => {
+      state.loading = false;
+    });
   },
 });
 
-export const addProductHandler = (payload) => async (dispatch, state) => {
-  try {
-    let result = await Product.addProduct(payload);
-    if (result.status === 201) {
-      dispatch(addProduct(result));
-    } else {
-      dispatch(errorMessage({ message: result }));
+export const addProductHandler = createAsyncThunk(
+  "product/create",
+  async (payload, { dispatch, rejectWithValue }) => {
+    try {
+      let { status, data, message } = await Product.addProduct(payload);
+      if (status === 201) {
+        dispatch(triggerToast({ message, type: DialogType.INFO }));
+      } else {
+        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        return rejectWithValue(message);
+      }
+    } catch (error) {
+      dispatch(
+        triggerToast({ message: error.message, type: DialogType.DANGER })
+      );
+      return rejectWithValue(error.message);
     }
-  } catch (error) {
-    dispatch(
-      errorMessage(() => {
-        return { message: "something went wrong" };
-      })
-    );
   }
-};
+);
 
 export const getProductsByStatusHandler = createAsyncThunk(
   "products/getByStatus",
@@ -342,4 +359,5 @@ export const {
   addSearchData,
   addSearchedProduct,
   deleteProduct,
+  resetSuccess,
 } = products.actions;

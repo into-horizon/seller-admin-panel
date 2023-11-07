@@ -43,6 +43,13 @@ import ApiService from "./ApiService";
 
         }
     }
+    async getCategories(){
+        try {
+            return await this.get(`${this.path}/category`)
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    }
 }
 
 const Category = new CategoryService()
