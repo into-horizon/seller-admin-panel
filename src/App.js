@@ -89,16 +89,13 @@ const App = ({
         if (location.pathname === "/500") {
           navigate("/");
         }
-        getParentCategoriesHandler();
-        getChildCategoriesHandler();
-        getGrandChildCategoriesHandler();
-        getCategories();
         if (!id && token) {
           getUser();
-          getAddress();
         }
         if (loggedIn && id && verified_email) {
-          navigate(!checkUnAuth(location.pathname) ?  location.pathname: '/');
+          getAddress();
+          getCategories();
+          navigate(!checkUnAuth(location.pathname) ? location.pathname : "/");
         } else if (!loggedIn && !token && !id) {
           let path = checkUnAuth(currentPath) ? currentPath : "/login";
           navigate(path);
@@ -114,12 +111,13 @@ const App = ({
   }, [loggedIn, verified_email]);
 
   useEffect(() => {
-    if (i18n.language === "en") {
-      document.documentElement.setAttribute("lang", "en");
-      document.documentElement.setAttribute("dir", "ltl");
-    } else if (i18n.language === "ar") {
+    if (i18n.language === "ar") {
       document.documentElement.setAttribute("lang", "ar");
       document.documentElement.setAttribute("dir", "rtl");
+    } else {
+      document.documentElement.setAttribute("lang", "en");
+      document.documentElement.setAttribute("dir", "ltl");
+      i18n.changeLanguage("en");
     }
   }, [i18n.language]);
 
