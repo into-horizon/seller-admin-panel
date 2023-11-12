@@ -23,32 +23,17 @@ import {
   CModalTitle,
   CForm,
 } from "@coreui/react";
-// import jsPDF from 'jspdf';
-import { useNavigate } from "react-router-dom";
 import Pdf from "../../components/Pdf";
-// import { PDFDownloadLink, Document, Page } from "@react-pdf/renderer";
+import { useTranslation } from "react-i18next";
 
 const OrderModel = ({ data, updateOrderItemHandler }) => {
   const [loading, setLoading] = useState(true);
   const [itemAction, setItemAction] = useState("");
   const [itemId, setItemId] = useState("");
-
-  const closeModel = () => {
-    setItemAction("");
-    setItemId("");
-  };
+  const { t, i18n } = useTranslation(["order", "color", "global"]);
   useEffect(() => {
     setLoading(false);
-    // setOrders(data)
   }, [data]);
-  // const generatePDF = () => {
-  //     const doc = new jsPDF('landscape', 'pt', 'a4')
-  //     doc.html(document.getElementById('orders'), {
-  //         callback: (pdf) => {
-  //             pdf.save('mypdf.pdf')
-  //         }
-  //     })
-  // }
   const updateItem = (e, item) => {
     e.preventDefault();
     itemAction === "canceled"
@@ -60,46 +45,74 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
       : updateOrderItemHandler({ ...item, status: e.target.status.value });
     closeModel();
   };
+  const localizations = {
+    ar: "ar-eg",
+    en: "en-US",
+  };
+  const localizedDate = (date) =>
+    Intl.DateTimeFormat(localizations[i18n.language], {
+      day: "2-digit",
+      year: "numeric",
+      month: "2-digit",
+    }).format(date);
 
-  // useEffect(() => {
-  //       setOrders(pendingOrders)
-  // },[data])
+  const localizedNumber = (number) =>
+    Intl.NumberFormat(localizations[i18n.language]).format(number);
+    
   const OrderItemAction = ({ item }) => {
     const { entitle } = item;
+    const [visible, setVisible] = useState(false);
+    const closeModel = () => {
+      setVisible(false);
+    };
     return (
       <React.Fragment>
-        <CModalHeader>{entitle}</CModalHeader>
+        <CButton color="secondary" onClick={() => visible(true)}>
+          {t("TAKE_ACTION")}
+        </CButton>
+        <CModal visible={visible} alignment="center" onClose={closeModel}>
+          <CModalHeader>{entitle}</CModalHeader>
 
-        <CForm onSubmit={(e) => updateItem(e, item)}>
-          <CRow>
-            <CCol md={11}>
-              <CFormSelect
-                id="status"
-                onChange={(e) => setItemAction(e.target.value)}
-                className="m-2-1rem"
-                value={itemAction}
-              >
-                <option value="accepted">approve</option>
-                <option value="canceled">reject</option>
-              </CFormSelect>
-            </CCol>
-            {itemAction === "canceled" && (
-              <CCol md={11} className="m-2-1rem">
+          <CForm onSubmit={(e) => updateItem(e, item)}>
+            <CRow>
+              <CCol md={11}>
                 <CFormSelect
-                  id="cancellation_reason"
-                  required={itemAction === "rejected"}
+                  id="status"
+                  onChange={(e) => setItemAction(e.target.value)}
+                  className="m-2-1rem"
+                  value={itemAction}
                 >
-                  <option value="incorrect item">incorrect item</option>
-                  <option value="out of stock">out of stock</option>
-                  <option value="defective">defective</option>
+                  <option value="accepted">{t("APPROVE")}</option>
+                  <option value="canceled">{t("reject".toUpperCase())}</option>
                 </CFormSelect>
               </CCol>
-            )}
-          </CRow>
-          <CModalFooter>
-            <CButton type="submit">submit</CButton>
-          </CModalFooter>
-        </CForm>
+              {itemAction === "canceled" && (
+                <CCol md={11} className="m-2-1rem">
+                  <CFormSelect
+                    id="cancellation_reason"
+                    required={itemAction === "rejected"}
+                  >
+                    <option value="incorrect item">
+                      {t("INCORRECT_ITEM")}
+                    </option>
+                    <option value="out of stock">{t("OUT_OF_STOCK")}</option>
+                    <option value="defective">
+                      {t("defective".toUpperCase())}
+                    </option>
+                  </CFormSelect>
+                </CCol>
+              )}
+            </CRow>
+            <CModalFooter>
+              <CButton color="secondary" type="button">
+                {t("close")}
+              </CButton>
+              <CButton type="submit">
+                {t("submit".toLowerCase(), { ns: "global" })}
+              </CButton>
+            </CModalFooter>
+          </CForm>
+        </CModal>
       </React.Fragment>
     );
   };
@@ -118,17 +131,17 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
             margin: "2rem 0",
           }}
         >
-          <h5>order details</h5>
+          <h5>{t("ORDER_DETAILS")}</h5>
           <CTable>
             <CTableHead>
               <CTableRow>
-                <CTableHeaderCell>Order ID</CTableHeaderCell>
-                <CTableHeaderCell>customer Name</CTableHeaderCell>
-                <CTableHeaderCell>grand total</CTableHeaderCell>
-                <CTableHeaderCell>status</CTableHeaderCell>
-                <CTableHeaderCell>placed at</CTableHeaderCell>
-                <CTableHeaderCell>last update at</CTableHeaderCell>
-                <CTableHeaderCell>delivered at</CTableHeaderCell>
+                <CTableHeaderCell>{t("ORDER_NUMBER")}</CTableHeaderCell>
+                <CTableHeaderCell>{t("CUSTOMER_NAME")}</CTableHeaderCell>
+                <CTableHeaderCell>{t("GRAND_TOTAL")}</CTableHeaderCell>
+                <CTableHeaderCell>{t("STATUS")}</CTableHeaderCell>
+                <CTableHeaderCell>{t("PLACED_AT")}</CTableHeaderCell>
+                <CTableHeaderCell>{t("UPDATED_AT")}</CTableHeaderCell>
+                <CTableHeaderCell>{t("DELIVERED_AT")}</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -137,19 +150,19 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
                 <CTableDataCell>
                   {`${order.first_name} ${order.last_name}`}
                 </CTableDataCell>
-                <CTableDataCell>{order.grand_total.toFixed(2)}</CTableDataCell>
-                <CTableDataCell>{order.status}</CTableDataCell>
                 <CTableDataCell>
-                  {new Date(order.created_at).toLocaleDateString()}
+                  {localizedNumber(order.grand_total.toFixed(2))}
+                </CTableDataCell>
+                <CTableDataCell>{t(order.status.toUpperCase())}</CTableDataCell>
+                <CTableDataCell>
+                  {localizedDate(new Date(order.created_at))}
                 </CTableDataCell>
                 <CTableDataCell>
-                  {order.updated
-                    ? new Date(order.updated).toLocaleDateString()
-                    : "-"}
+                  {order.updated ? localizedDate(new Date(order.updated)) : "-"}
                 </CTableDataCell>
                 <CTableDataCell>
                   {order.delivery_date
-                    ? new Date(order.delivery_date).toLocaleDateString()
+                    ? localizedDate(new Date(order.delivery_date))
                     : "-"}
                 </CTableDataCell>
               </CTableRow>
@@ -157,18 +170,19 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
           </CTable>
           {order.items.map((item, i) => (
             <div key={i}>
-              <h6>order items</h6>
+              <h6>{t("ORDER_ITEMS")}</h6>
               <CTable key={i} align="middle">
                 <CTableHead>
                   <CTableRow>
-                    <CTableHeaderCell>image</CTableHeaderCell>
-                    <CTableHeaderCell>Title</CTableHeaderCell>
-                    <CTableHeaderCell>price</CTableHeaderCell>
-                    <CTableHeaderCell>quantity</CTableHeaderCell>
-                    {item.size && <CTableHeaderCell>size</CTableHeaderCell>}
-                    <CTableHeaderCell>status</CTableHeaderCell>
+                    <CTableHeaderCell>{t("IMAGE")}</CTableHeaderCell>
+                    <CTableHeaderCell>{t("TITLE")}</CTableHeaderCell>
+                    <CTableHeaderCell>{t("PRICE")}</CTableHeaderCell>
+                    <CTableHeaderCell>{t("QUANTITY")}</CTableHeaderCell>
+                    <CTableHeaderCell>{t("SIZE")}</CTableHeaderCell>
+                    <CTableHeaderCell>{t("COLOR")}</CTableHeaderCell>
+                    <CTableHeaderCell>{t("STATUS")}</CTableHeaderCell>
                     {item.status === "pending" && (
-                      <CTableHeaderCell>action</CTableHeaderCell>
+                      <CTableHeaderCell>{t("ACTIONS")}</CTableHeaderCell>
                     )}
                   </CTableRow>
                 </CTableHead>
@@ -183,26 +197,27 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
                         />
                       )}
                     </CTableDataCell>
-                    <CTableDataCell>{item.entitle}</CTableDataCell>
-                    <CTableDataCell>{item.price}</CTableDataCell>
-                    <CTableDataCell>{item.quantity}</CTableDataCell>
-                    {item.size && <CTableDataCell>{item.size}</CTableDataCell>}
-                    <CTableDataCell>{item.status}</CTableDataCell>
+                    <CTableDataCell>
+                      {item[`${i18n.language}title`]}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {localizedNumber(item.price)}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {localizedNumber(item.quantity)}
+                    </CTableDataCell>
+                    <CTableDataCell>{item.size ?? "-"}</CTableDataCell>
+                    <CTableDataCell>
+                      {item.color
+                        ? t(item.color?.capitalize(), { ns: "color" })
+                        : "-"}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {t(item.status.toUpperCase())}
+                    </CTableDataCell>
                     {item.status === "pending" && (
                       <CTableDataCell>
-                        <CModal
-                          visible={itemId === item.id}
-                          alignment="center"
-                          onClose={closeModel}
-                        >
-                          <OrderItemAction item={item} />
-                        </CModal>
-                        <CButton
-                          color="secondary"
-                          onClick={() => setItemId(item.id)}
-                        >
-                          action
-                        </CButton>
+                        <OrderItemAction item={item} />
                       </CTableDataCell>
                     )}
                   </CTableRow>

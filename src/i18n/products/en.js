@@ -65,4 +65,10 @@ export default {
   COMMISSION_TEXT:
     "the commission on the selected category is {{commission}}% and will be added to the price you insert, unless you checked on {{included}}. ",
   COMMISSION_INCLUDED: "price includes commission",
+  PRODUCT: "Product",
+  COLOR_OR_SIZE: 'Colors or Sizes',
+  COLORS: 'Colors',
+  SIZES: 'Sizes',
+  COLORS_AND_SIZES: 'Colors and Sizes',
+
 };

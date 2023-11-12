@@ -1,0 +1,18 @@
+export default {
+  register: "Register",
+  createAccount: "Create your account",
+  storeName: "Store Name",
+  yourEmail: "Your horizon account email",
+  amman: "Amman",
+  mobileNumber: "Mobile Number",
+  caption: "Caption",
+  about: "About",
+  choosePic: "Choose a picture to your store",
+  createBtn: "Create Account",
+  alreadyRegistered: "You Already Have An Account",
+  login: "login",
+  notTitle: "User not found",
+  notText: "there's no account associated with this email",
+  existsTitle: "Account already exists",
+  existsText: "you already have a seller account associated with this email",
+};

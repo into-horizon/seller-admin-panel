@@ -6,6 +6,7 @@ import routes from '../routes'
 
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 import cookie from 'react-cookies'
+import { formatLocalizationKey } from 'src/services/utils';
 
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
@@ -31,18 +32,18 @@ const AppBreadcrumb = () => {
   }
 
   const breadcrumbs = getBreadcrumbs(currentLocation)
-  const { t } = useTranslation('translation', { keyPrefix: 'routes' });
+  const { t } = useTranslation('route');
 
   return (
     <CBreadcrumb className="m-0 ms-2">
-      <CBreadcrumbItem href="/">{t('Home')}</CBreadcrumbItem>
+      <CBreadcrumbItem href="/">{t(formatLocalizationKey('Home'))}</CBreadcrumbItem>
       {breadcrumbs.map((breadcrumb, index) => {
         return (
           <CBreadcrumbItem
             {...(breadcrumb.active ? { active: true } : { href: breadcrumb.pathname })}
             key={index}
           >
-            {t(breadcrumb.name)}
+            {t(formatLocalizationKey(breadcrumb.name))}
           </CBreadcrumbItem>
         )
       })}

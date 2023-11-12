@@ -64,5 +64,10 @@ export default {
   delete: "حذف",
   COMMISSION_TEXT:
     "العمولة على الفئة المحددة هي {{commission}}% وسيتم إضافتها إلى السعر الذي أدخلته، إلا إذا قمت بتحديد {{included}}.",
-  COMMISSION_INCLUDED: "السعر يشمل العمولة"
+  COMMISSION_INCLUDED: "السعر يشمل العمولة",
+  PRODUCT: "المنتج",
+  COLOR_OR_SIZE: "ألوان او مقاسات",
+  COLORS: "ألوان",
+  SIZES: "مقاسات",
+  COLORS_AND_SIZES: "ألوان و مقاسات",
 };

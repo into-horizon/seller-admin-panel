@@ -33,6 +33,7 @@ import { cilTrash, cilPlus, cilInfo } from "@coreui/icons";
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
 import { showDialog } from "src/store/dialog";
+import { formatLocalizationKey } from "src/services/utils";
 
 const AddProduct = (props) => {
   const dispatch = useDispatch();
@@ -266,7 +267,7 @@ const AddProduct = (props) => {
       );
     }
     Object.entries(obj).forEach(([key, value]) => {
-      if (typeof value === "number" || typeof value === 'boolean') {
+      if (typeof value === "number" || typeof value === "boolean") {
         formData.append(key, value);
         return;
       } else if (_.isEmpty(value)) {
@@ -275,10 +276,6 @@ const AddProduct = (props) => {
         formData.append(key, value);
       }
     });
-    console.log(
-      "🚀 ~ file: AddProduct.jsx:280 ~ submitHandler ~  formData.get('is_commission_included'):",
-      formData.get("is_commission_included")
-    );
     addProductHandler(formData);
   };
 
@@ -404,9 +401,7 @@ const AddProduct = (props) => {
                 id="endescription"
                 style={{ height: "100px" }}
               ></CFormTextarea>
-              <CFormLabel htmlFor="floatingTextarea2" required>
-                {t("englishDescrition")}*
-              </CFormLabel>
+              <CFormLabel required>{t("englishDescrition")}*</CFormLabel>
             </CFormFloating>
           </CCol>
           <CCol xs={12} md={6}>
@@ -416,9 +411,7 @@ const AddProduct = (props) => {
                 id="ardescription"
                 style={{ height: "100px" }}
               ></CFormTextarea>
-              <CFormLabel htmlFor="floatingTextarea3" required>
-                {t("arabicDescription")}*
-              </CFormLabel>
+              <CFormLabel required>{t("arabicDescription")}*</CFormLabel>
             </CFormFloating>
           </CCol>
         </CRow>
@@ -484,7 +477,7 @@ const AddProduct = (props) => {
           <CCol xs={{ span: 12, offset: 0 }}>
             <CFormCheck
               id="size"
-              label={t("sizes")}
+              label={t("COLOR_OR_SIZE")}
               onChange={(e) =>
                 setColorsAndSizes({
                   ...colorsAndSizes,
@@ -500,7 +493,7 @@ const AddProduct = (props) => {
                 type="radio"
                 name="sc"
                 id="TC1"
-                label="colors only"
+                label={t("COLORS")}
                 onChange={(e) =>
                   setColorsAndSizes({
                     ...colorsAndSizes,
@@ -515,7 +508,7 @@ const AddProduct = (props) => {
                 type="radio"
                 name="sc"
                 id="TC1"
-                label="sizes only"
+                label={t("SIZES")}
                 onChange={(e) =>
                   setColorsAndSizes({
                     ...colorsAndSizes,
@@ -530,7 +523,7 @@ const AddProduct = (props) => {
                 type="radio"
                 name="sc"
                 id="TC1"
-                label="sizes and colors"
+                label={t(formatLocalizationKey("colors and sizes"))}
                 onChange={(e) =>
                   setColorsAndSizes({
                     ...colorsAndSizes,
