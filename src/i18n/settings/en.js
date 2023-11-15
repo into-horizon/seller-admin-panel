@@ -19,4 +19,6 @@ export default {
   deleteText: "Are you sure you want to delete this address?",
   deleteTitle: "Delete Address",
   successDelete: "Deleted Successfully",
+  UPDATE_ADDRESS: "Update Address",
+  INVALID_MOBILE:"please enter a valid mobile number"
 };

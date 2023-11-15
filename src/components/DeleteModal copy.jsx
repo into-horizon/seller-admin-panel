@@ -12,21 +12,30 @@ import {
 } from "@coreui/react";
 import React from "react";
 import { useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
-const DeleteModal = ({ onConfirm, tooltipContent, btnSize, disabled, btnText }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "globals" });
+const DeleteModal = ({
+  onConfirm,
+  tooltipContent,
+  btnSize,
+  disabled,
+  btnText,
+  icon = true,
+  className,
+}) => {
+  const { t } = useTranslation("global");
   const [visible, setVisible] = useState(false);
   return (
     <>
-      <CTooltip content={tooltipContent ?? "delete"}>
+      <CTooltip content={tooltipContent ?? t("delete")}>
         <CButton
           size={btnSize}
           color="danger"
           onClick={() => setVisible(true)}
           disabled={disabled}
+          className={className}
         >
-          <CIcon icon={cilTrash} size={btnSize} />
+          {icon && <CIcon icon={cilTrash} size={btnSize} />}
           {btnText}
         </CButton>
       </CTooltip>

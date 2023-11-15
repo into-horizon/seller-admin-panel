@@ -58,3 +58,13 @@ export const formatLocalizationKey = (key) => {
     throw new Error(`Invalid Key ${key}`);
   }
 };
+
+export const validateMobileNumber = (number) => {
+  const regex = /^(078|079|077)\d{7}$/;
+  return regex.test(number);
+};
+
+export const validateEmail = email =>{
+  const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+return regex.test(email)
+}
