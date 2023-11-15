@@ -12,6 +12,7 @@ const orders = createSlice({
     messages: "",
     statuses: [],
     loading: false,
+    isOrdersLoading: false,
   },
   reducers: {
     addPendingOrders(state, action) {
@@ -37,17 +38,32 @@ const orders = createSlice({
     builder.addCase(getOverviewOrdersHandler.rejected, (state) => {
       state.loading = false;
     });
+    builder.addCase(getPendingOrdersHandler.fulfilled, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(getPendingOrdersHandler.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getPendingOrdersHandler.rejected, (state) => {
+      state.loading = false;
+    });
   },
 });
 
-export const getPendingOrdersHandler = (payload) => async (dispatch, state) => {
-  try {
-    let response = await Orders.getStorePendingOrders(payload);
-    dispatch(addPendingOrders(response));
-  } catch (error) {
-    dispatch(errorMessage(error.message));
+export const getPendingOrdersHandler = createAsyncThunk(
+  "orders/getPending",
+  async (payload, { dispatch, rejectWithValue }) => {
+    try {
+      let response = await Orders.getStorePendingOrders(payload);
+      dispatch(addPendingOrders(response));
+    } catch (error) {
+      dispatch(
+        triggerToast({ message: error.message, type: DialogType.DANGER })
+      );
+      return rejectWithValue(error.message);
+    }
   }
-};
+);
 export const getOverviewOrdersHandler = createAsyncThunk(
   "order/get/overview",
   async (payload, { dispatch, rejectWithValue }) => {
@@ -62,11 +78,10 @@ export const getOverviewOrdersHandler = createAsyncThunk(
         dispatch(triggerToast({ message, type: DialogType.DANGER }));
       }
     } catch (error) {
-      console.log("🚀 ~ file: orders.js:65 ~ error:", error)
-      rejectWithValue(error.message);
       dispatch(
         triggerToast({ message: error.message, type: DialogType.DANGER })
       );
+      return rejectWithValue(error.message);
     }
   }
 );

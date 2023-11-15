@@ -24,6 +24,7 @@ import LoadingSpinner from "src/components/LoadingSpinner";
 import { useSearchParams } from "react-router-dom";
 import _ from "lodash";
 import { getSearchParamsObject } from "src/services/utils";
+import { useTranslation } from "react-i18next";
 const OrdersOverview = ({
   // getOverviewOrdersHandler,
   orders,
@@ -36,6 +37,7 @@ const OrdersOverview = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("status");
   const dispatch = useDispatch();
+  const { t } = useTranslation(["order"]);
   const updateSearchParams = (key, value) => {
     let data = {};
     for (const name of searchParams.keys()) {
@@ -53,7 +55,7 @@ const OrdersOverview = ({
   };
   const handlePageChange = (n) => {
     // updateSearchParams("page", n);
-    setSearchParams({...getSearchParamsObject(searchParams), page: n})
+    setSearchParams({ ...getSearchParamsObject(searchParams), page: n });
     dispatch(
       getOverviewOrdersHandler({
         ...getSearchParamsObject(searchParams),
@@ -75,17 +77,17 @@ const OrdersOverview = ({
 
   return (
     <>
-      <h2>orders overview</h2>
-      <CRow className="background">
+      <h2>{t("ORDERS_OVERVIEW")}</h2>
+      <CRow className="bg-white p-5 border rounded">
         <CCol md={2}>
-          <strong>search by</strong>
+          <strong>{t("SEARCH_BY")}</strong>
         </CCol>
         <CCol md={2}>
           <CFormCheck
             type="radio"
             name="search"
             value="status"
-            label="order status"
+            label={t("ORDER_STATUS")}
             defaultChecked
             onChange={(e) => setSearchType(e.target.value)}
             checked={searchType === "status"}
@@ -96,7 +98,7 @@ const OrdersOverview = ({
             type="radio"
             name="search"
             value="number"
-            label="order number"
+            label={t("ORDER_NUMBER")}
             onChange={(e) => setSearchType(e.target.value)}
             checked={!!searchParams.get("order_id") || searchType === "number"}
           />
@@ -113,10 +115,10 @@ const OrdersOverview = ({
                   }
                   value={searchParams.get("status") ?? ""}
                 >
-                  <option value="">All</option>
+                  <option value="">{t("ALL")}</option>
                   {React.Children.toArray(
                     statuses.map((status) => (
-                      <option value={status}>{status}</option>
+                      <option value={status}>{t(status.toUpperCase())}</option>
                     ))
                   )}
                 </CFormSelect>
@@ -124,7 +126,7 @@ const OrdersOverview = ({
               <CCol>
                 <CButton type="submit">
                   <CIcon icon={cilSearch} />
-                  search
+                  {t("SEARCH")}
                 </CButton>
               </CCol>
             </CRow>
@@ -136,8 +138,7 @@ const OrdersOverview = ({
               <CCol>
                 <CFormInput
                   type="text"
-                  placeholder="order number"
-                  aria-label="default input example"
+                  placeholder={t('ORDER_NUMBER')}
                   id="order"
                   value={searchParams.get("order_id") ?? ""}
                   onChange={(e) => {
@@ -154,7 +155,7 @@ const OrdersOverview = ({
               <CCol>
                 <CButton type="submit">
                   <CIcon icon={cilSearch} />
-                  search
+                  {t("SEARCH")}
                 </CButton>
               </CCol>
             </CRow>

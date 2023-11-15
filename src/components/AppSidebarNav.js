@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { CBadge } from "@coreui/react";
+import { formatLocalizationKey } from "src/services/utils";
 
 export const AppSidebarNav = ({ items }) => {
-  const { t, i18n } = useTranslation("translation", { keyPrefix: "routes" });
+  const { t } = useTranslation("route");
   const pendingOrders = useSelector((state) => state.orders.pendingOrders);
   const { status } = useSelector((state) => state.login.user);
   const location = useLocation();
@@ -14,9 +15,7 @@ export const AppSidebarNav = ({ items }) => {
     return (
       <>
         {icon && icon}
-        {name && name === "Pending Orders" && pendingOrders.length > 0
-          ? `${name}(${pendingOrders.length})`
-          : name}
+        {name && t(formatLocalizationKey(name))}
         {badge && (
           <CBadge color={badge.color} className="ms-auto">
             {badge.text}

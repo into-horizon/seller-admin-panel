@@ -29,6 +29,10 @@ const loading = (
   </div>
 );
 
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
 // Containers
 const DefaultLayout = React.lazy(() => import("./layout/DefaultLayout"));
 
@@ -43,14 +47,7 @@ const ResetPassword = React.lazy(() =>
   import("./views/pages/password/ResetPassword")
 );
 
-const App = ({
-  getParentCategoriesHandler,
-  getChildCategoriesHandler,
-  getGrandChildCategoriesHandler,
-  getAddress,
-  getCategories,
-  getUser,
-}) => {
+const App = ({ getAddress, getCategories, getUser }) => {
   const {
     loggedIn,
     user: { id, verified_email },

@@ -39,6 +39,26 @@ const login = createSlice({
     builder.addCase(getUser.rejected, (state) => {
       state.loading = false;
     });
+    builder.addCase(updateInfo.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = { ...state.user, ...action.payload };
+    });
+    builder.addCase(updateInfo.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateInfo.rejected, (state) => {
+      state.loading = false;
+    });
+    builder.addCase(updateName.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user.store_name = action.payload.store_name;
+    });
+    builder.addCase(updateName.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateName.rejected, (state) => {
+      state.loading = false;
+    });
   },
 });
 
@@ -117,28 +137,39 @@ export const endSession = () => async (dispatch, state) => {
   dispatch(loginAction({ logged: false, user: {} }));
 };
 
-export const updateInfo = (info) => async (dispatch, state) => {
-  try {
-    let response = await NewUpdate.updateInfo(info);
-    console.log(state());
-    dispatch(
-      loginAction({ user: { ...state().login.user, ...response.data } })
-    );
-  } catch (error) {
-    console.log("🚀 ~ file: auth.js ~ line 65 ~ error", error);
+export const updateInfo = createAsyncThunk(
+  "user/updateInfo",
+  async (info, { dispatch, rejectWithValue, getState }) => {
+    try {
+      let { data, status, message } = await NewUpdate.updateInfo(info);
+      dispatch(triggerToast({ type: DialogType.SUCCESS, message }));
+      return data;
+    } catch (error) {
+      dispatch(
+        triggerToast({ type: DialogType.DANGER, message: error.message })
+      );
+      return rejectWithValue(error.message);
+    }
   }
-};
+);
 
-export const updateName = (name) => async (dispatch, state) => {
-  try {
-    let response = await NewUpdate.updateStoreName({ store_name: name });
-    dispatch(
-      loginAction({ user: { ...state().login.user, ...response.data } })
-    );
-  } catch (error) {
-    console.log("🚀 ~ file: auth.js ~ line 77 ~ error", error);
+export const updateName = createAsyncThunk(
+  "user/updateName",
+  async (name, { dispatch, rejectWithValue, getState }) => {
+    try {
+      let { data, message } = await NewUpdate.updateStoreName({
+        store_name: name,
+      });
+      dispatch(loginAction({ user: { ...getState().login.user, ...data } }));
+      return data;
+    } catch (error) {
+      dispatch(
+        triggerToast({ type: DialogType.DANGER, message: error.message })
+      );
+      return rejectWithValue(error.message);
+    }
   }
-};
+);
 
 export const updateStorePicture = (data) => async (dispatch, state) => {
   try {

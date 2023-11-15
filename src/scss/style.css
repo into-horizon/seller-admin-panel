@@ -20,6 +20,19 @@ button::first-letter {
     cursor: pointer;
 }
 
+html[dir=rtl] input[type=number]::placeholder {
+    text-align: right;
+}
+html[dir=rtl] input[type=number] {
+    text-align: right;
+}
+html[dir=rtl] input[type=tel]::placeholder {
+    text-align: right;
+}
+html[dir=rtl] input[type=tel] {
+    text-align: right;
+}
+
 .pointer:hover {
     background-color: skyblue
 }
@@ -57,22 +70,6 @@ button::first-letter {
   } */
 .m-5rem {
     margin: 0 .5rem
-}
-
-.noen::placeholder {
-    text-align: left;
-}
-
-.noar::placeholder {
-    text-align: right;
-}
-
-.noen {
-    text-align: left;
-}
-
-.noar {
-    text-align: right;
 }
 
 .storeImageUpdate {

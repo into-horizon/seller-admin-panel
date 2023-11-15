@@ -41,6 +41,8 @@ import {
 import Paginator from "../../../components/Paginator";
 import AccountModal from "../../pages/settings/transfer-account/AccountModal";
 import LoadingSpinner from "src/components/LoadingSpinner";
+import { Trans, useTranslation } from "react-i18next";
+import { formatLocalizationKey, localizedDate } from "src/services/utils";
 
 export const Summary = ({
   getPendingAmounts,
@@ -50,16 +52,16 @@ export const Summary = ({
   addWithdrawalHandler,
 }) => {
   const pageSize = 5;
+  const { t, i18n } = useTranslation(["finance", "status", "global"]);
   const { pending, released, refunded, loading } = useSelector(
     (state) => state.finance
   );
   const { account, cashAccount } = useSelector((state) => state.bankAccount);
   const {
-    withdrawals: { data: withdrawals, count },
-    msg,
+    withdrawals: { data: withdrawals, count, canWithdraw },
+    loading: withdrawalsLoading,
   } = useSelector((state) => state.withdrawals);
   const [params, setParams] = useState({ pageSize, page: 1 });
-  const [active, setActive] = useState(0);
   const [add, setAdd] = useState(false);
   const [progressLoading, setProgressLoading] = useState(false);
   useEffect(() => {
@@ -67,7 +69,7 @@ export const Summary = ({
       getPendingAmounts(),
       getCashAccount(),
       getAccountsHandler(),
-      getWithdrawalsHandler(),
+      getWithdrawalsHandler(params),
     ]);
   }, []);
 
@@ -80,12 +82,10 @@ export const Summary = ({
     };
     Promise.all([addWithdrawalHandler(obj)]).then(() => {
       e.target.reset();
+      getWithdrawalsHandler(params);
       setProgressLoading(false);
     });
   };
-  useEffect(() => {
-    setActive(!withdrawals.find((w) => w.status === "requested"));
-  }, [withdrawals]);
   const handlePageChange = (page) => {
     setParams(() => {
       const newParams = { pageSize, page };
@@ -93,9 +93,9 @@ export const Summary = ({
       return newParams;
     });
   };
-  useEffect(()=>{
-    handlePageChange(1)
-  },[])
+  useEffect(() => {
+    handlePageChange(1);
+  }, []);
   return loading ? (
     <LoadingSpinner />
   ) : (
@@ -108,7 +108,7 @@ export const Summary = ({
             color="warning"
             icon={<CIcon icon={cilLockLocked} height={24} />}
             padding={false}
-            title="pending"
+            title={t("pending".toUpperCase(), { ns: "status" })}
             value={pending}
           />
         </CCol>
@@ -118,8 +118,8 @@ export const Summary = ({
             color="success"
             icon={<CIcon icon={cilCheck} height={24} />}
             padding={false}
-            title="released"
-            value={released.toFixed(2)}
+            title={t("released".toUpperCase(), { ns: "status" })}
+            value={released}
           />
         </CCol>
         <CCol lg={4} md={4} xs={12} sm={4}>
@@ -128,7 +128,7 @@ export const Summary = ({
             color="danger"
             icon={<CIcon icon={cilHistory} height={24} />}
             padding={false}
-            title="refunded"
+            title={t("refunded".toUpperCase(), { ns: "status" })}
             value={refunded}
           />
         </CCol>
@@ -138,7 +138,7 @@ export const Summary = ({
           {progressLoading ? (
             <CSpinner color="primary" />
           ) : (
-            active &&
+            canWithdraw &&
             released > 0 && (
               <CAccordion activeItemKey={0}>
                 <CAccordionItem itemKey={1}>
@@ -149,7 +149,10 @@ export const Summary = ({
                       </CCol>
                       <CCol>
                         <strong>
-                          you have {released.toFixed(2)} withdrawal amount
+                          <Trans
+                            defaults={t("WITHDRAWABLE_TEXT")}
+                            values={{ amount: released }}
+                          />
                         </strong>
                       </CCol>
                     </CRow>
@@ -158,7 +161,9 @@ export const Summary = ({
                     <CForm onSubmit={submitHandler}>
                       <CRow className="justify-content-md-center align-items-end ">
                         <CCol xs={3}>
-                          <CFormLabel>requested amount</CFormLabel>
+                          <CFormLabel>
+                            {t(formatLocalizationKey("requested amount"))}
+                          </CFormLabel>
                           <CFormInput
                             type="number"
                             step="any"
@@ -168,7 +173,9 @@ export const Summary = ({
                           />
                         </CCol>
                         <CCol xs={3}>
-                          <CFormLabel>Transfer To</CFormLabel>
+                          <CFormLabel>
+                            {t(formatLocalizationKey("Transfer To"))}
+                          </CFormLabel>
                           <CFormSelect id="account">
                             <option value={cashAccount.id}>
                               {cashAccount.title}
@@ -193,7 +200,9 @@ export const Summary = ({
                           </CCol>
                         )}
                         <CCol xs="auto">
-                          <CButton type="submit">submit</CButton>
+                          <CButton type="submit">
+                            {t(formatLocalizationKey("submit"), { ns: "global" })}
+                          </CButton>
                         </CCol>
                       </CRow>
                     </CForm>
@@ -204,57 +213,82 @@ export const Summary = ({
           )}
         </CCol>
       </CRow>
-      <CRow className="justify-content-md-center mgn-top50">
-        <CCol xs={8}>
-          <CTable striped>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell>transfer to</CTableHeaderCell>
-                <CTableHeaderCell>amount</CTableHeaderCell>
-                <CTableHeaderCell>status</CTableHeaderCell>
-                <CTableHeaderCell>created date</CTableHeaderCell>
-                <CTableHeaderCell>updated date</CTableHeaderCell>
-                <CTableHeaderCell>attachment</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {Children.toArray(
-                withdrawals.map((withdrawal) => (
-                  <CTableRow>
-                    <CTableDataCell>{withdrawal.title}</CTableDataCell>
-                    <CTableDataCell>{withdrawal.amount}</CTableDataCell>
-                    <CTableDataCell>{withdrawal.status}</CTableDataCell>
-                    <CTableDataCell>
-                      {new Date(withdrawal.created_at).toLocaleDateString()}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {withdrawal.updated
-                        ? new Date(withdrawal.updated).toLocaleDateString()
-                        : "-"}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {withdrawal.document ? (
-                        <a href={withdrawal.document} target="_blank">
-                          <CIcon icon={cilPaperclip} />
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </CTableDataCell>
-                  </CTableRow>
-                ))
-              )}
-            </CTableBody>
-          </CTable>
-          <Paginator
-            params={params}
-            page={1}
-            count={count}
-            pageSize={5}
-            onChangePage={handlePageChange}
-          />
-        </CCol>
-      </CRow>
+      {withdrawalsLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <CRow className="justify-content-md-center mgn-top50">
+          <CCol xs={8}>
+            <CTable striped>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell>
+                    {t(formatLocalizationKey("transfer to"))}
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {t(formatLocalizationKey("amount"))}
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {t(formatLocalizationKey("status"))}
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {t(formatLocalizationKey("created at"))}
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {t(formatLocalizationKey("updated at"))}
+                  </CTableHeaderCell>
+                  <CTableHeaderCell>
+                    {t(formatLocalizationKey("attachment"))}
+                  </CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {Children.toArray(
+                  withdrawals.map((withdrawal) => (
+                    <CTableRow>
+                      <CTableDataCell>{withdrawal.title}</CTableDataCell>
+                      <CTableDataCell>{withdrawal.amount}</CTableDataCell>
+                      <CTableDataCell>
+                        {t(formatLocalizationKey(withdrawal.status), {
+                          ns: "status",
+                        })}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {localizedDate(
+                          new Date(withdrawal.created_at),
+                          i18n.language
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {withdrawal.updated
+                          ? localizedDate(
+                              new Date(withdrawal.updated),
+                              i18n.language
+                            )
+                          : "-"}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {withdrawal.document ? (
+                          <a href={withdrawal.document} target="_blank">
+                            <CIcon icon={cilPaperclip} />
+                          </a>
+                        ) : (
+                          "-"
+                        )}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))
+                )}
+              </CTableBody>
+            </CTable>
+            <Paginator
+              page={params?.page}
+              count={count}
+              pageSize={5}
+              onChangePage={handlePageChange}
+            />
+          </CCol>
+        </CRow>
+      )}
     </>
   );
 };

@@ -22,12 +22,13 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilCloudDownload, cilDescription } from "@coreui/icons";
+import { useTranslation } from "react-i18next";
 
 const Pdf = ({ order }) => {
   const template = useRef();
   const [locale, setLocale] = useState("en");
   const [visible, setVisible] = useState(false);
-
+  const { t}= useTranslation('order')
   const localization = {
     en: {
       orderNumber: "Order#",
@@ -82,7 +83,7 @@ const Pdf = ({ order }) => {
   return (
     <>
       <CButton onClick={() => setVisible(true)} color="secondary">
-        <CIcon icon={cilDescription} /> Receipt
+        <CIcon icon={cilDescription} /> {t('RECEIPT')}
       </CButton>
       <CModal
         size="xl"

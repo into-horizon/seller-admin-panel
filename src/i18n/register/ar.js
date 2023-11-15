@@ -1,0 +1,18 @@
+export default {
+  register: "التسجيل",
+  createAccount: "أنشئ حسابك",
+  storeName: "اسم المتجر",
+  yourEmail: "البريد الإلكتروني الخاص بحسابك على هورايزن",
+  amman: "عمان",
+  mobileNumber: "رقم الهاتف",
+  caption: "الشرح",
+  about: "عن المتجر",
+  choosePic: "إختر صورة لمتجرك",
+  createBtn: "أنشئ حساب",
+  alreadyRegistered: "لديك حساب بالفعل",
+  login: "تسجيل دخول",
+  notTitle: "لم يتم إيجاد المستخدم",
+  notText: "لا يوجد حساب مرتط بالبريد الإلكتروني المرفق",
+  existsTitle: "الحساب مسجل بالفعل",
+  existsText: "أنت بالفعل تمتلك حساب بائع مرتبط بالبريد الإلكتروني المرفق",
+};

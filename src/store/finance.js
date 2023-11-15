@@ -88,21 +88,23 @@ export const getPendingAmounts = createAsyncThunk(
           getAmount("credit", "released") -
           getAmount("credit", "canceled");
         const released =
-          getAmount("credit", "released") - getAmount("debit", "transferred");
+          getAmount("credit", "released") -
+          getAmount("debit", "pending") +
+          +getAmount("debit", "canceled");
         const refunded = getAmount("debit", "refunded");
         dispatch(
           addData({
-            pending: pending,
-            released: released,
-            refunded: refunded,
+            pending: pending?.toFixed(2),
+            released: released?.toFixed(2),
+            refunded: refunded?.toFixed(2),
           })
         );
       }
     } catch (error) {
-      rejectWithValue(error.message);
       dispatch(
         triggerToast({ type: DialogType.DANGER, message: error.message })
       );
+      return rejectWithValue(error.message);
     }
   }
 );

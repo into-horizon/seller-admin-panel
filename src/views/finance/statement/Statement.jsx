@@ -12,14 +12,21 @@ import {
 import Paginator from "../../../components/Paginator";
 import LoadingSpinner from "src/components/LoadingSpinner";
 import { useSearchParams } from "react-router-dom";
-import { getSearchParamsObject } from "src/services/utils";
+import {
+  formatLocalizationKey,
+  getSearchParamsObject,
+  localizedDate,
+  mainStatues,
+} from "src/services/utils";
+import { useTranslation } from "react-i18next";
+
 export const Statement = ({ getTransactions }) => {
   const pageSize = 20;
+  const { t, i18n } = useTranslation(["finance", "order", "status", "product"]);
   const {
     transactions: { data, count },
     loading,
   } = useSelector((state) => state.finance);
-  // const [params, setParams] = useState({ limit: 20, offset: 0 });
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     const page = searchParams.get("page");
@@ -32,13 +39,13 @@ export const Statement = ({ getTransactions }) => {
   }, []);
 
   const handelPageChange = (n) => {
-    const params = { ...getSearchParamsObject(searchParams), page: n,pageSize };
+    const params = {
+      ...getSearchParamsObject(searchParams),
+      page: n,
+      pageSize,
+    };
     setSearchParams(params);
     getTransactions(params);
-    // setParams((params) => {
-    //   const newParams = { ...params, offset: (n - 1) * params.limit };
-    //   return newParams;
-    // });
   };
   return loading ? (
     <LoadingSpinner />
@@ -47,27 +54,48 @@ export const Statement = ({ getTransactions }) => {
       <CTable striped>
         <CTableHead>
           <CTableRow>
-            <CTableHeaderCell>id</CTableHeaderCell>
-            <CTableHeaderCell>order number</CTableHeaderCell>
-            <CTableHeaderCell>product</CTableHeaderCell>
-            <CTableHeaderCell>amount</CTableHeaderCell>
-            <CTableHeaderCell>status</CTableHeaderCell>
-            <CTableHeaderCell>type</CTableHeaderCell>
-            <CTableHeaderCell>Date</CTableHeaderCell>
+            <CTableHeaderCell>
+              {t("order_number".toUpperCase(), { ns: "order" })}
+            </CTableHeaderCell>
+            <CTableHeaderCell>
+              {t("product".toUpperCase(), { ns: "product" })}
+            </CTableHeaderCell>
+            <CTableHeaderCell>
+              {t("amount".toUpperCase(), { ns: "finance" })}
+            </CTableHeaderCell>
+            <CTableHeaderCell>
+              {t("status".toUpperCase(), { ns: "order" })}
+            </CTableHeaderCell>
+            <CTableHeaderCell>{t("type".toUpperCase())}</CTableHeaderCell>
+            <CTableHeaderCell>
+              {t("description".toUpperCase())}
+            </CTableHeaderCell>
+            <CTableHeaderCell>{t("Date".toUpperCase())}</CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {React.Children.toArray(
             data.map((transaction) => (
               <CTableRow>
-                <CTableDataCell>{transaction.id.substring(24)}</CTableDataCell>
-                <CTableDataCell>{transaction.customer_order_id}</CTableDataCell>
-                <CTableDataCell>{transaction.entitle}</CTableDataCell>
-                <CTableDataCell>{transaction.amount}</CTableDataCell>
-                <CTableDataCell>{transaction.status}</CTableDataCell>
-                <CTableDataCell>{transaction.type}</CTableDataCell>
+                <CTableDataCell>{transaction.customer_order_id?? '-'}</CTableDataCell>
                 <CTableDataCell>
-                  {new Date(transaction.created_at).toLocaleDateString()}
+                  {transaction[`${i18n.language}title`]?? '-'}
+                </CTableDataCell>
+                <CTableDataCell>{transaction.amount}</CTableDataCell>
+                <CTableDataCell>
+                  {t(formatLocalizationKey(transaction.status), {
+                    ns: "status",
+                  })}
+                </CTableDataCell>
+                <CTableDataCell>{t(formatLocalizationKey(transaction.description))}</CTableDataCell>
+                <CTableDataCell>
+                  {t(transaction.type.toUpperCase())}
+                </CTableDataCell>
+                <CTableDataCell>
+                  {localizedDate(
+                    new Date(transaction.created_at),
+                    i18n.language
+                  )}
                 </CTableDataCell>
               </CTableRow>
             ))
