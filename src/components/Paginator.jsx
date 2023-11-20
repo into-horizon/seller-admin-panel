@@ -15,6 +15,10 @@ const Paginator = ({
   const [selectedPage, setSelectedPage] = useState(+page ?? 1);
   useEffect(() => {
     let p = [];
+    const siblingCount = 5;
+
+    let pagesCount = Math.ceil(count / (pageSize ?? 5) || 1);
+
     if (pagesCount < siblingCount) {
       for (let i = 1; i <= pagesCount; i++) {
         p.push(i);
@@ -22,11 +26,11 @@ const Paginator = ({
     } else {
       let firstPages = [1, 2, 3];
       let lastPages = [pagesCount - 2, pagesCount - 1, pagesCount];
-      if (selectedPage === 1) {
+      if (page === 1) {
         p = [...firstPages, "...", ...lastPages];
-      } else if (selectedPage === pagesCount) {
+      } else if (page === pagesCount) {
         p = [...firstPages, "...", ...lastPages];
-      } else if (firstPages.includes(selectedPage)) {
+      } else if (firstPages.includes(page)) {
         p = [1, page - 1, page, page + 1, "...", ...lastPages];
       } else if (lastPages.includes(page)) {
         p = [1, ...firstPages, "...", page - 1, page, page + 1, pagesCount];

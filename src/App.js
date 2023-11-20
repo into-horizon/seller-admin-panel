@@ -4,7 +4,7 @@ import "./scss/style.scss";
 import { PopupProvider } from "react-custom-popup";
 import { getUser } from "./store/auth";
 import { useNavigate } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import cookie from "react-cookies";
 import { useTranslation } from "react-i18next";
 import { Rings } from "react-loader-spinner";
@@ -20,7 +20,7 @@ import GlobalDialog from "./components/Dialog";
 import { CCol, CContainer, CRow } from "@coreui/react";
 import * as buffer from "buffer";
 import Auth from "./services/Auth";
-import { history } from "./services/utils";
+import './socket'
 window.Buffer = buffer.Buffer;
 
 const loading = (
@@ -47,12 +47,14 @@ const ResetPassword = React.lazy(() =>
   import("./views/pages/password/ResetPassword")
 );
 
-const App = ({ getAddress, getCategories, getUser }) => {
+const App = ({ getAddress, getCategories }) => {
   const {
     loggedIn,
     user: { id, verified_email },
+    isLogoutLoading,
+    isUserLoading,
   } = useSelector((state) => state.login);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const [load, setLoad] = useState(true);
@@ -87,7 +89,7 @@ const App = ({ getAddress, getCategories, getUser }) => {
           navigate("/");
         }
         if (!id && token) {
-          getUser();
+          dispatch(getUser());
         }
         if (loggedIn && id && verified_email) {
           getAddress();
@@ -128,34 +130,39 @@ const App = ({ getAddress, getCategories, getUser }) => {
         </CRow>
       </CContainer>
     </div>
+
+
   );
+  if (load || isLogoutLoading || isUserLoading) {
+    if (isLogoutLoading && location.pathname !== "/login") {
+      navigate("/login");
+    }
+    return <Loading />;
+  }
   return (
     <PopupProvider>
       <GlobalToast />
       <GlobalDialog />
       <React.Suspense fallback={<Loading />}>
-        {load && <Loading />}
-        {!load && (
-          <Routes>
-            <Route exact path="/login" name="Login Page" element={<Login />} />
-            <Route
-              exact
-              path="/register"
-              name="Register Page"
-              element={<Register />}
-            />
-            <Route exact path="/verify" name="verify" element={<Verify />} />
-            <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route path="/reference" name="reference" element={<Reference />} />
-            <Route
-              path="/resetPassword/:token"
-              name="password reset"
-              element={<ResetPassword load={(x) => setLoad(x)} />}
-            />
-            <Route path="/*" name="Home" element={<DefaultLayout />} />
-            <Route path="*" name="Page 404" element={<Page404 />} />
-          </Routes>
-        )}
+        <Routes>
+          <Route exact path="/login" name="Login Page" element={<Login />} />
+          <Route
+            exact
+            path="/register"
+            name="Register Page"
+            element={<Register />}
+          />
+          <Route exact path="/verify" name="verify" element={<Verify />} />
+          <Route exact path="/500" name="Page 500" element={<Page500 />} />
+          <Route path="/reference" name="reference" element={<Reference />} />
+          <Route
+            path="/resetPassword/:token"
+            name="password reset"
+            element={<ResetPassword load={(x) => setLoad(x)} />}
+          />
+          <Route path="/*" name="Home" element={<DefaultLayout />} />
+          <Route path="*" name="Page 404" element={<Page404 />} />
+        </Routes>
       </React.Suspense>
     </PopupProvider>
   );

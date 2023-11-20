@@ -13,4 +13,7 @@ export default {
   saveChanges: "حفظ التغييرات",
   lang: "English",
   SUBMIT: "إرسال",
+  NO_NOTIFICATIONS: 'لا يوجد اشعارات',
+  SHOW_MORE: 'إظهار المزيد..',
+  NOTIFICATIONS: 'الإشعارات',
 };

@@ -5,12 +5,22 @@ import Update from "src/services/Update";
 import { showDialog } from "./dialog";
 import { DialogType } from "react-custom-popup";
 import { triggerToast } from "./toast";
+import { history } from "src/services/utils";
 const NewAuth = new Auth();
 const NewUpdate = new Update();
 
+const initialState = {
+  loggedIn: false,
+  user: {},
+  message: "",
+  loading: false,
+  isLogoutLoading: false,
+  isUserLoading: false,
+};
+
 const login = createSlice({
   name: "login",
-  initialState: { loggedIn: false, user: {}, message: "", loading: false },
+  initialState,
   reducers: {
     loginAction(state, action) {
       return { ...state, ...action.payload };
@@ -31,13 +41,13 @@ const login = createSlice({
       state.loading = false;
     });
     builder.addCase(getUser.fulfilled, (state) => {
-      state.loading = false;
+      state.isUserLoading = false;
     });
     builder.addCase(getUser.pending, (state) => {
-      state.loading = true;
+      state.isUserLoading = true;
     });
     builder.addCase(getUser.rejected, (state) => {
-      state.loading = false;
+      state.isUserLoading = false;
     });
     builder.addCase(updateInfo.fulfilled, (state, action) => {
       state.loading = false;
@@ -58,6 +68,15 @@ const login = createSlice({
     });
     builder.addCase(updateName.rejected, (state) => {
       state.loading = false;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.isLogoutLoading = false;
+    });
+    builder.addCase(logout.pending, (state) => {
+      state.isLogoutLoading = true;
+    });
+    builder.addCase(logout.rejected, (state) => {
+      state.isLogoutLoading = false;
     });
   },
 });
@@ -81,7 +100,7 @@ export const loginHandler = createAsyncThunk(
             title: "login error",
           })
         );
-        rejectWithValue(response.message);
+        return rejectWithValue(response.message);
       }
     } catch (err) {
       dispatch(
@@ -91,7 +110,7 @@ export const loginHandler = createAsyncThunk(
           title: "unauthorized",
         })
       );
-      rejectWithValue(err.message);
+      return rejectWithValue(err.message);
     }
   }
 );
@@ -111,27 +130,30 @@ export const getUser = createAsyncThunk(
             type: DialogType.WARNING,
           })
         );
-        rejectWithValue("session has expired");
+        return rejectWithValue("session has expired");
       }
     } catch (error) {
-      rejectWithValue(error.message);
       dispatch(
         triggerToast({ message: error.message, type: DialogType.WARNING })
       );
-      dispatch(loginAction({ loggedIn: false, user: {} }));
+      dispatch(loginAction(initialState));
+      return rejectWithValue(error.message);
     }
   }
 );
 
-export const logout = () => async (dispatch) => {
-  await NewAuth.logout();
-  let cookies = cookie.loadAll();
-  Object.keys(cookies).forEach((key) => {
-    cookie.remove(key, { path: "/" });
-  });
-  console.log(cookie.loadAll());
-  setTimeout(dispatch(loginAction({ loggedIn: false, user: {} })), 1000);
-};
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    await NewAuth.logout();
+    dispatch(loginAction(initialState));
+    const cookies = cookie.loadAll();
+    Object.keys(cookies).forEach((key) => {
+      cookie.remove(key, { path: "/" });
+    });
+    // history.push('/hello')
+  }
+);
 
 export const endSession = () => async (dispatch, state) => {
   dispatch(loginAction({ logged: false, user: {} }));

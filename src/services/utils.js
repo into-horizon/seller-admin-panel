@@ -37,7 +37,7 @@ export const mainStatues = {
   pending: "PENDING",
 };
 
-const localizations = {
+export const localizations = {
   ar: "ar-eg",
   en: "en-US",
 };
@@ -46,7 +46,13 @@ export const localizedDate = (date, language) =>
     day: "2-digit",
     year: "numeric",
     month: "2-digit",
-  }).format(date);
+  }).format(new Date(date));
+
+export const localizedTime = (date, language) =>
+  Intl.DateTimeFormat(localizations[language], {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(date));
 
 export const localizedNumber = (number, language) =>
   Intl.NumberFormat(localizations[language]).format(number);
@@ -64,7 +70,8 @@ export const validateMobileNumber = (number) => {
   return regex.test(number);
 };
 
-export const validateEmail = email =>{
-  const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-return regex.test(email)
-}
+export const validateEmail = (email) => {
+  const regex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  return regex.test(email);
+};

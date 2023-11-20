@@ -72,7 +72,7 @@ const Dashboard = () => {
       performance_rate,
       sales_rate,
     },
-    loading,
+    isUserLoading,
   } = useSelector((state) => state.login);
   const { t } = useTranslation("dashboard");
   const random = (min, max) => {
@@ -215,7 +215,7 @@ const Dashboard = () => {
       activity: "Last week",
     },
   ];
-  if (loading) {
+  if (isUserLoading) {
     return <LoadingSpinner />;
   }
   return (
@@ -409,7 +409,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
-      <CCard className="mb-4">
+      {/* <CCard className="mb-4">
         <CCardBody>
           <CRow>
             <CCol sm={5}>
@@ -549,9 +549,9 @@ const Dashboard = () => {
             ))}
           </CRow>
         </CCardFooter>
-      </CCard>
+      </CCard> */}
 
-      <CRow>
+      {/* <CRow>
         <CCol xs>
           <CCard className="mb-4">
             <CCardHeader>Traffic {" & "} Sales</CCardHeader>
@@ -728,7 +728,7 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow>
+      </CRow> */}
     </>
   );
 };

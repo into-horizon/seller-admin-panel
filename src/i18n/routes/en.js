@@ -17,4 +17,5 @@ export default {
   ACCOUNT: "Account",
   LOGOUT: "Logout",
   SIGNUP: "Signup",
+  MY_PRODUCTS: "My Products",
 };
