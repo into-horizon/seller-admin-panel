@@ -254,7 +254,7 @@ export const Summary = ({
                       </CTableDataCell>
                       <CTableDataCell>
                         {localizedDate(
-                          new Date(withdrawal.created_at),
+                          withdrawal.created_at,
                           i18n.language
                         )}
                       </CTableDataCell>

@@ -16,4 +16,6 @@ export default {
   PROFILE: "الملف الشخصي",
   ACCOUNT: "الحساب",
   LOGOUT: "تسجيل الخروج",
+  MY_PRODUCTS: "المنتجات الخاصة بي",
+
 };

@@ -28,7 +28,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: "Products",
+        name: "my Products",
         to: "/product/products",
       },
       {

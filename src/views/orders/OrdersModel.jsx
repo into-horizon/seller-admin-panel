@@ -25,6 +25,7 @@ import {
 } from "@coreui/react";
 import Pdf from "../../components/Pdf";
 import { useTranslation } from "react-i18next";
+import { localizedDate } from "src/services/utils";
 
 const OrderModel = ({ data, updateOrderItemHandler }) => {
   const [loading, setLoading] = useState(true);
@@ -45,20 +46,20 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
       : updateOrderItemHandler({ ...item, status: e.target.status.value });
     closeModel();
   };
-  const localizations = {
-    ar: "ar-eg",
-    en: "en-US",
-  };
-  const localizedDate = (date) =>
-    Intl.DateTimeFormat(localizations[i18n.language], {
-      day: "2-digit",
-      year: "numeric",
-      month: "2-digit",
-    }).format(date);
+  // const localizations = {
+  //   ar: "ar-eg",
+  //   en: "en-US",
+  // };
+  // const localizedDate = (date) =>
+  //   Intl.DateTimeFormat(localizations[i18n.language], {
+  //     day: "2-digit",
+  //     year: "numeric",
+  //     month: "2-digit",
+  //   }).format(date);
 
-  const localizedNumber = (number) =>
-    Intl.NumberFormat(localizations[i18n.language]).format(number);
-    
+  // const localizedNumber = (number) =>
+  //   Intl.NumberFormat(localizations[i18n.language]).format(number);
+
   const OrderItemAction = ({ item }) => {
     const { entitle } = item;
     const [visible, setVisible] = useState(false);
@@ -155,14 +156,16 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
                 </CTableDataCell>
                 <CTableDataCell>{t(order.status.toUpperCase())}</CTableDataCell>
                 <CTableDataCell>
-                  {localizedDate(new Date(order.created_at))}
+                  {localizedDate(order.created_at, i18n.language)}
                 </CTableDataCell>
                 <CTableDataCell>
-                  {order.updated ? localizedDate(new Date(order.updated)) : "-"}
+                  {order.updated
+                    ? localizedDate(order.updated, i18n.language)
+                    : "-"}
                 </CTableDataCell>
                 <CTableDataCell>
                   {order.delivery_date
-                    ? localizedDate(new Date(order.delivery_date))
+                    ? localizedDate(order.delivery_date, i18n.language)
                     : "-"}
                 </CTableDataCell>
               </CTableRow>

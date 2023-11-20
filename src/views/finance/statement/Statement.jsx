@@ -93,7 +93,7 @@ export const Statement = ({ getTransactions }) => {
                 </CTableDataCell>
                 <CTableDataCell>
                   {localizedDate(
-                    new Date(transaction.created_at),
+                    transaction.created_at,
                     i18n.language
                   )}
                 </CTableDataCell>

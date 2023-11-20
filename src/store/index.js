@@ -16,6 +16,7 @@ import bankAccount from "./bankAccount";
 import withdrawals from "./withdrawal";
 import dialog from "./dialog";
 import toast from "./toast";
+import notifications from "./notifications";
 const initialState = {
   sidebarShow: true,
 };
@@ -31,16 +32,17 @@ const changeState = (state = initialState, { type, ...rest }) => {
 
 const reducers = combineReducers({
   changeState,
-  login: login,
-  category: category,
-  products: products,
-  address: address,
-  orders: orders,
-  finance: finance,
-  bankAccount: bankAccount,
-  withdrawals: withdrawals,
+  login,
+  category,
+  products,
+  address,
+  orders,
+  finance,
+  bankAccount,
+  withdrawals,
   dialog,
-  toast
+  toast,
+  notifications,
 });
 
 const store = configureStore(

@@ -17,7 +17,6 @@ export default class ApiService {
 
       return res.data;
     } catch (error) {
-      console.log("🚀 ~ file: ApiService.js:20 ~ ApiService ~ get ~ error:", error)
       throw new Error(error.message);
     }
   }
@@ -55,9 +54,11 @@ export default class ApiService {
   }
 
   bearer(token) {
+    const locale = localStorage.getItem('i18nextLng')
     return {
       session_id: cookie.load("session_id"),
       Authorization: ` Bearer ${token}`,
+      locale
     };
   }
 

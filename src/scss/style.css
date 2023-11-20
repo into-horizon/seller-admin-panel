@@ -449,3 +449,9 @@ html[dir=rtl] input[type=tel] {
 .text-align-right {
     text-align: right;
 }
+
+.notifications-list{
+    width: 20rem;
+    overflow-y: auto;
+    max-height: 25rem ;
+}
