@@ -25,7 +25,7 @@ import {
 } from "@coreui/react";
 import Pdf from "../../components/Pdf";
 import { useTranslation } from "react-i18next";
-import { localizedDate } from "src/services/utils";
+import { localizedDate, localizedNumber } from "src/services/utils";
 
 const OrderModel = ({ data, updateOrderItemHandler }) => {
   const [loading, setLoading] = useState(true);
@@ -152,7 +152,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
                   {`${order.first_name} ${order.last_name}`}
                 </CTableDataCell>
                 <CTableDataCell>
-                  {localizedNumber(order.grand_total.toFixed(2))}
+                  {localizedNumber(order.grand_total.toFixed(2), i18n.language)}
                 </CTableDataCell>
                 <CTableDataCell>{t(order.status.toUpperCase())}</CTableDataCell>
                 <CTableDataCell>
@@ -204,7 +204,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
                       {item[`${i18n.language}title`]}
                     </CTableDataCell>
                     <CTableDataCell>
-                      {localizedNumber(item.price)}
+                      {localizedNumber(item.price, i18n.language)}
                     </CTableDataCell>
                     <CTableDataCell>
                       {localizedNumber(item.quantity)}
@@ -229,7 +229,7 @@ const OrderModel = ({ data, updateOrderItemHandler }) => {
             </div>
           ))}
 
-          <Pdf order={order} />
+          {order.status !== "pending " && <Pdf order={order} />}
         </div>
       ))}
     </>

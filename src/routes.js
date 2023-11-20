@@ -26,7 +26,7 @@ const routes = [
   { path: '/order/overview', name: 'Orders Overview', component: OrdersOverview},
   { path: '/pdf', name: 'pdf', component: Pdf},
   { path: '/finance', name: 'Finance', component: Statement},
-  { path: '/finance/statement', name: 'Statements', component: Statement},
+  { path: '/finance/statement', name: 'Statement', component: Statement},
   { path: '/finance/summary', name: 'Summary', component: Summary}
  
 

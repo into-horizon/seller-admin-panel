@@ -11,11 +11,10 @@ export default {
   FINANCE: "المالية",
   STATEMENT: "الحركات المالية",
   SUMMARY: "الملخص المالي",
-  COMPONENTS: "المكونات",
+  COMPONENTS: "الأجزاء",
   SETTINGS: "الاعدادات",
   PROFILE: "الملف الشخصي",
   ACCOUNT: "الحساب",
   LOGOUT: "تسجيل الخروج",
   MY_PRODUCTS: "المنتجات الخاصة بي",
-
 };

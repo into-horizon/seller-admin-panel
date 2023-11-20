@@ -114,12 +114,10 @@ const ProductsRender = ({
   };
 
   return (
-    <div className="productsRender">
-      <Export
-        data={downloadableData(products ?? [])}
-        title="download products"
-        fileName="products"
-      />
+    <CRow className=" justify-content-end " xs={{gutterY: 3}}>
+      <CCol xs={'auto'} className=" align-self-end ">
+        <Export data={downloadableData(products ?? [])} fileName="products" />
+      </CCol>
       {loading && <LoadingSpinner />}
       {!loading && products.length === 0 && (
         <h4 className="productStatusHead">{t(`no${status}`)}</h4>
@@ -344,7 +342,7 @@ const ProductsRender = ({
         onChangePage={changePage}
         pageSize={pageSize}
       />
-    </div>
+    </CRow>
   );
 };
 

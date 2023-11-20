@@ -12,9 +12,9 @@ export default {
   close: "Close",
   saveChanges: "Save Changes",
   lang: "عربي",
-  SUBMIT: 'Submit',
-  NO_NOTIFICATIONS: 'There are no notifications',
-  SHOW_MORE: 'Show more..',
-  NOTIFICATIONS: 'Notifications',
-  
+  SUBMIT: "Submit",
+  NO_NOTIFICATIONS: "There are no notifications",
+  SHOW_MORE: "Show more..",
+  NOTIFICATIONS: "Notifications",
+  DOWNLOAD: "Download",
 };
