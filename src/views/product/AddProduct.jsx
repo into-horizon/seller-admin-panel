@@ -217,6 +217,7 @@ const AddProduct = (props) => {
       discount: discount.hasDiscount,
       discount_rate: discount.discountRate,
       is_commission_included: e.target.isCommissionIncluded.checked,
+      commission
     };
     let formData = new FormData();
     if (e.target.image.files.length > 5) {
