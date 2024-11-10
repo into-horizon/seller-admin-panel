@@ -15,7 +15,6 @@ const PendingOrders = React.lazy(() =>
 const OrdersOverview = React.lazy(() =>
   import("./views/orders/overview/OrderOverView")
 );
-const Pdf = React.lazy(() => import("./components/PdfView"));
 const Statement = React.lazy(() =>
   import("./views/finance/statement/Statement")
 );
@@ -56,7 +55,6 @@ const routes = [
     name: "Orders Overview",
     component: OrdersOverview,
   },
-  { path: "/pdf", name: "pdf", component: Pdf },
   { path: "/finance", name: "Finance", component: Statement },
   { path: "/finance/statement", name: "Statement", component: Statement },
   { path: "/finance/summary", name: "Summary", component: Summary },

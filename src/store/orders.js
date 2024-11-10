@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import Orders from "../services/Orders";
 import { triggerToast } from "./toast";
-import { DialogType } from "react-custom-popup";
+import { PopupType } from "react-custom-popup";
 
 const orders = createSlice({
   name: "orders",
@@ -58,7 +58,7 @@ export const getPendingOrdersHandler = createAsyncThunk(
       dispatch(addPendingOrders(response));
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
       return rejectWithValue(error.message);
     }
@@ -75,11 +75,11 @@ export const getOverviewOrdersHandler = createAsyncThunk(
         dispatch(addOverviewOrders(data));
       } else {
         rejectWithValue(message);
-        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        dispatch(triggerToast({ message, type: PopupType.DANGER }));
       }
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
       return rejectWithValue(error.message);
     }

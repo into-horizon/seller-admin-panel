@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  DialogType,
+  PopupType,
   usePopup,
   AnimationType,
   OutAnimationType,
@@ -20,7 +20,7 @@ export const GlobalDialog = () => {
   };
   const showDialog = (title, message) => {
     showAlert({
-      type: DialogType.DANGER,
+      type: PopupType.DANGER,
       text:  message,
       title: title,
       animationType: AnimationType.FADE_IN,

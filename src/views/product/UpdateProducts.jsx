@@ -2,7 +2,7 @@ import React, { useState, useEffect, Children} from 'react';
 import { useLocation } from "react-router-dom";
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { CFormSelect, CFormLabel, CFormText, CFormCheck, CFormInput, CButton, CFormFloating, CFormTextarea, CFormFeedback, CCol, CForm, CRow, CInputGroup, CInputGroupText, CSpinner } from '@coreui/react'
-import { usePopup, DialogType, AnimationType, ToastPosition } from "react-custom-popup";
+import { usePopup, PopupType, AnimationType, ToastPosition } from "react-custom-popup";
 import { getSearchDataHandler, getSearchedProductHandler, updateProductHandler } from "../../store/product"
 import { useTranslation } from 'react-i18next';
 import { addProductHandler, errorMessage } from 'src/store/product';
@@ -125,7 +125,7 @@ const UpdateProduct = (props) => {
         if(message){
             if(message && message.includes('updated')){
                 showToast({
-                    type: DialogType.SUCCESS,
+                    type: PopupType.SUCCESS,
                     text: 'updated successfully',
                     timeoutDuration: 3000,
                     showProgress: true,

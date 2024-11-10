@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next';
 import {
-    DialogType,
+    PopupType,
     usePopup,
     ToastPosition,
 } from 'react-custom-popup';
@@ -14,14 +14,14 @@ export const DeleteModal = ({ visible, onClose, onDelete, id }) => {
         Promise.all([onDelete({ id: id })]).then((e) => {
             showToast({
                 text: t('successDelete'),
-                type: DialogType.INFO,
+                type: PopupType.INFO,
                 position: ToastPosition[t('ToastPosition')],
                 timeoutDuration: 5000
             })
         }).catch(() => {            
             showToast({
                 text: t('wentWrong'),
-                type: DialogType.DANGER,
+                type: PopupType.DANGER,
                 position: ToastPosition[t('ToastPosition')],
                 timeoutDuration: 5000
             })

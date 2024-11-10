@@ -14,7 +14,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilApplications, cilLocationPin, cilDescription, cilShortText, cilImagePlus } from '@coreui/icons'
-import { verifiedEmailHandler, updateVerficationCodeHandler, deleteMessage } from '../../../store/auth'
+import { verifiedEmailHandler, updateVerificationCodeHandler, deleteMessage } from '../../../store/auth'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -86,5 +86,5 @@ const mapStateToProps = (state) => ({
 
 })
 
-const mapDispatchToProps = { verifiedEmailHandler, updateVerficationCodeHandler }
+const mapDispatchToProps = { verifiedEmailHandler, updateVerficationCodeHandler: updateVerificationCodeHandler }
 export default connect(mapStateToProps, mapDispatchToProps)(Verify)

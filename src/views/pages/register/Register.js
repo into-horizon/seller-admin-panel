@@ -14,7 +14,7 @@ import {
 } from '@coreui/react'
 import { loginHandler, deleteMessage } from '../../../store/auth'
 import { Link, useNavigate } from 'react-router-dom';
-import { usePopup, DialogType } from "react-custom-popup";
+import { usePopup, PopupType } from "react-custom-popup";
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilApplications, cilLocationPin, cilDescription, cilShortText, cilImagePlus } from '@coreui/icons'
 import { createStoreHandler } from '../../../store/auth'
@@ -62,14 +62,14 @@ const Register = (props) => {
       if (message.includes('not')) {
         showAlert({
           title: t(`notTitle`),
-          type: DialogType.WARNING,
+          type: PopupType.WARNING,
           text: t(`notText`)
         });
       } else if (message.includes('exists')) {
         if (message) {
           showAlert({
             title: t(`existsTitle`),
-            type: DialogType.WARNING,
+            type: PopupType.WARNING,
             text: t(`existsText`)
           });
         }
