@@ -4,8 +4,13 @@ import { isJwtExpired } from "jwt-check-expiration";
 let api = process.env.REACT_APP_API;
 
 axios.defaults.baseURL = api;
-
 export default class ApiService {
+  constructor() {
+    axios.interceptors.request.use(async (config) => {
+      config.headers = this.bearer(await this.token());
+      return config;
+    });
+  }
   async get(endpoint, params, headers) {
     try {
       let res = await axios({
@@ -54,11 +59,11 @@ export default class ApiService {
   }
 
   bearer(token) {
-    const locale = localStorage.getItem('i18nextLng')
+    const locale = localStorage.getItem("i18nextLng") ?? "en";
     return {
       session_id: cookie.load("session_id"),
       Authorization: ` Bearer ${token}`,
-      locale
+      locale,
     };
   }
 
@@ -77,7 +82,7 @@ export default class ApiService {
       let { refresh_token, access_token, status, session_id } = await this.post(
         "auth/refresh",
         null,
-        this.bearer(cookie.load("refresh_token", { path: "/" }))
+        this.bearer(cookie.load("refresh_token", { path: "/" })),
       );
       if (status === 200) {
         cookie.remove("access_token", { path: "/" });

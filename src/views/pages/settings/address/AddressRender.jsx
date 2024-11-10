@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   AnimationType,
-  DialogType,
+  PopupType,
   OutAnimationType,
   PopupProvider,
   usePopup,

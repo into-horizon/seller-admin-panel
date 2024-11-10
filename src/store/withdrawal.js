@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Withdrawal from "../services/Withdrawal";
 import { updateWithdrawn } from "./finance";
 import { triggerToast } from "./toast";
-import { DialogType } from "react-custom-popup";
+import { PopupType } from "react-custom-popup";
 
 const withdrawal = createSlice({
   name: "withdrawal",
@@ -36,12 +36,12 @@ export const getWithdrawalsHandler = createAsyncThunk(
       if (status === 200) {
         dispatch(addWithdrawals(data));
       } else {
-        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        dispatch(triggerToast({ message, type: PopupType.DANGER }));
         return rejectWithValue(message);
       }
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
       return rejectWithValue(message);
     }
@@ -52,7 +52,7 @@ export const addWithdrawalHandler = (payload) => async (dispatch) => {
   try {
     let { status, message } = await Withdrawal.addWithdrawal(payload);
     if (status === 200) {
-     dispatch(triggerToast({message, type: DialogType.INFO}))
+     dispatch(triggerToast({message, type: PopupType.INFO}))
     } else {
       dispatch(addMsg(message));
     }

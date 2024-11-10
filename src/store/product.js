@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Product from "../services/ProductService";
 import { triggerToast } from "./toast";
-import { DialogType } from "react-custom-popup";
+import { PopupType } from "react-custom-popup";
 
 const initialState = {
   loading: false,
@@ -123,14 +123,14 @@ export const addProductHandler = createAsyncThunk(
     try {
       let { status, data, message } = await Product.addProduct(payload);
       if (status === 201) {
-        dispatch(triggerToast({ message, type: DialogType.INFO }));
+        dispatch(triggerToast({ message, type: PopupType.INFO }));
       } else {
-        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        dispatch(triggerToast({ message, type: PopupType.DANGER }));
         return rejectWithValue(message);
       }
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
       return rejectWithValue(error.message);
     }
@@ -146,13 +146,13 @@ export const getProductsByStatusHandler = createAsyncThunk(
       if (status === 200) {
         dispatch(getProducts({ result, count }));
       } else {
-        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        dispatch(triggerToast({ message, type: PopupType.DANGER }));
         rejectWithValue(message);
       }
     } catch (error) {
       rejectWithValue(error.message);
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
     }
   }

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Finance from "../services/Finance";
 import { triggerToast } from "./toast";
-import { DialogType } from "react-custom-popup";
+import { PopupType } from "react-custom-popup";
 
 const initialState = {
   loading: false,
@@ -64,7 +64,7 @@ export const getTransactions = createAsyncThunk(
     } catch (error) {
       rejectWithValue(error.message);
       dispatch(
-        triggerToast({ type: DialogType.DANGER, message: error.message })
+        triggerToast({ type: PopupType.DANGER, message: error.message })
       );
     }
   }
@@ -102,7 +102,7 @@ export const getPendingAmounts = createAsyncThunk(
       }
     } catch (error) {
       dispatch(
-        triggerToast({ type: DialogType.DANGER, message: error.message })
+        triggerToast({ type: PopupType.DANGER, message: error.message })
       );
       return rejectWithValue(error.message);
     }

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Address from "../services/Address";
 import { triggerToast } from "./toast";
-import { DialogType } from "react-custom-popup";
+import { PopupType } from "react-custom-popup";
 
 const address = createSlice({
   name: "address",
@@ -62,12 +62,12 @@ export const getAddress = createAsyncThunk(
       if (status === 200) {
         dispatch(addressState({ address: result }));
       } else {
-        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        dispatch(triggerToast({ message, type: PopupType.DANGER }));
         return rejectWithValue(message);
       }
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
       return rejectWithValue(error.message);
     }
@@ -81,13 +81,13 @@ export const updateAddress = createAsyncThunk(
       const { data, status, message } = await Address.updateAddress(payload);
       if (status === 200) {
         dispatch(addressState({ address: data }));
-        dispatch(triggerToast({ message, type: DialogType.SUCCESS }));
+        dispatch(triggerToast({ message, type: PopupType.SUCCESS }));
       } else {
-        dispatch(triggerToast({ message, type: DialogType.DANGER }));
+        dispatch(triggerToast({ message, type: PopupType.DANGER }));
       }
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.DANGER })
+        triggerToast({ message: error.message, type: PopupType.DANGER })
       );
       return rejectWithValue(error.message);
     }
