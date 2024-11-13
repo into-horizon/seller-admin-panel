@@ -20,7 +20,7 @@ import GlobalDialog from "./components/Dialog";
 import { CCol, CContainer, CRow } from "@coreui/react";
 import * as buffer from "buffer";
 import Auth from "./services/Auth";
-import './socket'
+import "./socket";
 window.Buffer = buffer.Buffer;
 
 const loading = (
@@ -43,8 +43,8 @@ const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
 const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
 const Verify = React.lazy(() => import("./views/pages/verify/verify"));
 const Reference = React.lazy(() => import("./views/pages/password/reference"));
-const ResetPassword = React.lazy(() =>
-  import("./views/pages/password/ResetPassword")
+const ResetPassword = React.lazy(
+  () => import("./views/pages/password/ResetPassword"),
 );
 
 const App = ({ getAddress, getCategories }) => {
@@ -61,7 +61,7 @@ const App = ({ getAddress, getCategories }) => {
   const location = useLocation();
   let token = cookie.load("access_token");
   const checkUnAuth = (route) => {
-    let unAuth = ["/login", "/register", "/reference"];
+    let unAuth = ["/login", "/register", "/reference", "/verify"];
     if (
       unAuth.some((x) => x === route) ||
       route?.startsWith("/resetPassword")
@@ -130,8 +130,6 @@ const App = ({ getAddress, getCategories }) => {
         </CRow>
       </CContainer>
     </div>
-
-
   );
   if (load || isLogoutLoading || isUserLoading) {
     if (isLogoutLoading && location.pathname !== "/login") {

@@ -21,7 +21,7 @@ import { useSelector, connect, useDispatch } from "react-redux";
 import { addProductHandler, resetSuccess } from "src/store/product";
 import {
   usePopup,
-  DialogType,
+  PopupType,
   AnimationType,
   ToastPosition,
 } from "react-custom-popup";
@@ -224,7 +224,7 @@ const AddProduct = (props) => {
       dispatch(
         showDialog({
           title: t("imageLimit"),
-          type: DialogType.WARNING,
+          type: PopupType.WARNING,
           message: (
             <p className={textAlign[i18n.language]}>{t("imageLimitText")}</p>
           ),
@@ -236,7 +236,7 @@ const AddProduct = (props) => {
       dispatch(
         showDialog({
           title: t("imageLimit"),
-          type: DialogType.WARNING,
+          type: PopupType.WARNING,
           message: (
             <p className={textAlign[i18n.language]}>
               you need to upload at least one image
@@ -254,7 +254,7 @@ const AddProduct = (props) => {
       dispatch(
         showDialog({
           title: t("categoryTitle"),
-          type: DialogType.WARNING,
+          type: PopupType.WARNING,
           message: t("categoryText"),
         })
       );

@@ -3,7 +3,7 @@ import cookie from "react-cookies";
 import Auth from "../services/Auth";
 import Update from "src/services/Update";
 import { showDialog } from "./dialog";
-import { DialogType } from "react-custom-popup";
+import { PopupType } from "react-custom-popup";
 import { triggerToast } from "./toast";
 import { history } from "src/services/utils";
 const NewAuth = new Auth();
@@ -96,9 +96,9 @@ export const loginHandler = createAsyncThunk(
         dispatch(
           showDialog({
             message: response.message,
-            type: DialogType.DANGER,
+            type: PopupType.DANGER,
             title: "login error",
-          })
+          }),
         );
         return rejectWithValue(response.message);
       }
@@ -106,13 +106,13 @@ export const loginHandler = createAsyncThunk(
       dispatch(
         showDialog({
           message: "you are not a seller",
-          type: DialogType.DANGER,
+          type: PopupType.DANGER,
           title: "unauthorized",
-        })
+        }),
       );
       return rejectWithValue(err.message);
     }
-  }
+  },
 );
 
 export const getUser = createAsyncThunk(
@@ -127,19 +127,19 @@ export const getUser = createAsyncThunk(
         dispatch(
           triggerToast({
             message: "session has expired",
-            type: DialogType.WARNING,
-          })
+            type: PopupType.WARNING,
+          }),
         );
         return rejectWithValue("session has expired");
       }
     } catch (error) {
       dispatch(
-        triggerToast({ message: error.message, type: DialogType.WARNING })
+        triggerToast({ message: error.message, type: PopupType.WARNING }),
       );
       dispatch(loginAction(initialState));
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const logout = createAsyncThunk(
@@ -152,7 +152,7 @@ export const logout = createAsyncThunk(
       cookie.remove(key, { path: "/" });
     });
     // history.push('/hello')
-  }
+  },
 );
 
 export const endSession = () => async (dispatch, state) => {
@@ -164,15 +164,15 @@ export const updateInfo = createAsyncThunk(
   async (info, { dispatch, rejectWithValue, getState }) => {
     try {
       let { data, status, message } = await NewUpdate.updateInfo(info);
-      dispatch(triggerToast({ type: DialogType.SUCCESS, message }));
+      dispatch(triggerToast({ type: PopupType.SUCCESS, message }));
       return data;
     } catch (error) {
       dispatch(
-        triggerToast({ type: DialogType.DANGER, message: error.message })
+        triggerToast({ type: PopupType.DANGER, message: error.message }),
       );
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const updateName = createAsyncThunk(
@@ -186,11 +186,11 @@ export const updateName = createAsyncThunk(
       return data;
     } catch (error) {
       dispatch(
-        triggerToast({ type: DialogType.DANGER, message: error.message })
+        triggerToast({ type: PopupType.DANGER, message: error.message }),
       );
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const updateStorePicture = (data) => async (dispatch, state) => {
@@ -204,13 +204,13 @@ export const updateStorePicture = (data) => async (dispatch, state) => {
             ...state().login.user,
             store_picture: response.result.store_picture,
           },
-        })
+        }),
       );
     }
   } catch (error) {
     console.log(
       "🚀 ~ file: auth.js ~ line 88 ~ updateStorePicture ~ error",
-      error
+      error,
     );
   }
 };
@@ -227,7 +227,7 @@ export const createStoreHandler = (payload) => async (dispatch, state) => {
   } catch (error) {
     console.log(
       "🚀 ~ file: auth.js ~ line 109 ~ createStoreHandler ~ error",
-      error
+      error,
     );
   }
 };
@@ -236,6 +236,7 @@ export const verifiedEmailHandler = (payload) => async (dispatch, state) => {
   try {
     let res = await NewAuth.verifyEmail(payload);
     let { result, message, status } = res;
+    console.log("🚀 ~ verifiedEmailHandler ~ result:", result)
     if (res.status === 200) {
       dispatch(loginAction({ user: result, message: message }));
     } else if (res.status === 403) {
@@ -244,7 +245,7 @@ export const verifiedEmailHandler = (payload) => async (dispatch, state) => {
   } catch (error) {
     console.log(
       "🚀 ~ file: auth.js ~ line 88 ~ updateStorePicture ~ error",
-      error
+      error,
     );
   }
 };
@@ -253,7 +254,7 @@ export const updateVerficationCodeHandler =
   (payload) => async (dispatch, state) => {
     try {
       let res = await NewAuth.updateCode(payload);
-      let { result, message, status } = res;
+      let { user: result, message, status } = res;
       if (status === 200) {
         dispatch(loginAction({ user: result, message: message }));
       } else {
@@ -262,7 +263,7 @@ export const updateVerficationCodeHandler =
     } catch (error) {
       console.log(
         "🚀 ~ file: auth.js ~ line 131 ~ updateVerficationCodeHandler ~ error",
-        error
+        error,
       );
     }
   };
@@ -278,7 +279,7 @@ export const provideReferenceHandler = (payload) => async (dispatch, state) => {
   } catch (error) {
     console.log(
       "🚀 ~ file: auth.js ~ line 131 ~ updateVerficationCodeHandler ~ error",
-      error
+      error,
     );
   }
 };
@@ -294,7 +295,7 @@ export const validateTokenHandler = (token) => async (dispatch, state) => {
   } catch (error) {
     console.log(
       "🚀 ~ file: auth.js ~ line 162 ~ validateTokenHandler ~ error",
-      error
+      error,
     );
   }
 };
@@ -311,7 +312,7 @@ export const resetPasswordHandler =
     } catch (error) {
       console.log(
         "🚀 ~ file: auth.js ~ line 176 ~ resetPasswordHandler ~ error",
-        error
+        error,
       );
     }
   };
