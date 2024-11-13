@@ -13,7 +13,8 @@ import { AppSidebarNav } from "./AppSidebarNav";
 
 
 import SimpleBar from "simplebar-react";
-import "simplebar-react/dist/simplebar.min.css";
+
+import 'simplebar-react/dist/simplebar.min.css';
 
 // sidebar nav config
 import navigation from "../_nav";

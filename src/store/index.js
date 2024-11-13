@@ -3,9 +3,8 @@ import * as thunk from "redux-thunk";
 import {
   combineReducers,
   configureStore,
-  getDefaultMiddleware,
 } from "@reduxjs/toolkit";
-import { createStore, applyMiddleware } from "redux";
+import { applyMiddleware } from "redux";
 import login from "./auth";
 import category from "./category";
 import products from "./product";

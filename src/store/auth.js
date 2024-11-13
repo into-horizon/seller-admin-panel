@@ -250,7 +250,7 @@ export const verifiedEmailHandler = (payload) => async (dispatch, state) => {
   }
 };
 
-export const updateVerficationCodeHandler =
+export const updateVerificationCodeHandler =
   (payload) => async (dispatch, state) => {
     try {
       let res = await NewAuth.updateCode(payload);
