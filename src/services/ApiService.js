@@ -7,6 +7,12 @@ axios.defaults.baseURL = api;
 export default class ApiService {
   constructor() {
     axios.interceptors.request.use(async (config) => {
+      const locale = localStorage.getItem("i18nextLng") ?? "en";
+
+      if (config.headers.Authorization) {
+        config.headers.locale = locale;
+        return config;
+      }
       config.headers = this.bearer(await this.token());
       return config;
     });
