@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { connect, useSelector } from "react-redux";
-import { getTransactions } from "../../../store/finance";
+import React, { useState, useEffect } from 'react'
+import { connect, useSelector } from 'react-redux'
+import { getTransactions } from '../../../store/finance'
 import {
   CTableRow,
   CTableHead,
@@ -8,45 +8,45 @@ import {
   CTableHeaderCell,
   CTableBody,
   CTableDataCell,
-} from "@coreui/react";
-import Paginator from "../../../components/Paginator";
-import LoadingSpinner from "src/components/LoadingSpinner";
-import { useSearchParams } from "react-router-dom";
+} from '@coreui/react'
+import Paginator from '../../../components/Paginator'
+import LoadingSpinner from 'src/components/LoadingSpinner'
+import { useSearchParams } from 'react-router-dom'
 import {
   formatLocalizationKey,
   getSearchParamsObject,
   localizedDate,
   mainStatues,
-} from "src/services/utils";
-import { useTranslation } from "react-i18next";
+} from 'src/services/utils'
+import { useTranslation } from 'react-i18next'
 
 export const Statement = ({ getTransactions }) => {
-  const pageSize = 20;
-  const { t, i18n } = useTranslation(["finance", "order", "status", "product"]);
+  const pageSize = 20
+  const { t, i18n } = useTranslation(['finance', 'order', 'status', 'product'])
   const {
     transactions: { data, count },
     loading,
-  } = useSelector((state) => state.finance);
-  const [searchParams, setSearchParams] = useSearchParams();
+  } = useSelector((state) => state.finance)
+  const [searchParams, setSearchParams] = useSearchParams()
   useEffect(() => {
-    const page = searchParams.get("page");
+    const page = searchParams.get('page')
     if (!page) {
-      setSearchParams({ page: 1 });
-      handelPageChange(1);
+      setSearchParams({ page: 1 })
+      handelPageChange(1)
     } else {
-      getTransactions(getSearchParamsObject(searchParams));
+      getTransactions(getSearchParamsObject(searchParams))
     }
-  }, []);
+  }, [])
 
   const handelPageChange = (n) => {
     const params = {
       ...getSearchParamsObject(searchParams),
       page: n,
       pageSize,
-    };
-    setSearchParams(params);
-    getTransactions(params);
-  };
+    }
+    setSearchParams(params)
+    getTransactions(params)
+  }
   return loading ? (
     <LoadingSpinner />
   ) : (
@@ -54,51 +54,34 @@ export const Statement = ({ getTransactions }) => {
       <CTable striped>
         <CTableHead>
           <CTableRow>
-            <CTableHeaderCell>
-              {t("order_number".toUpperCase(), { ns: "order" })}
-            </CTableHeaderCell>
-            <CTableHeaderCell>
-              {t("product".toUpperCase(), { ns: "product" })}
-            </CTableHeaderCell>
-            <CTableHeaderCell>
-              {t("amount".toUpperCase(), { ns: "finance" })}
-            </CTableHeaderCell>
-            <CTableHeaderCell>
-              {t("status".toUpperCase(), { ns: "order" })}
-            </CTableHeaderCell>
-            <CTableHeaderCell>{t("type".toUpperCase())}</CTableHeaderCell>
-            <CTableHeaderCell>
-              {t("description".toUpperCase())}
-            </CTableHeaderCell>
-            <CTableHeaderCell>{t("Date".toUpperCase())}</CTableHeaderCell>
+            <CTableHeaderCell>{t('order_number'.toUpperCase(), { ns: 'order' })}</CTableHeaderCell>
+            <CTableHeaderCell>{t('product'.toUpperCase(), { ns: 'product' })}</CTableHeaderCell>
+            <CTableHeaderCell>{t('amount'.toUpperCase(), { ns: 'finance' })}</CTableHeaderCell>
+            <CTableHeaderCell>{t('status'.toUpperCase(), { ns: 'order' })}</CTableHeaderCell>
+            <CTableHeaderCell>{t('type'.toUpperCase())}</CTableHeaderCell>
+            <CTableHeaderCell>{t('description'.toUpperCase())}</CTableHeaderCell>
+            <CTableHeaderCell>{t('Date'.toUpperCase())}</CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {React.Children.toArray(
             data.map((transaction) => (
               <CTableRow>
-                <CTableDataCell>{transaction.customer_order_id?? '-'}</CTableDataCell>
-                <CTableDataCell>
-                  {transaction[`${i18n.language}title`]?? '-'}
-                </CTableDataCell>
+                <CTableDataCell>{transaction.customer_order_id ?? '-'}</CTableDataCell>
+                <CTableDataCell>{transaction[`${i18n.language}title`] ?? '-'}</CTableDataCell>
                 <CTableDataCell>{transaction.amount}</CTableDataCell>
                 <CTableDataCell>
                   {t(formatLocalizationKey(transaction.status), {
-                    ns: "status",
+                    ns: 'status',
                   })}
                 </CTableDataCell>
-                <CTableDataCell>{t(formatLocalizationKey(transaction.description))}</CTableDataCell>
+                <CTableDataCell>{t(transaction.type.toUpperCase())}</CTableDataCell>
+                <CTableDataCell>{t(formatLocalizationKey(transaction.source))}</CTableDataCell>
                 <CTableDataCell>
-                  {t(transaction.type.toUpperCase())}
-                </CTableDataCell>
-                <CTableDataCell>
-                  {localizedDate(
-                    transaction.created_at,
-                    i18n.language
-                  )}
+                  {localizedDate(transaction.created_at, i18n.language)}
                 </CTableDataCell>
               </CTableRow>
-            ))
+            )),
           )}
         </CTableBody>
       </CTable>
@@ -106,14 +89,13 @@ export const Statement = ({ getTransactions }) => {
         count={count}
         onChangePage={handelPageChange}
         pageSize={20}
-        page={searchParams.get("page")}
+        page={searchParams.get('page')}
       />
     </>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state) => ({});
 
-const mapDispatchToProps = { getTransactions };
+const mapDispatchToProps = { getTransactions }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Statement);
+export default connect(null, mapDispatchToProps)(Statement)
