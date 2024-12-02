@@ -72,12 +72,11 @@ export const getPendingAmounts = createAsyncThunk(
     try {
       const { status, data } = await Finance.getAmountsSummary()
       const getAmount = (type, status) => {
-        return data
-          .reduce((acc, amount) => {
-            if (amount.type === type && amount.status === status) {
-              return acc + amount.sum
-            } else return acc
-          }, 0)
+        return data.reduce((acc, amount) => {
+          if (amount.type === type && amount.status === status) {
+            return acc + amount.sum
+          } else return acc
+        }, 0)
       }
       if (status === 200) {
         const pending =

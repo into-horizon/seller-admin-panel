@@ -1,23 +1,17 @@
-import React, { useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import {
-  AppContent,
-  AppSidebar,
-  AppFooter,
-  AppHeader,
-} from "../components/index";
-import { storeSocket } from "src/socket";
-import { getNotifications } from "src/store/notifications";
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import { storeSocket } from 'src/socket'
+import { getNotifications, resetNotifications } from 'src/store/notifications'
 
-const DefaultLayout = (props) => {
-  const { user } = useSelector((state) => state.login);
-  const dispatch = useDispatch();
-  storeSocket.emit("populate-store", user);
-  storeSocket.on("triggerNotification", () => {
-    alert("notification");
-    dispatch(getNotifications({ limit: 5, offset: 0 }));
-  });
+const DefaultLayout = () => {
+  const { user } = useSelector((state) => state.login)
+  const dispatch = useDispatch()
+  storeSocket.emit('populate-store', user)
+  storeSocket.on('triggerNotification', () => {
+    dispatch(resetNotifications())
+    dispatch(getNotifications({ limit: 5, offset: 0 }))
+  })
   return (
     <div>
       <AppSidebar />
@@ -29,11 +23,7 @@ const DefaultLayout = (props) => {
         <AppFooter />
       </div>
     </div>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state) => ({
-  login: state.login,
-});
-
-export default connect(mapStateToProps)(DefaultLayout);
+export default DefaultLayout
