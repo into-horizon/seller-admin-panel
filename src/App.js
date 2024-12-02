@@ -1,51 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation, useParams } from "react-router-dom";
-import "./scss/style.scss";
-import { PopupProvider } from "react-custom-popup";
-import { getUser } from "./store/auth";
-import { useNavigate } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import cookie from "react-cookies";
-import { useTranslation } from "react-i18next";
-import { Rings } from "react-loader-spinner";
+import React, { useEffect, useState } from 'react'
+import { Route, Routes, useLocation, useParams } from 'react-router-dom'
+import './scss/style.scss'
+import { PopupProvider } from 'react-custom-popup'
+import { getUser } from './store/auth'
+import { useNavigate } from 'react-router-dom'
+import { connect, useDispatch, useSelector } from 'react-redux'
+import cookie from 'react-cookies'
+import { useTranslation } from 'react-i18next'
+import { Rings } from 'react-loader-spinner'
 import {
   getParentCategoriesHandler,
   getChildCategoriesHandler,
   getGrandChildCategoriesHandler,
   getCategories,
-} from "./store/category";
-import { getAddress } from "./store/address";
-import GlobalToast from "./components/Toast";
-import GlobalDialog from "./components/Dialog";
-import { CCol, CContainer, CRow } from "@coreui/react";
-import * as buffer from "buffer";
-import Auth from "./services/Auth";
+} from './store/category'
+import { getAddress } from './store/address'
+import GlobalToast from './components/Toast'
+import GlobalDialog from './components/Dialog'
+import { CCol, CContainer, CRow } from '@coreui/react'
+import * as buffer from 'buffer'
+import Auth from './services/Auth'
 import './socket'
-window.Buffer = buffer.Buffer;
+window.Buffer = buffer.Buffer
 
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
   </div>
-);
+)
 
 String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
+  return this.charAt(0).toUpperCase() + this.slice(1)
+}
 
 // Containers
-const DefaultLayout = React.lazy(() => import("./layout/DefaultLayout"));
+const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 // Pages
-const Login = React.lazy(() => import("./views/pages/login/Login"));
-const Register = React.lazy(() => import("./views/pages/register/Register"));
-const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
-const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
-const Verify = React.lazy(() => import("./views/pages/verify/verify"));
-const Reference = React.lazy(() => import("./views/pages/password/reference"));
-const ResetPassword = React.lazy(() =>
-  import("./views/pages/password/ResetPassword")
-);
+const Login = React.lazy(() => import('./views/pages/login/Login'))
+const Register = React.lazy(() => import('./views/pages/register/Register'))
+const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
+const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+const Verify = React.lazy(() => import('./views/pages/verify/verify'))
+const Reference = React.lazy(() => import('./views/pages/password/reference'))
+const ResetPassword = React.lazy(() => import('./views/pages/password/ResetPassword'))
 
 const App = ({ getAddress, getCategories }) => {
   const {
@@ -53,72 +51,69 @@ const App = ({ getAddress, getCategories }) => {
     user: { id, verified_email },
     isLogoutLoading,
     isUserLoading,
-  } = useSelector((state) => state.login);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { i18n } = useTranslation();
-  const [load, setLoad] = useState(true);
-  const location = useLocation();
-  let token = cookie.load("access_token");
+  } = useSelector((state) => state.login)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { i18n } = useTranslation()
+  const [load, setLoad] = useState(true)
+  const location = useLocation()
+  let token = cookie.load('access_token')
   const checkUnAuth = (route) => {
-    let unAuth = ["/login", "/register", "/reference"];
-    if (
-      unAuth.some((x) => x === route) ||
-      route?.startsWith("/resetPassword")
-    ) {
-      return true;
-    } else return false;
-  };
+    let unAuth = ['/login', '/register', '/reference']
+    if (unAuth.some((x) => x === route) || route?.startsWith('/resetPassword')) {
+      return true
+    } else return false
+  }
   useEffect(() => {
     let tabID = sessionStorage.tabID
       ? sessionStorage.tabID
-      : (sessionStorage.tabID = (Math.random() * 1000).toFixed(0));
-    const lang = localStorage.getItem("i18nextLng");
+      : (sessionStorage.tabID = (Math.random() * 1000).toFixed(0))
+    const lang = localStorage.getItem('i18nextLng')
     if (lang) {
-      i18n.changeLanguage(lang);
+      i18n.changeLanguage(lang)
     } else {
-      i18n.changeLanguage("en");
+      i18n.changeLanguage('en')
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    let currentPath = location.pathname;
+    let currentPath = location.pathname
     Promise.all([new Auth().checkAPI()])
       .then(() => {
-        if (location.pathname === "/500") {
-          navigate("/");
+        if (location.pathname === '/500') {
+          navigate('/')
         }
         if (!id && token) {
-          dispatch(getUser());
+          dispatch(getUser())
         }
         if (loggedIn && id && verified_email) {
-          getAddress();
-          getCategories();
-          navigate(!checkUnAuth(location.pathname) ? location.pathname : "/");
+          getAddress()
+          getCategories()
+          navigate(!checkUnAuth(location.pathname) ? location.pathname : '/')
         } else if (!loggedIn && !token && !id) {
-          let path = checkUnAuth(currentPath) ? currentPath : "/login";
-          navigate(path);
+          let path = checkUnAuth(currentPath) ? currentPath : '/login'
+          navigate(path)
         } else if (verified_email === false) {
-          navigate("/verify");
+          navigate('/verify')
         }
-        setLoad(false);
+        setLoad(false)
       })
       .catch(() => {
-        setLoad(false);
-        navigate("/500");
-      });
-  }, [loggedIn, verified_email]);
+        setLoad(false)
+        navigate('/500')
+      })
+  }, [loggedIn, verified_email])
 
   useEffect(() => {
-    if (i18n.language === "ar") {
-      document.documentElement.setAttribute("lang", "ar");
-      document.documentElement.setAttribute("dir", "rtl");
+    if (i18n.language === 'ar') {
+      document.documentElement.setAttribute('lang', 'ar')
+      document.documentElement.setAttribute('dir', 'rtl')
     } else {
-      document.documentElement.setAttribute("lang", "en");
-      document.documentElement.setAttribute("dir", "ltl");
-      i18n.changeLanguage("en");
+      document.documentElement.setAttribute('lang', 'en')
+      document.documentElement.setAttribute('dir', 'ltl')
+      i18n.changeLanguage('en')
     }
-  }, [i18n.language]);
+  }, [i18n.language])
 
   const Loading = () => (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -130,14 +125,12 @@ const App = ({ getAddress, getCategories }) => {
         </CRow>
       </CContainer>
     </div>
-
-
-  );
+  )
   if (load || isLogoutLoading || isUserLoading) {
-    if (isLogoutLoading && location.pathname !== "/login") {
-      navigate("/login");
+    if (isLogoutLoading && location.pathname !== '/login') {
+      navigate('/login')
     }
-    return <Loading />;
+    return <Loading />
   }
   return (
     <PopupProvider>
@@ -146,12 +139,7 @@ const App = ({ getAddress, getCategories }) => {
       <React.Suspense fallback={<Loading />}>
         <Routes>
           <Route exact path="/login" name="Login Page" element={<Login />} />
-          <Route
-            exact
-            path="/register"
-            name="Register Page"
-            element={<Register />}
-          />
+          <Route exact path="/register" name="Register Page" element={<Register />} />
           <Route exact path="/verify" name="verify" element={<Verify />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
           <Route path="/reference" name="reference" element={<Reference />} />
@@ -165,12 +153,12 @@ const App = ({ getAddress, getCategories }) => {
         </Routes>
       </React.Suspense>
     </PopupProvider>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   login: state.login,
-});
+})
 const mapDispatchToProps = {
   getUser,
   getParentCategoriesHandler,
@@ -178,5 +166,5 @@ const mapDispatchToProps = {
   getGrandChildCategoriesHandler,
   getAddress,
   getCategories,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App)
