@@ -14,7 +14,7 @@ class Notifications extends ApiService {
   }
   async updateNotifications(id) {
     try {
-      return await this.update(this.url, { id });
+      return await this.put(this.url, { id });
     } catch (error) {
       throw new Error(error.message);
     }

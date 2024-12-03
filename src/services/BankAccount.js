@@ -15,7 +15,7 @@ class BankAccount extends ApiService {
     }
     async updateBankAccount(data) {
         try {
-            let result = await this.update(`${this.path}/update`, data)
+            let result = await this.put(`${this.path}/update`, data)
             return result
         } catch (error) {
             return error
