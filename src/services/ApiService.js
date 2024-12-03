@@ -1,103 +1,106 @@
-import axios from "axios";
-import cookie from "react-cookies";
-import { isJwtExpired } from "jwt-check-expiration";
-let api = process.env.REACT_APP_API;
+import axios from 'axios'
+import cookie from 'react-cookies'
+import { isJwtExpired } from 'jwt-check-expiration'
+let api = process.env.REACT_APP_API
 
-axios.defaults.baseURL = api;
+axios.defaults.baseURL = api
 export default class ApiService {
   constructor() {
     axios.interceptors.request.use(async (config) => {
-      const locale = localStorage.getItem("i18nextLng") ?? "en";
-
-      if (config.headers.Authorization) {
-        config.headers.locale = locale;
-        return config;
+      const locale = localStorage.getItem('i18nextLng') || 'en'
+      config.headers.locale = locale
+      const sessionId = this.session
+      const token = await this.token()
+      if (token && sessionId) {
+        config.headers.Authorization = `Bearer ${token}`
+        config.headers.session_id = sessionId
       }
-      config.headers = this.bearer(await this.token());
-      return config;
-    });
+
+      return config
+    })
   }
-  async get(endpoint, params, headers) {
+  async get(endpoint, params) {
     try {
       let res = await axios({
-        method: "get",
+        method: 'get',
         url: `/${endpoint}`,
         params: params,
-        headers: headers || this.bearer(await this.token()),
-      });
+      })
 
-      return res.data;
+      return res.data
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
   async post(endpoint, data, header, params = null) {
     let res = await axios({
-      method: "post",
+      method: 'post',
       url: `/${endpoint}`,
       data: data,
-      headers: header || this.bearer(await this.token()),
+      headers: header,
       params: params,
-    });
-    return res.data;
+    })
+    return res.data
   }
 
-  async update(endpoint, data, header, params = null) {
+  async put(endpoint, data, header, params = null) {
     let res = await axios({
-      method: "put",
+      method: 'put',
       url: `/${endpoint}`,
       params: params,
       data: data,
-      headers: header || this.bearer(await this.token()),
-    });
-    return res.data;
+    })
+    return res.data
   }
 
   async delete(endpoint, data, header, params = null) {
     let res = await axios({
-      method: "delete",
+      method: 'delete',
       url: `/${endpoint}`,
       data: data,
       params: params,
       headers: header || this.bearer(await this.token()),
-    });
-    return res.data;
+    })
+    return res.data
   }
 
   bearer(token) {
-    const locale = localStorage.getItem("i18nextLng") ?? "en";
+    const locale = localStorage.getItem('i18nextLng') ?? 'en'
     return {
-      session_id: cookie.load("session_id"),
+      session_id: cookie.load('session_id'),
       Authorization: ` Bearer ${token}`,
       locale,
-    };
+    }
   }
 
   basic(data) {
     return {
       Authorization: ` Basic ${btoa(`${data.email}:${data.password}`)}`,
-    };
+    }
+  }
+  get session() {
+    return cookie.load('session_id')
   }
   async token() {
-    let token = cookie.load("access_token", { path: "/" });
+    let token = cookie.load('access_token', { path: '/' })
 
-    if (!token) return;
+    if (!token) return
     else if (!isJwtExpired(token)) {
-      return token;
+      return token
     } else {
       let { refresh_token, access_token, status, session_id } = await this.post(
-        "auth/refresh",
+        'auth/refresh',
         null,
-        this.bearer(cookie.load("refresh_token", { path: "/" })),
-      );
+        this.bearer(cookie.load('refresh_token', { path: '/' })),
+      )
       if (status === 200) {
-        cookie.remove("access_token", { path: "/" });
-        cookie.remove("refresh_token", { path: "/" });
-        cookie.save("access_token", access_token, { path: "/" });
-        cookie.save("refresh_token", refresh_token, { path: "/" });
+        cookie.remove('access_token', { path: '/' })
+        cookie.remove('refresh_token', { path: '/' })
+        cookie.save('access_token', access_token, { path: '/' })
+        cookie.save('refresh_token', refresh_token, { path: '/' })
 
-        return access_token;
-      } else return;
+        return access_token
+      } else return
     }
   }
   getLimitOffsetFromParams(params) {
@@ -106,8 +109,8 @@ export default class ApiService {
         ...params,
         limit: params.pageSize,
         offset: params.pageSize * (params.page - 1),
-      };
+      }
     }
-    return params;
+    return params
   }
 }

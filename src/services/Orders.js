@@ -28,7 +28,7 @@ class Orders extends ApiService {
   }
   async updateOrderItem(data) {
     try {
-      let result = await this.update(this.path2, data);
+      let result = await this.put(this.path2, data);
       return result;
     } catch (error) {
       throw new Error(error.message);
