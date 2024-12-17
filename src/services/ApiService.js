@@ -15,7 +15,6 @@ export default class ApiService {
         config.headers.Authorization = `Bearer ${token}`
         config.headers.session_id = sessionId
       }
-
       return config
     })
   }
@@ -29,39 +28,51 @@ export default class ApiService {
 
       return res.data
     } catch (error) {
-      throw new Error(error.message)
+      throw new Error(error.response?.data?.message)
     }
   }
   async post(endpoint, data, header, params = null) {
-    let res = await axios({
-      method: 'post',
-      url: `/${endpoint}`,
-      data: data,
-      headers: header,
-      params: params,
-    })
-    return res.data
+    try {
+      let res = await axios({
+        method: 'post',
+        url: `/${endpoint}`,
+        data: data,
+        headers: header,
+        params: params,
+      })
+      return res.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message)
+    }
   }
 
   async put(endpoint, data, header, params = null) {
-    let res = await axios({
-      method: 'put',
-      url: `/${endpoint}`,
-      params: params,
-      data: data,
-    })
-    return res.data
+    try {
+      let res = await axios({
+        method: 'put',
+        url: `/${endpoint}`,
+        params: params,
+        data: data,
+      })
+      return res.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message)
+    }
   }
 
   async delete(endpoint, data, header, params = null) {
-    let res = await axios({
-      method: 'delete',
-      url: `/${endpoint}`,
-      data: data,
-      params: params,
-      headers: header || this.bearer(await this.token()),
-    })
-    return res.data
+    try {
+      let res = await axios({
+        method: 'delete',
+        url: `/${endpoint}`,
+        data: data,
+        params: params,
+        headers: header || this.bearer(await this.token()),
+      })
+      return res.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message)
+    }
   }
 
   bearer(token) {

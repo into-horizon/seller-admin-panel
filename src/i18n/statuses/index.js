@@ -1,8 +1,9 @@
-import ar from "./ar";
-import en from "./en";
+import ar from './ar'
+import en from './en'
 
 const statusesLocalization = {
-    ar,en
+  ar,
+  en,
 }
 
 export default statusesLocalization

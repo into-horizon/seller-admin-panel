@@ -1,4 +1,4 @@
-import React, { Children, useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from 'react'
 import {
   CButton,
   CSpinner,
@@ -13,121 +13,113 @@ import {
   CFormSelect,
   CModalTitle,
   CModalBody,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import ColorSelector from "src/components/ColorSelector";
-import _ from "lodash";
-import { cilStorage, cilPlus } from "@coreui/icons";
-import { useTranslation } from "react-i18next";
-import Multiselect from "multiselect-react-dropdown";
-import CSS_COLOR_NAMES from "src/services/colors";
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import ColorSelector from 'src/components/ColorSelector'
+import _ from 'lodash'
+import { cilStorage, cilPlus } from '@coreui/icons'
+import { useTranslation } from 'react-i18next'
+import Multiselect from 'multiselect-react-dropdown'
+import CSS_COLOR_NAMES from 'src/services/colors'
 
 export const AddOwnComponent = ({ onClick, sizesType, values, addSizes }) => {
-  const { t, i18n } = useTranslation("translation", {
-    keyPrefix: "addProduct",
-  });
+  const { t, i18n } = useTranslation('translation', {
+    keyPrefix: 'addProduct',
+  })
   return (
     <React.Fragment>
       <div className="addOwnSizes">
-        <CFormLabel htmlFor="validationServer05">{t("sizes")}</CFormLabel>
+        <CFormLabel htmlFor="validationServer05">{t('sizes')}</CFormLabel>
         <CFormInput
           type="text"
-          value={values.join(",") ?? ""}
+          value={values.join(',') ?? ''}
           id="sizesInput"
-          placeholder={t("inserSizes")}
+          placeholder={t('inserSizes')}
           required
           onChange={addSizes}
         />
         <CButton color="secondary" type="button" onClick={onClick}>
-          {t("add")}
+          {t('add')}
         </CButton>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
 const QuantityModal = ({ product, updateSizeAndQuantity }) => {
-  const { t, i18n } = useTranslation("translation", {
-    keyPrefix: "addProduct",
-  });
-  let temp = JSON.parse(product.size_and_color);
-  let sizeSymbols = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-  let sizeNumbers = _.range(30, 51);
-  const [visible, setVisible] = useState(false);
-  const [sizes, setSizes] = useState({ original: temp, updated: temp });
-  const [colorAndSize, setColorAndSize] = useState({ color: "", size: "" });
-  const [values, setValues] = useState([]);
-  const [SQLoad, setSQLoad] = useState(false);
-  const [product_, setProduct] = useState({ color: false, size: false });
-  const { size: productSize, color: productColor } = product_;
+  const { t, i18n } = useTranslation('translation', {
+    keyPrefix: 'addProduct',
+  })
+  let temp = JSON.parse(product.size_and_color)
+  let sizeSymbols = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+  let sizeNumbers = _.range(30, 51)
+  const [visible, setVisible] = useState(false)
+  const [sizes, setSizes] = useState({ original: temp, updated: temp })
+  const [colorAndSize, setColorAndSize] = useState({ color: '', size: '' })
+  const [values, setValues] = useState([])
+  const [SQLoad, setSQLoad] = useState(false)
+  const [product_, setProduct] = useState({ color: false, size: false })
+  const { size: productSize, color: productColor } = product_
 
   const [sizesType, setSizesType] = useState({
     add: false,
     data: [...sizeSymbols],
-  });
+  })
   const closeQuantityModal = () => {
-    setVisible(false);
-  };
+    setVisible(false)
+  }
   useEffect(() => {
     if (product.size_and_color) {
       setProduct({
         color: temp.some((item) => item.color),
         size: temp.some((item) => item.size),
-      });
+      })
     }
-  }, [product]);
+  }, [product])
   const updateSQHandler = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     updateSizeAndQuantity({
       id: product.id,
       quantity:
-        sizes.updated.reduce((p, c) => p + Number(c.quantity), 0) ||
-        e.target.quantityInput.value,
-      size_and_color:
-        sizes.updated.length > 0 ? JSON.stringify(sizes.updated) : null,
-    });
-    closeQuantityModal();
-  };
+        sizes.updated?.reduce((p, c) => p + Number(c.quantity), 0) || e.target.quantityInput.value,
+      size_and_color: sizes.updated?.length > 0 ? JSON.stringify(sizes.updated) : null,
+    })
+    closeQuantityModal()
+  }
 
   const updateSQ = (id, s) => {
     setSizeForm((x) => {
-      return { ...x, visible: id };
-    });
+      return { ...x, visible: id }
+    })
     if (s) {
-      setSizes({ ...sizes, original: JSON.parse(s), updated: JSON.parse(s) });
+      setSizes({ ...sizes, original: JSON.parse(s), updated: JSON.parse(s) })
       JSON.parse(s)
         .map((val) => val.color)
         .filter((val) => val).length > 0 &&
         setProduct((x) => {
-          return { ...x, color: true };
-        });
+          return { ...x, color: true }
+        })
       JSON.parse(s)
         .map((val) => val.size)
         .filter((val) => val).length > 0 &&
         setProduct((x) => {
-          return { ...x, size: true };
-        });
+          return { ...x, size: true }
+        })
     }
-  };
-  document.addEventListener("click", (e) => {
-    if (
-      e.target.classList.contains("btn-close") ||
-      e.target.classList.contains("btn-danger")
-    ) {
-      closeQuantityModal();
+  }
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-close') || e.target.classList.contains('btn-danger')) {
+      closeQuantityModal()
     } else {
-      document.removeEventListener("click", (e) => {
-        if (
-          e.target.classList.contains("btn-close") ||
-          e.target.classList.contains("btn-danger")
-        ) {
-          closeQuantityModal();
+      document.removeEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-close') || e.target.classList.contains('btn-danger')) {
+          closeQuantityModal()
         } else {
-          document.removeEventListener("click");
+          document.removeEventListener('click')
         }
-      });
+      })
     }
-  });
+  })
 
   const selectColors = (e) => {
     let x = {
@@ -140,17 +132,16 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
             size: null,
             color: val.name,
             quantity: 0,
-          };
+          }
         }),
       ],
-    };
+    }
     x.updated = x.updated.filter(
       (value, index, self) =>
-        index ===
-        self.findIndex((t) => t.size === value.size && t.color === value.color)
-    );
-    setSizes(x);
-  };
+        index === self.findIndex((t) => t.size === value.size && t.color === value.color),
+    )
+    setSizes(x)
+  }
   const removeColors = (e) => {
     let x = {
       ...sizes,
@@ -162,12 +153,12 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
             size: null,
             color: val.name,
             quantity: 0,
-          };
+          }
         }),
       ],
-    };
-    setSizes(x);
-  };
+    }
+    setSizes(x)
+  }
 
   const select = (e) => {
     let x = {
@@ -175,55 +166,53 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
       updated: [
         ...sizes.original,
         ...e.map((val) => {
-          return { size: val.name, quantity: 0 };
+          return { size: val.name, quantity: 0 }
         }),
       ],
-    };
+    }
     x.updated = x.updated.filter(
       (value, index, self) =>
-        index ===
-        self.findIndex((t) => t.size === value.size && t.color === value.color)
-    );
-    setSizes(x);
-  };
+        index === self.findIndex((t) => t.size === value.size && t.color === value.color),
+    )
+    setSizes(x)
+  }
   const remove = (e) => {
     let x = {
       ...sizes,
       updated: [
         ...sizes.original,
         ...e.map((val) => {
-          return { size: val.name, quantity: 0 };
+          return { size: val.name, quantity: 0 }
         }),
       ],
-    };
-    setSizes(x);
-  };
+    }
+    setSizes(x)
+  }
   const updateQuantity = (e) => {
     // let y = [...sizes.updated]
     let x = sizes.updated.map((val) => {
       if (val.id === Number(e.target.id)) {
         return {
           ...val,
-          quantity:
-            Number(e.target.value) === 0 ? null : Number(e.target.value),
-        };
+          quantity: Number(e.target.value) === 0 ? null : Number(e.target.value),
+        }
       } else {
-        return val;
+        return val
       }
-    });
-    setSizes({ ...sizes, updated: x });
-  };
+    })
+    setSizes({ ...sizes, updated: x })
+  }
   const addSizes = (e) => {
-    setValues((i) => [...e.target.value.split(",")]);
+    setValues((i) => [...e.target.value.split(',')])
     // if (e.target.value.includes(',')) {
     // }
-  };
+  }
 
   const removeSize = (size) => {
-    let newSizes = sizes.updated.filter((val) => val.id !== size);
-    let newOriginal = sizes.original.filter((val) => val.id !== size);
-    setSizes({ ...sizes, original: newOriginal, updated: newSizes });
-  };
+    let newSizes = sizes.updated.filter((val) => val.id !== size)
+    let newOriginal = sizes.original.filter((val) => val.id !== size)
+    setSizes({ ...sizes, original: newOriginal, updated: newSizes })
+  }
 
   const addOwnSizes = () => {
     let x = {
@@ -231,18 +220,17 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
       updated: [
         ...sizes.updated,
         ...values.map((val) => {
-          return { size: val, quantity: 0 };
+          return { size: val, quantity: 0 }
         }),
       ],
-    };
+    }
     x.updated = x.updated.filter(
       (value, index, self) =>
-        index ===
-        self.findIndex((t) => t.size === value.size && t.color === value.color)
-    );
-    setSizes(x);
-    document.getElementById("sizesInput").value = null;
-  };
+        index === self.findIndex((t) => t.size === value.size && t.color === value.color),
+    )
+    setSizes(x)
+    document.getElementById('sizesInput').value = null
+  }
   const addSizeAndColor = () => {
     let x = {
       ...sizes,
@@ -255,43 +243,40 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
           quantity: 0,
         },
       ],
-    };
+    }
     x.updated = x.updated.filter(
       (value, index, self) =>
-        index ===
-        self.findIndex((t) => t.size === value.size && t.color === value.color)
-    );
-    setSizes(x);
-  };
+        index === self.findIndex((t) => t.size === value.size && t.color === value.color),
+    )
+    setSizes(x)
+  }
   const addNewSizes = () => {
     setSizesType((d) => {
-      return { ...d, data: [...d.data, ...values] };
-    });
-    setValues([]);
-  };
+      return { ...d, data: [...d.data, ...values] }
+    })
+    setValues([])
+  }
   return (
     <>
       <CButton color="success" onClick={() => setVisible(true)}>
         <CIcon icon={cilStorage}></CIcon>
-        {t("quantity")}
+        {t('quantity')}
       </CButton>
       <CModal
         alignment="center"
-        size={product.size_and_color && "lg"}
+        size={product.size_and_color && 'lg'}
         scrollable={true}
         visible={visible}
       >
         <CModalHeader closeButton>
-          <CModalTitle>{t("quantity")}</CModalTitle>
+          <CModalTitle>{t('quantity')}</CModalTitle>
         </CModalHeader>
 
         <form onSubmit={updateSQHandler}>
-          <CModalBody
-            style={{ height: `${productSize && !productColor ? "50vh" : ""}` }}
-          >
+          <CModalBody style={{ height: `${productSize && !productColor ? '50vh' : ''}` }}>
             {!product.size_and_color && (
-              <h6 style={{ margin: "2rem 0", textAlign: "center" }}>
-                <strong>{t("quantity")}: </strong>
+              <h6 style={{ margin: '2rem 0', textAlign: 'center' }}>
+                <strong>{t('quantity')}: </strong>
                 <input
                   className="discounRate"
                   id="quantityInput"
@@ -305,19 +290,18 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
               <CCol xs={6}>
                 {productColor && !productSize && (
                   <div className="m-3">
-                    {" "}
+                    {' '}
                     <Multiselect
                       options={CSS_COLOR_NAMES.filter(
-                        (val) =>
-                          !sizes.updated.map((v) => v.color).includes(val)
+                        (val) => !sizes.updated.map((v) => v.color).includes(val),
                       ).map((val, idx) => {
-                        return { name: val, id: idx + 1 };
+                        return { name: val, id: idx + 1 }
                       })}
                       onSelect={selectColors}
                       onRemove={removeColors}
                       selectedValues={(e) => console.log(e)}
                       displayValue="name"
-                      placeholder={t("select")}
+                      placeholder={t('select')}
                     />
                   </div>
                 )}
@@ -327,7 +311,7 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                       <CFormCheck
                         type="radio"
                         name="s"
-                        label={t("symbolSizes")}
+                        label={t('symbolSizes')}
                         onClick={() =>
                           setSizesType(() => ({
                             data: [...sizeSymbols],
@@ -335,16 +319,14 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                           }))
                         }
                         onChange={() => ({})}
-                        checked={sizesType.data.every(
-                          (size) => typeof size === "string"
-                        )}
+                        checked={sizesType.data.every((size) => typeof size === 'string')}
                       />
                     </CCol>
                     <CCol xs="12">
                       <CFormCheck
                         type="radio"
                         name="s"
-                        label={t("numericSizes")}
+                        label={t('numericSizes')}
                         onClick={() =>
                           setSizesType(() => ({
                             data: [...sizeNumbers],
@@ -352,16 +334,14 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                           }))
                         }
                         onChange={() => ({})}
-                        checked={sizesType.data.every(
-                          (size) => typeof size === "number"
-                        )}
+                        checked={sizesType.data.every((size) => typeof size === 'number')}
                       />
                     </CCol>
                     <CCol xs="12">
                       <CFormCheck
                         type="radio"
                         name="s"
-                        label={t("addOther")}
+                        label={t('addOther')}
                         onChange={() =>
                           setSizesType((original) => ({
                             ...original,
@@ -375,13 +355,13 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                       {!sizesType.add ? (
                         <Multiselect
                           options={sizesType.data.map((val, idx) => {
-                            return { name: val, id: idx + 1 };
+                            return { name: val, id: idx + 1 }
                           })}
                           onSelect={select}
                           onRemove={remove}
                           selectedValues={(e) => console.log(e)}
                           displayValue="name"
-                          placeholder={t("select")}
+                          placeholder={t('select')}
                         />
                       ) : (
                         <AddOwnComponent
@@ -401,7 +381,7 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                         className="form-check-input"
                         type="radio"
                         name="sc"
-                        label={t("symbolSizes")}
+                        label={t('symbolSizes')}
                         defaultChecked
                         id="symbolSizes"
                         onChange={() =>
@@ -412,11 +392,8 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                           })
                         }
                       />
-                      <label
-                        htmlFor="symbolSizes"
-                        className="form-check-label px-1"
-                      >
-                        {t("symbolSizes")}
+                      <label htmlFor="symbolSizes" className="form-check-label px-1">
+                        {t('symbolSizes')}
                       </label>
                     </CCol>
                     <CCol md={12}>
@@ -425,7 +402,7 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                         type="radio"
                         name="sc"
                         id="numericSizes"
-                        label={t("numericSizes")}
+                        label={t('numericSizes')}
                         onChange={() =>
                           setSizesType({
                             ...sizesType,
@@ -434,11 +411,8 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                           })
                         }
                       />
-                      <label
-                        htmlFor="numericSizes"
-                        className="form-check-label px-1"
-                      >
-                        {t("numericSizes")}
+                      <label htmlFor="numericSizes" className="form-check-label px-1">
+                        {t('numericSizes')}
                       </label>
                     </CCol>
                     <CCol xs={12}>
@@ -447,15 +421,10 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                         type="radio"
                         name="sc"
                         id="addOther"
-                        onChange={() =>
-                          setSizesType({ ...sizesType, add: true })
-                        }
+                        onChange={() => setSizesType({ ...sizesType, add: true })}
                       />
-                      <label
-                        htmlFor="addOther"
-                        className="form-check-label px-1"
-                      >
-                        {t("addOther")}
+                      <label htmlFor="addOther" className="form-check-label px-1">
+                        {t('addOther')}
                       </label>
                     </CCol>
                     <CCol md={4}>
@@ -497,28 +466,22 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                         disabled={!(colorAndSize.color && colorAndSize.size)}
                       >
                         <CIcon icon={cilPlus} size="sm"></CIcon>
-                        {t("add")}
+                        {t('add')}
                       </CButton>
                     </CCol>
                     {sizesType.add && (
                       <div className="addOwnSizes">
-                        <CFormLabel htmlFor="validationServer05">
-                          {t("sizes")}
-                        </CFormLabel>
+                        <CFormLabel htmlFor="validationServer05">{t('sizes')}</CFormLabel>
                         <CFormInput
                           type="text"
-                          value={values.join(",")}
+                          value={values.join(',')}
                           id="sizesInput"
-                          placeholder={t("inserSizes")}
+                          placeholder={t('inserSizes')}
                           required
                           onChange={addSizes}
                         />
-                        <CButton
-                          color="secondary"
-                          type="button"
-                          onClick={addNewSizes}
-                        >
-                          {t("add")}
+                        <CButton color="secondary" type="button" onClick={addNewSizes}>
+                          {t('add')}
                         </CButton>
                       </div>
                     )}
@@ -534,8 +497,8 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                           <button
                             type="button"
                             onClick={(e) => {
-                              e.preventDefault();
-                              removeSize(size.id);
+                              e.preventDefault()
+                              removeSize(size.id)
                             }}
                           >
                             X
@@ -560,9 +523,9 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
                             onChange={updateQuantity}
                           />
                         </li>
-                      ))
+                      )),
                     )}
-                  {}{" "}
+                  {}{' '}
                 </ul>
               </CCol>
             </CRow>
@@ -570,12 +533,12 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
           <CModalFooter>
             {!SQLoad && (
               <CButton color="primary" type="submit">
-                {t("submit")}
+                {t('submit')}
               </CButton>
             )}
             {!SQLoad && (
               <CButton color="danger" onClick={closeQuantityModal}>
-                {t("cancel")}
+                {t('cancel')}
               </CButton>
             )}
             {SQLoad && <CSpinner />}
@@ -583,7 +546,7 @@ const QuantityModal = ({ product, updateSizeAndQuantity }) => {
         </form>
       </CModal>
     </>
-  );
-};
+  )
+}
 
-export default QuantityModal;
+export default QuantityModal
