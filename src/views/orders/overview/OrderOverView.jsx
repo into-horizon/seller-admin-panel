@@ -12,10 +12,8 @@ import {
   CButton,
   CRow,
   CCol,
-  CSpinner,
   CFormCheck,
   CFormInput,
-  CContainer,
 } from "@coreui/react";
 
 import CIcon from "@coreui/icons-react";

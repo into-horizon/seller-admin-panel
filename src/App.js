@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import './scss/style.scss'
 import { PopupProvider } from 'react-custom-popup'
-import { getUser } from './store/auth'
+import { checkAPIServer, getUser } from './store/auth'
 import { useNavigate } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import cookie from 'react-cookies'
@@ -21,6 +21,8 @@ import { CCol, CContainer, CRow } from '@coreui/react'
 import * as buffer from 'buffer'
 import Auth from './services/Auth'
 import './socket'
+import routes from './routes'
+import AuthLayout from './layout/AuthLayout'
 window.Buffer = buffer.Buffer
 
 const loading = (
@@ -45,65 +47,16 @@ const Verify = React.lazy(() => import('./views/pages/verify/verify'))
 const Reference = React.lazy(() => import('./views/pages/password/reference'))
 const ResetPassword = React.lazy(() => import('./views/pages/password/ResetPassword'))
 
-const App = ({ getAddress, getCategories }) => {
+const App = () => {
   const {
-    loggedIn,
-    user: { id, verified_email },
-    isLogoutLoading,
+    user: { status },
     isUserLoading,
+    globalLoader,
+    isServerDown,
   } = useSelector((state) => state.login)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const { i18n } = useTranslation()
-  const [load, setLoad] = useState(true)
-  const location = useLocation()
-  let token = cookie.load('access_token')
-  const checkUnAuth = (route) => {
-    let unAuth = ['/login', '/register', '/reference']
-    if (unAuth.some((x) => x === route) || route?.startsWith('/resetPassword')) {
-      return true
-    } else return false
-  }
-  useEffect(() => {
-    let tabID = sessionStorage.tabID
-      ? sessionStorage.tabID
-      : (sessionStorage.tabID = (Math.random() * 1000).toFixed(0))
-    const lang = localStorage.getItem('i18nextLng')
-    if (lang) {
-      i18n.changeLanguage(lang)
-    } else {
-      i18n.changeLanguage('en')
-    }
-  }, [])
-
-  useEffect(() => {
-    let currentPath = location.pathname
-    Promise.all([new Auth().checkAPI()])
-      .then(() => {
-        if (location.pathname === '/500') {
-          navigate('/')
-        }
-        if (!id && token) {
-          dispatch(getUser())
-        }
-        if (loggedIn && id && verified_email) {
-          getAddress()
-          getCategories()
-          navigate(!checkUnAuth(location.pathname) ? location.pathname : '/')
-        } else if (!loggedIn && !token && !id) {
-          let path = checkUnAuth(currentPath) ? currentPath : '/login'
-          navigate(path)
-        } else if (verified_email === false) {
-          navigate('/verify')
-        }
-        setLoad(false)
-      })
-      .catch(() => {
-        setLoad(false)
-        navigate('/500')
-      })
-  }, [loggedIn, verified_email])
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (i18n.language === 'ar') {
       document.documentElement.setAttribute('lang', 'ar')
@@ -126,10 +79,18 @@ const App = ({ getAddress, getCategories }) => {
       </CContainer>
     </div>
   )
-  if (load || isLogoutLoading || isUserLoading) {
-    if (isLogoutLoading && location.pathname !== '/login') {
-      navigate('/login')
+  useEffect(() => {
+    dispatch(checkAPIServer())
+  }, [])
+  useEffect(() => {
+    if (isServerDown) {
+      navigate('/500')
+    } else {
+      navigate('/')
     }
+  }, [isServerDown])
+
+  if (isUserLoading || globalLoader) {
     return <Loading />
   }
   return (
@@ -138,17 +99,33 @@ const App = ({ getAddress, getCategories }) => {
       <GlobalDialog />
       <React.Suspense fallback={<Loading />}>
         <Routes>
-          <Route exact path="/login" name="Login Page" element={<Login />} />
-          <Route exact path="/register" name="Register Page" element={<Register />} />
+          <Route path="/" element={<AuthLayout />}>
+            <Route index element={<Navigate to={'login'} />} />
+            <Route path="login" name="Login Page" element={<Login />} />
+            <Route path="register" name="Register Page" element={<Register />} />
+            <Route path="reference" name="reference" element={<Reference />} />
+            <Route path="resetPassword/:token" name="password reset" element={<ResetPassword />} />
+          </Route>
+          <Route path="/" name="Home" element={<DefaultLayout />}>
+            <Route index element={<Navigate to={'dashboard'} />} />
+            {routes.map((route, idx) => {
+              const Item = route.component
+              return (
+                route.component &&
+                (route.approved ? route.approved && status === 'approved' : true) && (
+                  <Route
+                    key={`route${idx}`}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    element={<Item />}
+                  />
+                )
+              )
+            })}
+          </Route>
           <Route exact path="/verify" name="verify" element={<Verify />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          <Route path="/reference" name="reference" element={<Reference />} />
-          <Route
-            path="/resetPassword/:token"
-            name="password reset"
-            element={<ResetPassword load={(x) => setLoad(x)} />}
-          />
-          <Route path="/*" name="Home" element={<DefaultLayout />} />
           <Route path="*" name="Page 404" element={<Page404 />} />
         </Routes>
       </React.Suspense>
@@ -156,15 +133,4 @@ const App = ({ getAddress, getCategories }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  login: state.login,
-})
-const mapDispatchToProps = {
-  getUser,
-  getParentCategoriesHandler,
-  getChildCategoriesHandler,
-  getGrandChildCategoriesHandler,
-  getAddress,
-  getCategories,
-}
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default App

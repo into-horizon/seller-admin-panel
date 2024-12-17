@@ -1,32 +1,18 @@
-import React, { lazy } from "react";
+import React from 'react'
 
 import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
   CCard,
-  CCardBody,
-  CCardFooter,
-  CCardHeader,
   CCol,
-  CProgress,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
   CAccordion,
   CAccordionItem,
   CAccordionHeader,
   CAccordionBody,
-  CWidgetStatsF,
   CWidgetStatsB,
-} from "@coreui/react";
-import { CChart, CChartLine } from "@coreui/react-chartjs";
-import { getStyle, hexToRgba } from "@coreui/utils";
-import CIcon from "@coreui/icons-react";
+} from '@coreui/react'
+import { CChart } from '@coreui/react-chartjs'
+import { getStyle } from '@coreui/utils'
+import CIcon from '@coreui/icons-react'
 import {
   cibCcAmex,
   cibCcApplePay,
@@ -44,22 +30,20 @@ import {
   cifPl,
   cifUs,
   cibTwitter,
-  cilCloudDownload,
-  cilPeople,
   cilUser,
   cilUserFemale,
   cilWarning,
-} from "@coreui/icons";
-import { useTranslation } from "react-i18next";
+} from '@coreui/icons'
+import { useTranslation } from 'react-i18next'
 
-import avatar1 from "src/assets/images/avatars/1.jpg";
-import avatar2 from "src/assets/images/avatars/2.jpg";
-import avatar3 from "src/assets/images/avatars/3.jpg";
-import avatar4 from "src/assets/images/avatars/4.jpg";
-import avatar5 from "src/assets/images/avatars/5.jpg";
-import avatar6 from "src/assets/images/avatars/6.jpg";
-import { useSelector } from "react-redux";
-import LoadingSpinner from "src/components/LoadingSpinner";
+import avatar1 from 'src/assets/images/avatars/1.jpg'
+import avatar2 from 'src/assets/images/avatars/2.jpg'
+import avatar3 from 'src/assets/images/avatars/3.jpg'
+import avatar4 from 'src/assets/images/avatars/4.jpg'
+import avatar5 from 'src/assets/images/avatars/5.jpg'
+import avatar6 from 'src/assets/images/avatars/6.jpg'
+import { useSelector } from 'react-redux'
+import LoadingSpinner from 'src/components/LoadingSpinner'
 
 const Dashboard = () => {
   const {
@@ -73,174 +57,172 @@ const Dashboard = () => {
       sales_rate,
     },
     isUserLoading,
-  } = useSelector((state) => state.login);
-  const { t } = useTranslation("dashboard");
+  } = useSelector((state) => state.login)
+  const { t } = useTranslation('dashboard')
   const random = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
 
   const colorLevel = (n) => {
-    if (n >= 80) return "success";
-    else if (n >= 60) return "";
-    else if (n >= 50) return "warning";
-    else return "danger";
-  };
+    if (n >= 80) return 'success'
+    else if (n >= 60) return ''
+    else if (n >= 50) return 'warning'
+    else return 'danger'
+  }
   const progressExample = [
-    { title: "Visits", value: "29.703 Users", percent: 40, color: "success" },
-    { title: "Unique", value: "24.093 Users", percent: 20, color: "info" },
+    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
+    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
     {
-      title: "Pageviews",
-      value: "78.706 Views",
+      title: 'Pageviews',
+      value: '78.706 Views',
       percent: 60,
-      color: "warning",
+      color: 'warning',
     },
-    { title: "New Users", value: "22.123 Users", percent: 80, color: "danger" },
+    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
     {
-      title: "Bounce Rate",
-      value: "Average Rate",
+      title: 'Bounce Rate',
+      value: 'Average Rate',
       percent: 40.15,
-      color: "primary",
+      color: 'primary',
     },
-  ];
+  ]
 
   const progressGroupExample1 = [
-    { title: "Monday", value1: 34, value2: 78 },
-    { title: "Tuesday", value1: 56, value2: 94 },
-    { title: "Wednesday", value1: 12, value2: 67 },
-    { title: "Thursday", value1: 43, value2: 91 },
-    { title: "Friday", value1: 22, value2: 73 },
-    { title: "Saturday", value1: 53, value2: 82 },
-    { title: "Sunday", value1: 9, value2: 69 },
-  ];
+    { title: 'Monday', value1: 34, value2: 78 },
+    { title: 'Tuesday', value1: 56, value2: 94 },
+    { title: 'Wednesday', value1: 12, value2: 67 },
+    { title: 'Thursday', value1: 43, value2: 91 },
+    { title: 'Friday', value1: 22, value2: 73 },
+    { title: 'Saturday', value1: 53, value2: 82 },
+    { title: 'Sunday', value1: 9, value2: 69 },
+  ]
 
   const progressGroupExample2 = [
-    { title: "Male", icon: cilUser, value: 53 },
-    { title: "Female", icon: cilUserFemale, value: 43 },
-  ];
+    { title: 'Male', icon: cilUser, value: 53 },
+    { title: 'Female', icon: cilUserFemale, value: 43 },
+  ]
 
   const progressGroupExample3 = [
-    { title: "Organic Search", icon: cibGoogle, percent: 56, value: "191,235" },
-    { title: "Facebook", icon: cibFacebook, percent: 15, value: "51,223" },
-    { title: "Twitter", icon: cibTwitter, percent: 11, value: "37,564" },
-    { title: "LinkedIn", icon: cibLinkedin, percent: 8, value: "27,319" },
-  ];
+    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
+    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
+    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
+    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
+  ]
 
   const tableExample = [
     {
-      avatar: { src: avatar1, status: "success" },
+      avatar: { src: avatar1, status: 'success' },
       user: {
-        name: "Yiorgos Avraamu",
+        name: 'Yiorgos Avraamu',
         new: true,
-        registered: "Jan 1, 2021",
+        registered: 'Jan 1, 2021',
       },
-      country: { name: "USA", flag: cifUs },
+      country: { name: 'USA', flag: cifUs },
       usage: {
         value: 50,
-        period: "Jun 11, 2021 - Jul 10, 2021",
-        color: "success",
+        period: 'Jun 11, 2021 - Jul 10, 2021',
+        color: 'success',
       },
-      payment: { name: "Mastercard", icon: cibCcMastercard },
-      activity: "10 sec ago",
+      payment: { name: 'Mastercard', icon: cibCcMastercard },
+      activity: '10 sec ago',
     },
     {
-      avatar: { src: avatar2, status: "danger" },
+      avatar: { src: avatar2, status: 'danger' },
       user: {
-        name: "Avram Tarasios",
+        name: 'Avram Tarasios',
         new: false,
-        registered: "Jan 1, 2021",
+        registered: 'Jan 1, 2021',
       },
-      country: { name: "Brazil", flag: cifBr },
+      country: { name: 'Brazil', flag: cifBr },
       usage: {
         value: 22,
-        period: "Jun 11, 2021 - Jul 10, 2021",
-        color: "info",
+        period: 'Jun 11, 2021 - Jul 10, 2021',
+        color: 'info',
       },
-      payment: { name: "Visa", icon: cibCcVisa },
-      activity: "5 minutes ago",
+      payment: { name: 'Visa', icon: cibCcVisa },
+      activity: '5 minutes ago',
     },
     {
-      avatar: { src: avatar3, status: "warning" },
-      user: { name: "Quintin Ed", new: true, registered: "Jan 1, 2021" },
-      country: { name: "India", flag: cifIn },
+      avatar: { src: avatar3, status: 'warning' },
+      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
+      country: { name: 'India', flag: cifIn },
       usage: {
         value: 74,
-        period: "Jun 11, 2021 - Jul 10, 2021",
-        color: "warning",
+        period: 'Jun 11, 2021 - Jul 10, 2021',
+        color: 'warning',
       },
-      payment: { name: "Stripe", icon: cibCcStripe },
-      activity: "1 hour ago",
+      payment: { name: 'Stripe', icon: cibCcStripe },
+      activity: '1 hour ago',
     },
     {
-      avatar: { src: avatar4, status: "secondary" },
-      user: { name: "Enéas Kwadwo", new: true, registered: "Jan 1, 2021" },
-      country: { name: "France", flag: cifFr },
+      avatar: { src: avatar4, status: 'secondary' },
+      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
+      country: { name: 'France', flag: cifFr },
       usage: {
         value: 98,
-        period: "Jun 11, 2021 - Jul 10, 2021",
-        color: "danger",
+        period: 'Jun 11, 2021 - Jul 10, 2021',
+        color: 'danger',
       },
-      payment: { name: "PayPal", icon: cibCcPaypal },
-      activity: "Last month",
+      payment: { name: 'PayPal', icon: cibCcPaypal },
+      activity: 'Last month',
     },
     {
-      avatar: { src: avatar5, status: "success" },
+      avatar: { src: avatar5, status: 'success' },
       user: {
-        name: "Agapetus Tadeáš",
+        name: 'Agapetus Tadeáš',
         new: true,
-        registered: "Jan 1, 2021",
+        registered: 'Jan 1, 2021',
       },
-      country: { name: "Spain", flag: cifEs },
+      country: { name: 'Spain', flag: cifEs },
       usage: {
         value: 22,
-        period: "Jun 11, 2021 - Jul 10, 2021",
-        color: "primary",
+        period: 'Jun 11, 2021 - Jul 10, 2021',
+        color: 'primary',
       },
-      payment: { name: "Google Wallet", icon: cibCcApplePay },
-      activity: "Last week",
+      payment: { name: 'Google Wallet', icon: cibCcApplePay },
+      activity: 'Last week',
     },
     {
-      avatar: { src: avatar6, status: "danger" },
+      avatar: { src: avatar6, status: 'danger' },
       user: {
-        name: "Friderik Dávid",
+        name: 'Friderik Dávid',
         new: true,
-        registered: "Jan 1, 2021",
+        registered: 'Jan 1, 2021',
       },
-      country: { name: "Poland", flag: cifPl },
+      country: { name: 'Poland', flag: cifPl },
       usage: {
         value: 43,
-        period: "Jun 11, 2021 - Jul 10, 2021",
-        color: "success",
+        period: 'Jun 11, 2021 - Jul 10, 2021',
+        color: 'success',
       },
-      payment: { name: "Amex", icon: cibCcAmex },
-      activity: "Last week",
+      payment: { name: 'Amex', icon: cibCcAmex },
+      activity: 'Last week',
     },
-  ];
+  ]
   if (isUserLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner />
   }
   return (
     <>
-      {status !== "approved" && (
+      {status !== 'approved' && (
         <CAccordion flush>
           <CAccordionItem itemKey={1}>
             <CAccordionHeader>
               <CIcon icon={cilWarning} />
-              <span style={{ margin: "0 0.5em" }}>
-                {status === "pending" && t("pendingStatus")}
-                {status === "rejected" && t("rejectedStatus")}
+              <span style={{ margin: '0 0.5em' }}>
+                {status === 'pending' && t('pendingStatus')}
+                {status === 'rejected' && t('rejectedStatus')}
               </span>
             </CAccordionHeader>
             <CAccordionBody>
-              {status === "pending" && (
+              {status === 'pending' && (
                 <p>
-                  <strong>{t("moreInfo")}</strong>{" "}
-                  <span>{t("pendingInfo")}</span>
+                  <strong>{t('moreInfo')}</strong> <span>{t('pendingInfo')}</span>
                 </p>
               )}
-              {status === "rejected" && (
+              {status === 'rejected' && (
                 <p>
-                  <strong>{t("rejectedReason")}: </strong>{" "}
-                  <span>{rejected_reason}</span>
+                  <strong>{t('rejectedReason')}: </strong> <span>{rejected_reason}</span>
                 </p>
               )}
             </CAccordionBody>
@@ -253,21 +235,21 @@ const Dashboard = () => {
         <CCol xs={6}>
           <CWidgetStatsB
             className="mb-3"
-            progress={{ color: "primary", value: performance_rate }}
+            progress={{ color: 'primary', value: performance_rate }}
             color={colorLevel(performance_rate)}
             // color= {colorLevel(40)}
-            title={t("performanceRate")}
-            value={performance_rate + "%"}
+            title={t('performanceRate')}
+            value={performance_rate + '%'}
           />
         </CCol>
         <CCol xs={6}>
           <CWidgetStatsB
             className="mb-3"
-            progress={{ color: "primary", value: sales_rate * 20 }}
+            progress={{ color: 'primary', value: sales_rate * 20 }}
             color={colorLevel(sales_rate * 20)}
             // color= {colorLevel(40)}
-            title={t("salesRate")}
-            value={sales_rate * 20 + "%"}
+            title={t('salesRate')}
+            value={sales_rate * 20 + '%'}
           />
         </CCol>
       </CRow>
@@ -288,11 +270,9 @@ const Dashboard = () => {
             inverse
             progress={{ value: (fulfilled_orders / overall_orders) * 100 ?? 0 }}
             text="items you have accepted"
-            title={t("fulfillmentRate")}
+            title={t('fulfillmentRate')}
             value={
-              (overall_orders
-                ? (fulfilled_orders / overall_orders).toFixed(2) * 100
-                : 0) + "%"
+              (overall_orders ? (fulfilled_orders / overall_orders) * 100 : 0).toFixed(0) + '%'
             }
           />
         </CCol>
@@ -303,12 +283,8 @@ const Dashboard = () => {
             inverse
             progress={{ value: (ontime_orders / fulfilled_orders) * 100 ?? 0 }}
             text="items were accepted on time"
-            title={t("acceptanceRate")}
-            value={
-              (overall_orders
-                ? (ontime_orders / fulfilled_orders).toFixed(2) * 100
-                : 0) + "%"
-            }
+            title={t('acceptanceRate')}
+            value={(overall_orders ? (ontime_orders / fulfilled_orders) * 100 : 0).toFixed(0) + '%'}
           />
         </CCol>
         <CCol xs={4}>
@@ -317,19 +293,15 @@ const Dashboard = () => {
             color="danger"
             inverse
             progress={{
-              value:
-                ((overall_orders - fulfilled_orders) / overall_orders) * 100 ??
-                0,
+              value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 ?? 0,
             }}
             text="items were canceled"
-            title={t("cancellationRate")}
+            title={t('cancellationRate')}
             value={
               (overall_orders
-                ? (
-                    (overall_orders - fulfilled_orders) /
-                    overall_orders
-                  ).toFixed(2) * 100
-                : 0) + "%"
+                ? ((overall_orders - fulfilled_orders) / overall_orders) * 100
+                : 0
+              ).toFixed(0) + '%'
             }
           />
         </CCol>
@@ -338,9 +310,9 @@ const Dashboard = () => {
         <CCol xs={3}>
           <CWidgetStatsB
             className="mb-3"
-            progress={{ color: "success", value: 100 }}
+            progress={{ color: 'success', value: 100 }}
             text="total item purchased"
-            title={t("placedOrderItems")}
+            title={t('placedOrderItems')}
             value={overall_orders}
           />
         </CCol>
@@ -351,7 +323,7 @@ const Dashboard = () => {
             inverse
             progress={{ value: (fulfilled_orders / overall_orders) * 100 ?? 0 }}
             text="items you have accepted"
-            title={t("acceptedItems")}
+            title={t('acceptedItems')}
             value={fulfilled_orders}
           />
         </CCol>
@@ -362,7 +334,7 @@ const Dashboard = () => {
             inverse
             progress={{ value: (ontime_orders / fulfilled_orders) * 100 ?? 0 }}
             text="items were accepted on time"
-            title={t("acceptedOnTime")}
+            title={t('acceptedOnTime')}
             value={ontime_orders}
           />
         </CCol>
@@ -372,12 +344,10 @@ const Dashboard = () => {
             color="danger"
             inverse
             progress={{
-              value:
-                ((overall_orders - fulfilled_orders) / overall_orders) * 100 ??
-                0,
+              value: ((overall_orders - fulfilled_orders) / overall_orders) * 100 ?? 0,
             }}
             text="items were canceled"
-            title={t("canceledItems")}
+            title={t('canceledItems')}
             value={overall_orders - fulfilled_orders}
           />
         </CCol>
@@ -388,10 +358,10 @@ const Dashboard = () => {
             <CChart
               type="doughnut"
               data={{
-                labels: [t("acceptedItems"), t("canceledItems")],
+                labels: [t('acceptedItems'), t('canceledItems')],
                 datasets: [
                   {
-                    backgroundColor: ["#41B883", "#E46651"],
+                    backgroundColor: ['#41B883', '#E46651'],
                     data: [fulfilled_orders, overall_orders - fulfilled_orders],
                   },
                 ],
@@ -400,7 +370,7 @@ const Dashboard = () => {
                 plugins: {
                   legend: {
                     labels: {
-                      color: getStyle("--cui-body-color"),
+                      color: getStyle('--cui-body-color'),
                     },
                   },
                 },
@@ -730,7 +700,7 @@ const Dashboard = () => {
         </CCol>
       </CRow> */}
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

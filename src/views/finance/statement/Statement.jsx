@@ -89,7 +89,7 @@ export const Statement = ({ getTransactions }) => {
         count={count}
         onChangePage={handelPageChange}
         pageSize={20}
-        page={searchParams.get('page')}
+        page={+searchParams.get('page')}
       />
     </>
   )
